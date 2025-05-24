@@ -41,11 +41,11 @@ def home():
 
 @app.route('/submit_code', methods=['POST'])
 def submitSessionCode():
-    user_input_code: str = request.form.get('session_code')
+    user_input_code: str = request.form.get('sessionID')
     name = request.form.get('name')
 
     if user_input_code == session_code:
-        return redirect(url_for()) # USER LOGIN PAGE
+        return render_template('user-room.html', users=users) # USER LOGIN PAGE
     else:
         return "WRONG SESSION CODE!!!"
 
