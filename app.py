@@ -34,7 +34,7 @@ def home():
         with open('moment.json', 'w') as file:
             json.dump(users, file, indent=2)
 
-        return render_template('', name=name) # prompt for session code
+        return render_template('session.html', name=name) # prompt for session code
     
     return render_template('index.html') # user prompt for name
 
