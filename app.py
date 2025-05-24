@@ -1,41 +1,59 @@
 from flask import Flask, render_template, request, url_for, redirect
+from typing import Dict, List
 import string, random, json
 
 app = Flask(__name__)
-users = []
-SERVER_IP = '192.168.0.226' 
+users: Dict[str, List[str]] = {
+    "names": []
+}
+SERVER_IP: str = '192.168.0.226' 
 
 def generateRandomSessionCode(length: int) -> str:
-    characters = string.ascii_letters + string.digits
-    code = ''.join(random.choice(characters) for _ in range(length))
+    characters: str = string.ascii_letters + string.digits
+    code: str = ''.join(random.choice(characters) for _ in range(length))
     return code.upper()
 
-session_code: str = f"{generateRandomSessionCode(7)}"
+session_code: str = f"{generateRandomSessionCode(4)}"
+
+def userIsTheServer(addr: str) -> bool:
+    return addr == SERVER_IP
+
+
+# WEB ROUTES
 
 @app.route('/')
 def home():
-    return f"{session_code}"
+    if userIsTheServer(request.remote_addr):
+        return f"{session_code}"
+    else:
+        return render_template('') # USER SESSION CODE PROMPT
+
+@app.route('/login', methods=['POST'])
+def userLogin():
+    name: str = request.form.get('name')
+    users["names"].append(name)
+
+    with open('moment.json', 'w') as file:
+        json.dump(users, file, indent=2)
+
+    return redirect(url_for('begin_session'))
+
+@app.route('/submit_code', methods=['POST'])
+def submitSessionCode():
+    user_input_code: str = request.form.get('session_code')
+    if user_input_code == session_code:
+        return redirect(url_for()) # USER LOGIN PAGE
+    else:
+        return "WRONG SESSION CODE!!!"
 
 @app.route(f'/{session_code}')
-def view():
-    user_ip = request.remote_addr
-    if user_ip != SERVER_IP:
-        return render_template('index.html', users=users)
-    else:
-        return render_template('admin.html', users=users)
+def begin_session():
+    return render_template(
+        'index.html' if userIsTheServer(request.remote_addr) else 'admin.html', 
+        users=users
+    )
 
-@app.route('/submit', methods=['POST'])
-def submit():
-    name = request.form.get('name')
-    users.append(name)
-    with open('moment.json', 'a') as file:
-        data = users
-        json.dump(data, file, indent=2)
-    return redirect(url_for('view'))
 
-@app.route('/users')
-def user():
-    return '  '.join(i for i in users)
 
 if __name__ == "__main__":
     app.run(
