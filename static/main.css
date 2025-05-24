@@ -1,0 +1,38 @@
+@font-face {
+    font-family: Poppins;
+    src: url(/static/fonts/Poppins-Regular.ttf) format('truetype');
+}
+
+h1, h2, h3{
+    font-family: Poppins, sans-serif;
+    color: rgb(13, 41, 31);
+}
+
+h2{
+    font-size: 5rem;
+}
+
+body{
+    overflow: hidden;
+    background-color: #FFFEF9;
+}
+
+.registration{
+    margin: 0 auto;
+    width: 50%;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.name-field{
+    border: none;
+    outline: none;
+    border-bottom: 1px solid #949795;
+    font-size: 3rem;
+    align-items: center;
+    background-color: rgba(0,0,0,0);
+}
+
