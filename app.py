@@ -29,7 +29,9 @@ def home():
     
     if request.method == 'POST':
         name: str = request.form.get('name')
-        users["names"].append(name)
+        
+        if name and name not in users["names"]:
+            users["names"].append(name)
         
         with open('moment.json', 'w') as file:
             json.dump(users, file, indent=2)
@@ -49,6 +51,9 @@ def submitSessionCode():
     else:
         return "WRONG SESSION CODE!!!"
 
+@app.route('/participant_count')
+def returnParticipantCount():
+    return {'count': len(users['names'])}
 
 @app.route('/room')
 def begin_session():

@@ -6,7 +6,20 @@
   <title>Document</title>
 </head>
 <body>
-    <h3>Session Code</h3>
-    <h4>{{ session_code }}</h4>
+  <h1>Session Code: {{ session_code }}</h1>
+  <h2>Participants: <span id="participant-count">0</span></h2>
+
+  <script>
+    function fetchParticipantCount() {
+      fetch('/participant_count')
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('participant-count').textContent = data.count;
+        });
+    }
+
+    setInterval(fetchParticipantCount, 2000);
+    fetchParticipantCount();
+  </script>
 </body>
 </html>
