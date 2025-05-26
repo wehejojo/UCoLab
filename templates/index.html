@@ -3,21 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Session Page</title>
-  <link rel="stylesheet" href="static/style.css">
+  <link rel="stylesheet" href="/static/main.css">
 </head>
 <body>
-  <h2>Submit Your Name</h2>
-  <form action="/submit" method="post">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name">
-    <input type="submit" value="Submit">
-  </form>
-
-  <h3>Submitted Users:</h3>
-  <ul>
-    {% for user in users %}
-      <li>{{ user }}</li>
-    {% endfor %}
-  </ul>
+  <div class="centered-container">
+    <h2>What should we call you?</h2>
+    <form action="/" method="post">
+      <input type="text" id="name" name="name" class="input-field" required placeholder="Nickname">
+      <input type="submit" value="Submit" class="submit-button">
+    </form>
+  </div>
 </body>
 </html>

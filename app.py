@@ -35,17 +35,18 @@ def home():
             json.dump(users, file, indent=2)
 
         return render_template('session.html', name=name) # prompt for session code
+        return render_template('session.html', name=name) # prompt for session code
     
     return render_template('index.html') # user prompt for name
 
 
 @app.route('/submit_code', methods=['POST'])
 def submitSessionCode():
-    user_input_code: str = request.form.get('session_code')
+    user_input_code: str = request.form.get('sessionID')
     name = request.form.get('name')
 
     if user_input_code == session_code:
-        return render_template('user-room.html', name=name) # room page
+        return render_template('user-room.html', users=users) # room page
     else:
         return "WRONG SESSION CODE!!!"
 

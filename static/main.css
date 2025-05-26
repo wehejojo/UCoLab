@@ -17,9 +17,9 @@ body{
     background-color: #FFFEF9;
 }
 
-.registration{
+.centered-container{
     margin: 0 auto;
-    width: 50%;
+    width: 100%;
     height: 100vh;
     align-items: center;
     justify-content: center;
@@ -27,12 +27,47 @@ body{
     flex-direction: column;
 }
 
-.name-field{
+.user-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-field{
     border: none;
     outline: none;
     border-bottom: 1px solid #949795;
-    font-size: 3rem;
+    font-size: 2rem;
     align-items: center;
     background-color: rgba(0,0,0,0);
 }
 
+.submit-button{
+    background-color: rgba(0,0,0,0);
+    border: none;
+    outline: none;
+    font-size:2rem;
+    color: #949795;
+    cursor: pointer;
+}
+
+li{
+    margin: 0;
+    padding-left: 0;
+    list-style-type: none;
+    font-family: poppins, sans-serif;
+    font-size: 1.5rem;
+}
+
+ul{
+    margin: 0;
+    padding-left: 0;
+}
+
+.users{
+    max-width: 50%;
+    height: 5rem;
+    border: 1px solid #949795;
+    padding: 0.5rem;
+}
