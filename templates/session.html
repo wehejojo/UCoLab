@@ -9,10 +9,12 @@
 <body>
     <div class="centered-container">
         <h2>Join a Room!</h2>
-        <form action="/submit_code" method="post">
-        <input type="text" id="sessionID" name="sessionID" class="input-field" required placeholder="Enter Session ID">
-        <input type="submit" value="Submit" class="submit-button">
-    </form>
+        <form method="POST" action="/submit_code">
+            <input type="hidden" name="name" value="{{ name }}">
+            <label for="sessionID">Enter Session Code:</label>
+            <input type="text" id="sessionID" name="sessionID" required>
+            <button type="submit">Join Session</button>
+        </form>
     </div>
 </body>
 </html>

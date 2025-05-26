@@ -29,12 +29,6 @@ def home():
     
     if request.method == 'POST':
         name: str = request.form.get('name')
-        
-        if name and name not in users["names"]:
-            users["names"].append(name)
-        
-        with open('moment.json', 'w') as file:
-            json.dump(users, file, indent=2)
 
         return render_template('session.html', name=name) # prompt for session code
     
@@ -47,7 +41,13 @@ def submitSessionCode():
     name = request.form.get('name')
 
     if user_input_code == session_code:
+        users["names"].append(name)
+
+        with open('moment.json', 'w') as file:
+            json.dump(users, file, indent=2)
+            
         return render_template('user-room.html', users=users) # room page
+        
     else:
         return "WRONG SESSION CODE!!!"
 
