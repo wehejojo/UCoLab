@@ -72,6 +72,81 @@ input{
 
 /* H E L P E R */
 
-* {
-    outline: 2px solid #d1d1d1;
+
+.top-bar{
+    width: auto;
+    height: 100%;
+    padding: 2rem;
+    background-color: #e7e7e7;
+    border-radius: 20px;
+    margin: 0.5rem;
 }
+
+.details{
+    display: flex;
+    flex-direction: row;
+}
+
+.participants, .participant-form{
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 0.5rem;
+}
+
+.participants{
+    background-color: #e7e7e7;
+    flex: 0.5;
+}
+
+.participant-header{
+    display: flex;
+    flex-direction: row;
+}
+
+.participant-header h2{
+    flex: 0.6;
+}
+
+.participant-header p{
+    background-color: #FFFFFF;
+    padding: 0.5rem;
+    border-radius: 20px;
+    width: 100%;
+    flex: 0.4;
+    text-align: center;
+}
+
+.participant-form{
+    background-color: #e7e7e7;
+    border-radius: 20px;
+    flex:1;
+}
+
+.bottom-bar{
+    height: 100%;
+    padding: 2rem;
+    background-color: #e7e7e7;
+    border-radius: 20px;
+    margin: 0.5rem;
+    display: flex;
+    flex-direction: row;
+}
+
+.bottom-bar button{
+    background-color: #0F161E;
+    color: white;
+    border-radius: 20px;
+    outline: none;
+    height: 100%;
+    width: 100%;
+}
+
+.bottom-message{
+    flex: 0.80 ;
+    font-size: 1.2rem;
+}
+
+.bottom-button{
+    flex: 0.20;
+}
+
