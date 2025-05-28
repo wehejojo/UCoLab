@@ -1,66 +1,120 @@
-from flask import Flask, render_template, request, url_for, redirect
-from typing import Dict, List
-import string, random, json
+from flask import Flask, request, jsonify, session
+from flask_cors import CORS
+
+import string, random, secrets, json, os
 
 app = Flask(__name__)
-users: Dict[str, List[str]] = {
-    "names": []
-}
-SERVER_IP: str = '192.168.0.226' 
+app.secret_key = secrets.token_hex(32)
+CORS(app=app)
+
+DB = 'answers.json'
+QUESTIONS = 'questions.json'
+SERVER_IP = '192.168.0.226'
 
 def generateRandomSessionCode(length: int) -> str:
-    characters: str = string.ascii_letters + string.digits
-    code: str = ''.join(random.choice(characters) for _ in range(length))
-    return code.upper()
-
-session_code: str = f"{generateRandomSessionCode(4)}"
+    characters: str = string.ascii_letters.upper() + string.digits
+    return ''.join(random.choice(characters) for _ in range(length))
 
 def userIsTheServer(addr: str) -> bool:
     return addr == SERVER_IP
 
+SESSION_CODE: str = generateRandomSessionCode(4)
 
-# WEB ROUTES
+def load_json_file(filename):
+    if not os.path.exists(filename):
+        return {}
+    with open(filename, 'r') as f:
+        return json.load(f)
 
-# users will submit their name to route '/'
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    if userIsTheServer(request.remote_addr):
-        return render_template('admin.html', session_code=session_code) # show the session code to the session master
-    
-    if request.method == 'POST':
-        name: str = request.form.get('name')
+def save_json_file(filename, data):
+    with open(filename, 'w') as f:
+        json.dump(data, f, indent=2)
 
-        return render_template('session.html', name=name) # prompt for session code
-    
-    return render_template('index.html') # user prompt for name
+@app.before_request
+def assign_user():
+    if 'user_id' not in session:
+        session['user_id'] = f"user_{os.urandom(4).hex()}"
+        # if 'X-User-ID' in request.headers:
+        #     session['user_id'] = request.headers['X-User-ID']
+        # else:
+        #     session['user_id'] = f"user_{os.urandom(4).hex()}"
+
+@app.route('/')
+def index():
+    return jsonify({
+        "session_code": SESSION_CODE,
+        "secret-key" : app.secret_key
+    })
+
+@app.route('/questions', methods=['GET'])
+def getQuestions():
+    questions = load_json_file(QUESTIONS)
+    return jsonify(questions)
 
 
-@app.route('/submit_code', methods=['POST'])
-def submitSessionCode():
-    user_input_code: str = request.form.get('sessionID')
-    name = request.form.get('name')
+@app.route('/submit-code', methods=['POST'])
+def method_name():
+    data = request.get_json()
+    code = data.get('code')
 
-    if user_input_code == session_code:
-        users["names"].append(name)
-
-        with open('moment.json', 'w') as file:
-            json.dump(users, file, indent=2)
-            
-        return render_template('user-room.html', users=users) # room page
-        
+    if code == SESSION_CODE:
+        return jsonify({ 'success' : True, 'redirect_url' : '/room' })
     else:
-        return "WRONG SESSION CODE!!!"
+        return jsonify({ 'success' : False, 'error' : "Invalid Code" })
+    
+@app.route('/submit-user-details', methods=['POST'])
+def submitUserDetails():
+    data = request.get_json()
+    name = data.get('name')
+    college = data.get('college')
+    user_id = session.get('user_id')
 
-@app.route('/participant_count')
+    if not user_id:
+        return jsonify({'error': 'User session not found'}), 400
+    
+    db = load_json_file(DB)
+    if user_id not in db:
+        db[user_id] = {}
+    
+    db[user_id]["name"] = name
+    db[user_id]["college"] = college
+
+    save_json_file(DB, db)
+    return jsonify({ "sucess" : True })
+
+
+@app.route('/submit-answer', methods=['POST'])
+def submitAnswer():
+    data = request.get_json()
+    question_id = data.get('question_id')
+    answer = data.get('answer')
+    user_id = session.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'User session not found'}), 400
+    if not question_id or answer is None:
+        return jsonify({'error': 'Missing question_id or answer'}), 400
+
+    db = load_json_file(DB)
+
+    if user_id not in db:
+        db[user_id] = {}
+
+    if "quiz-details" not in db[user_id]:
+        db[user_id]["quiz-details"] = {}
+    db[user_id]["quiz-details"][question_id] = answer
+    save_json_file(DB, db)
+
+    return jsonify({'success': True})
+
+@app.route('/show-participants')
 def returnParticipantCount():
-    return {'count': len(users['names'])}
+    db = load_json_file(DB)
+    return jsonify({
+        "participant-count" : len(db),
+        "participants" : db
+    })
 
-@app.route('/room')
-def begin_session():
-    return render_template(
-        'admin_room.html' if userIsTheServer(request.remote_addr) else 'user_room.html',
-        users=users
-    )
 
 if __name__ == "__main__":
     app.run(
