@@ -67,6 +67,7 @@ def submitUserDetails():
     data = request.get_json()
     name = data.get('name')
     college = data.get('college')
+    attribute = data.get('attribute')
     user_id = session.get('user_id')
 
     if not user_id:
@@ -78,6 +79,7 @@ def submitUserDetails():
     
     db[user_id]["name"] = name
     db[user_id]["college"] = college
+    db[user_id]["attribute"] = attribute
 
     save_json_file(DB, db)
     return jsonify({ "sucess" : True })
@@ -100,9 +102,9 @@ def submitAnswer():
     if user_id not in db:
         db[user_id] = {}
 
-    if "quiz-details" not in db[user_id]:
-        db[user_id]["quiz-details"] = {}
-    db[user_id]["quiz-details"][question_id] = answer
+    if "skills" not in db[user_id]:
+        db[user_id]["skills"] = {}
+    db[user_id]["skills"][question_id] = answer
     save_json_file(DB, db)
 
     return jsonify({'success': True})
