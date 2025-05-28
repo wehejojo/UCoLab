@@ -3,12 +3,15 @@
     src: url(/static/fonts/Poppins-Regular.ttf) format('truetype');
 }
 
-h1, h2, h3, p{
+h1,
+h2,
+h3,
+p {
     font-family: Poppins, sans-serif;
     color: rgb(13, 41, 31);
 }
 
-.matching-container{
+.matching-container {
     width: 40%;
     height: 60%;
     margin: 10% auto;
@@ -17,18 +20,18 @@ h1, h2, h3, p{
     padding: 2rem;
 }
 
-.matching-container h1{
+.matching-container h1 {
     font-size: 3.8rem;
     font-weight: bolder;
 }
 
-.query-container{
+.query-container {
     display: flex;
-    flex-direction:row ;
+    flex-direction: row;
     justify-content: center;
 }
 
-.type-container{
+.type-container {
     width: 20rem;
     height: 20rem;
     background-color: #e7e7e7;
@@ -38,33 +41,34 @@ h1, h2, h3, p{
     border-radius: 40px;
 }
 
-.type-container h2{
+.type-container h2 {
     font-size: 2rem;
     font-weight: bolder;
-}   
-
-.type-label{
-    word-wrap: break-word ;
 }
 
-input{
+.type-label {
+    word-wrap: break-word;
+}
+
+input {
     border-radius: 40px;
     outline: none;
     border: none;
     height: 2.5rem;
 }
 
-#codeInput{
+#codeInput {
     background-color: rgba(0, 0, 0, 0);
-    
+
 }
 
-#codeSubmit, #randomSubmit{
+#codeSubmit,
+#randomSubmit {
     background-color: #0F161E;
     color: white;
 }
 
-.code-submit{
+.code-submit {
     width: 17rem;
     border-radius: 40px;
     background-color: white;
@@ -72,9 +76,11 @@ input{
 
 /* H E L P E R */
 
+/* *{
+    border: 1px solid #565656;
+}  */
 
-.top-bar{
-    width: auto;
+.top-bar {
     height: 100%;
     padding: 2rem;
     background-color: #e7e7e7;
@@ -82,32 +88,56 @@ input{
     margin: 0.5rem;
 }
 
-.details{
+.details {
     display: flex;
     flex-direction: row;
+    height: 56rem;
 }
 
-.participants, .participant-form{
+.participants,
+.participant-form {
     border-radius: 20px;
     padding: 2rem;
     margin: 0.5rem;
 }
 
-.participants{
+.participants {
     background-color: #e7e7e7;
     flex: 0.5;
 }
 
-.participant-header{
+.participant-header {
     display: flex;
     flex-direction: row;
 }
 
-.participant-header h2{
+.participant-header h2 {
     flex: 0.6;
 }
 
-.participant-header p{
+.users {
+    display: flex;
+    flex-direction: column;
+    flex: 0.4;
+    overflow-y: scroll;
+    height: 80%;
+    padding: 2rem;
+}
+
+.player {
+    width: 5rem;
+    height: 5rem;
+}
+
+.pfp {
+    height: 40px;
+    width: 40px;
+    background-color: #0F161E;
+    border-radius: 100%;
+}
+
+
+.participant-header p {
     background-color: #FFFFFF;
     padding: 0.5rem;
     border-radius: 20px;
@@ -116,13 +146,35 @@ input{
     text-align: center;
 }
 
-.participant-form{
+.participant-form {
     background-color: #e7e7e7;
     border-radius: 20px;
-    flex:1;
+    flex: 1;
+    margin: 0.5rem;
 }
 
-.bottom-bar{
+#participantName {
+    width: 60%;
+    padding: 0.5rem;
+    border-radius: 10px;
+}
+
+#College {
+    width: 61%;
+    height: 5rem;
+    padding: 0.5rem;
+    border-radius: 10px;
+    border: none;
+}
+
+#attributes {
+    width: 60%;
+    padding: 0.5rem;
+    border-radius: 10px;
+}
+
+
+.bottom-bar {
     height: 100%;
     padding: 2rem;
     background-color: #e7e7e7;
@@ -132,7 +184,7 @@ input{
     flex-direction: row;
 }
 
-.bottom-bar button{
+.bottom-bar button {
     background-color: #0F161E;
     color: white;
     border-radius: 20px;
@@ -141,12 +193,49 @@ input{
     width: 100%;
 }
 
-.bottom-message{
-    flex: 0.80 ;
-    font-size: 1.2rem;
+.bottom-message {
+    flex: 0.80;
+    font-size: 1.5rem;
 }
 
-.bottom-button{
+.bottom-button {
     flex: 0.20;
 }
 
+
+.bottom-button button {
+    font-size: 1.5rem;
+}
+
+/* waduhyawbduawbjdnhawbd  */
+
+.quiz {
+    margin: 0.5rem;
+    text-align: center;
+    height: 55rem;
+}
+
+.question h2 {
+    font-size: 2.5rem;
+}
+
+.options {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 4rem;
+}
+
+.option {
+    text-align: left;
+    width: 45%;
+    background-color: #e7e7e7;
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+.option.selected {
+    border-color: #007bff;
+    background-color: #e7f0ff;
+}

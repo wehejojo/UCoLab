@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+
+<body>
+    <div class="top-bar">
+        <h1>Room #: I124Q</h1>
+    </div>
+
+    <div class="quiz">
+        <div class="question">
+            <h2>why are you black?</h2>
+        </div>
+        <div class="options">
+            <div class="option" onclick="selectOption(this)">
+                <h2>Hustler</h2>
+                <p>Am hustlin it bro im hustlin it</p>
+            </div>
+            <div class="option" onclick="selectOption(this)">
+                <h2>Hustler</h2>
+                <p>Am hustlin it bro im hustlin it</p>
+            </div>
+            <div class="option" onclick="selectOption(this)">
+                <h2>Hustler</h2>
+                <p>Am hustlin it bro im hustlin it</p>
+            </div>
+            <div class="option" onclick="selectOption(this)">
+                <h2>Hustler</h2>
+                <p>Am hustlin it bro im hustlin it</p>
+            </div>
+                <script>
+        function selectOption(clickedDiv) {
+            document.querySelectorAll('.option').forEach(div => {
+                div.classList.remove('selected');
+            });
+            clickedDiv.classList.add('selected');
+        }
+    </script>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <div class="bottom-message">
+            <p>Waiting for host to start matchmaking...</p>
+        </div>
+
+        <div class="bottom-button">
+            <button class="Start">Start Matchmaking</button>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

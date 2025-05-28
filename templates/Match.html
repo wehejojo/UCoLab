@@ -1,53 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Match</title>
     <link href="/static/main.css" rel="stylesheet" />
 </head>
+
 <body>
-    <div class="top-bar">
-        <h1>Room #: I124Q</h1>
-    </div>
-    <div class="details">
-        <div class="participants">
-            <div class="participant-header">
-                <h2>Participants</h2>
-                <p>x users joined</p>
-            </div>
+    <div>
+        <div class="top-bar">
+            <h1>Room #: I124Q</h1>
+        </div>
+        <div class="details">
+            <div class="participants">
+                <div class="participant-header">
+                    <h2>Participants</h2>
+                    <p>x users joined</p>
+                </div>
 
-            <div class="users">
-
+                <div class="users">
+                    <div class="player">
+                        <div class="pfp"></div>
+                        <p>Johann Liwag</p>
+                    </div>
+                </div>
+            </div>
+            <div class="participant-form">
+                <h1>Details</h1>
+                <p>Enter your name</p>
+                <input type="text" id="participantName" placeholder="Your Name" />
+                <p>What College are you part of?</p>
+                <select name="college" id="College">
+                    <option value="CITCS">College of Information Technology and Computer Science</option>
+                    <option value="CON">College of Nursing</option>
+                    <option value="CEA">College of Engineering</option>
+                    <option value="CBA">College of Business Administration</option>
+                    <option value="CAS">College of Art and Sciences</option>
+                    <option value="COA">College of Accountancy</option>
+                    <option value="CHTM">College of Hospitality Tourism Management</option>
+                    <option value="CCJE">College of Criminal Justice Education</option>
+                    <option value="CTE">College of Teacher Education</option>
+                </select>
+                <p>What are your skills</p>
+                <input type="text" placeholder="Search Skills" id="attributes">
             </div>
         </div>
-        <div class="participant-form">
-            <h1>Details</h1>
-            <p>Enter your name</p>
-            <input type="text" id="participantName" placeholder="Your Name" />
-            <p>What College are you part of?</p>
-            <select name="college" id="College">
-                <option value="CITCS">College of Information Technology and Computer Science</option>
-                <option value="CON">College of Nursing</option>
-                <option value="CEA">College of Engineering</option>
-                <option value="CBA">College of Business Administration</option>
-                <option value="CAS">College of Art and Sciences</option>
-                <option value="COA">College of Accountancy</option>
-                <option value="CHTM">College of Hospitality Tourism Management</option>
-                <option value="CCJE">College of Criminal Justice Education</option>
-                <option value="CTE">College of Teacher Education</option>
-            </select>
-            <p>What are your skills</p>
-            <input type="text" placeholder="Search Skills">
+        <div class="bottom-bar">
+            <div class="bottom-message">
+                <p>Waiting for host to start matchmaking...</p>
+            </div>
+            <div class="bottom-button">
+                <button class="Start">Start Matchmaking</button>
+            </div>
         </div>
     </div>
-    <div class="bottom-bar">
-        <div class="bottom-message">
-            <p>Waiting for host to start matchmaking...</p>
-        </div>
-        <div class="bottom-button">
-            <button class="Start">Start Matchmaking</button>
-        </div>
-    </div>
+
 </body>
+
 </html>
