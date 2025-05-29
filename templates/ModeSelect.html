@@ -22,13 +22,16 @@
 
                 <div class="code-entry">
                     <div class="code-submit">
-                        <input type="text" id="codeInput" placeholder="Enter Code" />
+                        <input type="text" id="code" placeholder="Enter Code" />
                         <input type="submit" value="Join Room ->" id="codeSubmit" />
                     </div>
                 </div>
 
             </div>
 
+            </div>
+        </div>
+    </div>
             <div class="type-container">
                 <div class="type-label">
                     <h2>Explore <br>Open-Matching</h2>
@@ -39,9 +42,31 @@
                 <div class="random-submit">
                     <input type="submit" value="Start Smart Quiz ->" id="randomSubmit" />
                 </div>
-            </div>
-        </div>
-    </div>
+    <script>
+        const submitButton = document.getElementById('codeSubmit');
+
+
+        submitButton.onclick = async () => {
+            const codeInput = document.getElementById('code').value;
+
+            const response = await fetch('http://192.168.0.226:5000/submit-code', {
+                method : 'POST',
+                headers : {
+                    'Content-Type': 'application/json'
+                },
+                body : JSON.stringify({ code : codeInput })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                window.location.href = "./Match.html";
+            } else {
+                window.alert("Wrong Session Code!!!");
+            }
+        };
+
+    </script>
 </body>
 
 </html>
