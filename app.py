@@ -34,10 +34,10 @@ def save_json_file(filename, data):
 def assign_user():
     if 'user_id' not in session:
         session['user_id'] = f"user_{os.urandom(4).hex()}"
-        # if 'X-User-ID' in request.headers:
-        #     session['user_id'] = request.headers['X-User-ID']
-        # else:
-        #     session['user_id'] = f"user_{os.urandom(4).hex()}"
+# if 'X-User-ID' in request.headers:
+#     session['user_id'] = request.headers['X-User-ID']
+# else:
+#     session['user_id'] = f"user_{os.urandom(4).hex()}"
 
 @app.route('/')
 def index():
