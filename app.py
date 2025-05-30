@@ -7,6 +7,10 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 CORS(app=app)
 
+match_status = {
+    "started": False
+}
+
 DB = 'answers.json'
 QUESTIONS = 'questions.json'
 SERVER_IP = '192.168.0.87' 
@@ -133,10 +137,21 @@ def returnParticipantCount():
 
 @app.route('/quiz-redirect')
 def quizRedirect():
+    global quiz_started
     if userIsTheServer(request.remote_addr):
-        return render_template('quiz.html', session_code=SESSION_CODE)
+        quiz_started = True
+        return jsonify({"success": True, "message": "Quiz started."})
     else:
-        return jsonify({ "success": False, "error": "Unauthorized access" }), 403
+        return jsonify({"success": quiz_started})
+
+@app.route('/start-matching', methods=['POST'])
+def start_matching():
+    match_status["started"] = True
+    return jsonify({"success": True})
+
+@app.route('/check-matching')
+def check_matching():
+    return jsonify({"started": match_status["started"]})
 
 if __name__ == "__main__":
     app.run(

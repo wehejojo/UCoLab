@@ -14,7 +14,7 @@
             <h1 id="session_code">Room #: </h1>
         </div>
         <div class="details">
-            <div class="participants">
+            <div class="participants">  
                 <div class="participant-header">
                     <h2>Participants</h2>
                     <p>0 users joined</p>
@@ -54,6 +54,8 @@
         </div>
     </div>
     <script>
+        let isServer = false;
+
         async function fetchAndRenderParticipants() {
             try {
                 const response = await fetch('http://192.168.0.87:5000/show-participants');
@@ -110,12 +112,11 @@
             if (isServer) {
                 document.querySelector('.Start').id = "master";
                 document.querySelector('.Start').innerHTML = 'Start Matching';
-                return true;
             } else {
                 document.querySelector('.Start').id = "player";
                 document.querySelector('.Start').innerHTML = 'Lock In';
-                return false;
             }
+            return isServer;
         }
 
         async function renderRoom(){
@@ -126,69 +127,75 @@
                 document.getElementById('session_code').innerHTML = `Room #: ${result.room_code}`;
             }
         }
+        
+        window.addEventListener('DOMContentLoaded', async () => {
+            renderRoom();
+            fetchAndRenderParticipants();
+            setInterval(fetchAndRenderParticipants, 2000);
 
-        async function redirect(){
-            getStatus();
-        }
+            isServer = await getStatus();
 
-        getStatus();
-        renderRoom();
-        fetchAndRenderParticipants();
-        setInterval(fetchAndRenderParticipants, 2000);
+            if(isServer){
+                document.querySelector('.participant-form').style.display = 'none';
 
-        document.getElementById('player').addEventListener('click', async () => {
-            const name = document.getElementById('participantName').value.trim();
-            const collegeDropdown = document.getElementById('college');
-            const college = collegeDropdown.options[collegeDropdown.selectedIndex].value;
-            const attribute = document.getElementById('attributes').value.trim();
+                document.getElementById('master').addEventListener('click', async () => {
+                    try {
+                        const response = await fetch('http://192.168.0.87:5000/start-matching', { method: 'POST' });
+                        const result = await response.json();
 
-            if (!name) {
-                alert("Please enter your name.");
-                return;
-            }
-            if(!college) {
-                alert("Please select your college.");
-                return;
-            }
-            if (!attribute) {
-                alert("Please enter your skills.");
-                return;
-            }
-
-            try {
-                const response = await fetch('http://192.168.0.87:5000/submit-user-details', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, college, attribute })
+                        if (result.success) {
+                            alert("Quiz has started.");
+                        }
+                    } catch (error) {
+                        console.error("Error starting match:", error);
+                    }
                 });
+            } else {
+                setInterval(async () => {
+                    try {
+                        const res = await fetch('http://192.168.0.87:5000/check-matching');
+                        const data = await res.json();
+                        if (data.started) {
+                            window.location.href = "./Quiz.html";
+                        }
+                    } catch (err) {
+                        console.error("Polling error:", err);
+                    }
+                }, 2000);
+                document.getElementById('player').addEventListener('click', async () => {
+                    const name = document.getElementById('participantName').value.trim();
+                    const collegeDropdown = document.getElementById('college');
+                    const college = collegeDropdown.options[collegeDropdown.selectedIndex].value;
+                    const attribute = document.getElementById('attributes').value.trim();
 
-                const result = await response.json();
+                    if (!name || !college || !attribute) {
+                        alert("Please fill out all fields.");
+                        return;
+                    }
 
-                if (result.success) {
-                    alert("Details submitted successfully!");
-                    // Optionally clear inputs here:
-                    document.getElementById('participantName').value = '';
-                    document.getElementById('attributes').value = '';
-                    collegeDropdown.selectedIndex = 0;
-                }
-            } catch (error) {
-                console.error("Error submitting user details:", error);
-                alert("Error submitting details, please try again.");
-            }
+                    try {
+                        const response = await fetch('http://192.168.0.87:5000/submit-user-details', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name, college, attribute })
+                        });
 
-            const response = await fetch('http://192.168.0.87:5000/');
-            const result = await response.json();
+                        const result = await response.json();
 
-            console.log(result);
-
-            if (result.success) {
-                document.getElementById('session_code').innerHTML = `Room #: ${result.session_code}`;
-            }
-            
-            document.getElementById('start').onclick = () => {
-                window.location.href = "./Match.html";
+                        if (result.success) {
+                            alert("Details submitted successfully!");
+                            document.getElementById('participantName').value = '';
+                            document.getElementById('attributes').value = '';
+                            collegeDropdown.selectedIndex = 0;
+                        }
+                    } catch (error) {
+                        console.error("Error submitting user details:", error);
+                        alert("Error submitting details, please try again.");
+                    }
+                });
             }
         });
+
     </script>
 </body>
 
