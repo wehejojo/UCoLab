@@ -10,7 +10,7 @@ CORS(app=app)
 DB = 'answers.json'
 QUESTIONS = 'questions.json'
 SERVER_IP = '192.168.0.87' 
-SERVER_IP = '192.168.0.147'
+# SERVER_IP = '192.168.0.147'
 
 def generateRandomSessionCode(length: int) -> str:
     characters: str = string.ascii_letters.upper() + string.digits

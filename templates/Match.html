@@ -110,9 +110,11 @@
             if (isServer) {
                 document.querySelector('.Start').id = "master";
                 document.querySelector('.Start').innerHTML = 'Start Matching';
+                return true;
             } else {
                 document.querySelector('.Start').id = "player";
                 document.querySelector('.Start').innerHTML = 'Lock In';
+                return false;
             }
         }
 
@@ -123,6 +125,10 @@
             if (result.success) {
                 document.getElementById('session_code').innerHTML = `Room #: ${result.room_code}`;
             }
+        }
+
+        async function redirect(){
+            getStatus();
         }
 
         getStatus();
