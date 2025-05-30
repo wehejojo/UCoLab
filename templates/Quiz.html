@@ -15,7 +15,7 @@
 
 <body>
     <div class="top-bar">
-        <h1>Room #: I124Q</h1>
+        <h1 id="session_code">Room #: </h1>
     </div>
 
     <div id="quiz-container">
@@ -193,6 +193,16 @@
             }
         }
 
+        async function renderRoom(){
+            const response = await fetch('http://192.168.0.87:5000/room_code');
+            const result = await response.json();
+
+            if (result.success) {
+                document.getElementById('session_code').innerHTML = `Room #: ${result.room_code}`;
+            }
+        }
+
+        renderRoom();
         window.onload = () => loadQuestion(currentIndex);
     </script>
 </body>

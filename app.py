@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, render_template
 from flask_cors import CORS
 
 import string, random, secrets, json, os
@@ -9,7 +9,8 @@ CORS(app=app)
 
 DB = 'answers.json'
 QUESTIONS = 'questions.json'
-SERVER_IP = '192.168.0.226'
+SERVER_IP = '192.168.0.87' 
+SERVER_IP = '192.168.0.147'
 
 def generateRandomSessionCode(length: int) -> str:
     characters: str = string.ascii_letters.upper() + string.digits
@@ -37,10 +38,13 @@ def assign_user():
 
 @app.route('/')
 def index():
-    return jsonify({
-        "session_code": SESSION_CODE,
-        "secret-key" : app.secret_key
-    })
+    if userIsTheServer(request.remote_addr):
+        return jsonify({
+            "session_code": SESSION_CODE,
+            "secret-key" : app.secret_key,
+            "success": True
+        })
+    return jsonify({ "success": False })
 
 @app.route('/questions', methods=['GET'])
 def getQuestions():
@@ -57,7 +61,21 @@ def method_name():
         return jsonify({ 'success' : True, 'redirect_url' : '/room' })
     else:
         return jsonify({ 'success' : False, 'error' : "Invalid Code" })
-    
+
+@app.route('/status')
+def getStatus():
+    if userIsTheServer(request.remote_addr):
+        return jsonify({ "success": True, "is_server": True })
+    else:
+        return jsonify({ "success": True, "is_server": False })
+
+@app.route('/room_code')
+def getRoomCode():
+    return jsonify({
+        "room_code": SESSION_CODE,
+        "success": True
+    })
+
 @app.route('/submit-user-details', methods=['POST'])
 def submitUserDetails():
     data = request.get_json()
@@ -78,7 +96,7 @@ def submitUserDetails():
     db[user_id]["attribute"] = attribute
 
     save_json_file(DB, db)
-    return jsonify({ "sucess" : True })
+    return jsonify({ "sucess" : True, "data": db })
 
 
 @app.route('/submit-answer', methods=['POST'])
@@ -113,6 +131,12 @@ def returnParticipantCount():
         "participants" : db
     })
 
+@app.route('/quiz-redirect')
+def quizRedirect():
+    if userIsTheServer(request.remote_addr):
+        return render_template('quiz.html', session_code=SESSION_CODE)
+    else:
+        return jsonify({ "success": False, "error": "Unauthorized access" }), 403
 
 if __name__ == "__main__":
     app.run(

@@ -1,72 +1,79 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <link href="/static/main.css" rel="stylesheet" />
     <title>UCoLab Matching</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="matching-container">
-        <h1>Choose a Matching Mode</h1>
+      <h1>Choose a Matching Mode</h1>
 
-        <div class="query-container">
+      <div class="query-container">
+        <div class="type-container">
+          <div class="type-label">
+            <h2>
+              Join with a <br />
+              Code
+            </h2>
+          </div>
+          <div class="type-detail">
+            <p>
+              Real-time matchmaking for classes, hackathons, or incubator
+              events.
+            </p>
+          </div>
 
-            <div class="type-container">
-                <div class="type-label">
-                    <h2>Join with a <br> Code</h2>
-                </div>
-                <div class="type-detail">
-                    <p>Real-time matchmaking for classes, hackathons, or incubator events.</p>
-                </div>
-
-                <div class="code-entry">
-                    <div class="code-submit">
-                        <input type="text" id="code" placeholder="Enter Code" />
-                        <input type="submit" value="Join Room ->" id="codeSubmit" />
-                    </div>
-                </div>
-
+          <div class="code-entry">
+            <div class="code-submit">
+              <input type="text" id="code" placeholder="Enter Code" />
+              <input type="submit" value="Join Room ->" id="codeSubmit" />
             </div>
-
-            </div>
+          </div>
         </div>
+        <div class="type-container">
+          <div class="type-label">
+            <h2>Explore <br />Open-Matching</h2>
+          </div>
+          <div class="type-detail">
+            <p>
+              Asynchronous, algorithmic matching for users not in a live
+              session.
+            </p>
+          </div>
+          <div class="random-submit">
+            <input
+              type="submit"
+              value="Start Smart Quiz ->"
+              id="randomSubmit"
+            />
+          </div>
+        </div>
+      </div>
     </div>
-            <div class="type-container">
-                <div class="type-label">
-                    <h2>Explore <br>Open-Matching</h2>
-                </div>
-                <div class="type-detail">
-                    <p>Asynchronous, algorithmic matching for users not in a live session.</p>
-                </div>
-                <div class="random-submit">
-                    <input type="submit" value="Start Smart Quiz ->" id="randomSubmit" />
-                </div>
+
     <script>
-        const submitButton = document.getElementById('codeSubmit');
+      const submitButton = document.getElementById("codeSubmit");
 
+      submitButton.onclick = async () => {
+        const codeInput = document.getElementById("code").value;
 
-        submitButton.onclick = async () => {
-            const codeInput = document.getElementById('code').value;
+        const response = await fetch("http://192.168.0.87:5000/submit-code", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ code: codeInput }),
+        });
 
-            const response = await fetch('http://192.168.0.226:5000/submit-code', {
-                method : 'POST',
-                headers : {
-                    'Content-Type': 'application/json'
-                },
-                body : JSON.stringify({ code : codeInput })
-            });
+        const result = await response.json();
 
-            const result = await response.json();
-
-            if (result.success) {
-                window.location.href = "./Match.html";
-            } else {
-                window.alert("Wrong Session Code!!!");
-            }
-        };
-
+        if (result.success) {
+          window.location.href = "./Match.html";
+        } else {
+          window.alert("Wrong Session Code!!!");
+        }
+      };
     </script>
-</body>
-
+  </body>
 </html>

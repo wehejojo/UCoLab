@@ -11,26 +11,23 @@
 <body>
     <div>
         <div class="top-bar">
-            <h1>Room #: I124Q</h1>
+            <h1 id="session_code">Room #: </h1>
         </div>
         <div class="details">
             <div class="participants">
                 <div class="participant-header">
                     <h2>Participants</h2>
-                    <p>x users joined</p>
+                    <p>0 users joined</p>
                 </div>
 
-                <div class="users">
-                    <div class="player">
-                        <div class="pfp"></div>
-                        <p>Johann Liwag</p>
-                    </div>
+                <div class="users" id="users">
+
                 </div>
             </div>
             <div class="participant-form">
                 <h1>Details</h1>
                 <p>Enter your name</p>
-                <input type="text" id="participantName" placeholder="Your Name" />
+                <input type="text" id="participantName" placeholder="Your Name" required>
                 <p>What College are you part of?</p>
                 <select name="college" id="college">
                     <option value="CITCS">College of Information Technology and Computer Science</option>
@@ -44,7 +41,7 @@
                     <option value="CTE">College of Teacher Education</option>
                 </select>
                 <p>What are your skills</p>
-                <input type="text" placeholder="Search Skills" id="attributes">
+                <input type="text" placeholder="Search Skills" id="attributes" required>
             </div>
         </div>
         <div class="bottom-bar">
@@ -52,51 +49,140 @@
                 <p>Waiting for host to start matchmaking...</p>
             </div>
             <div class="bottom-button">
-                <button class="Start" id="lock-in">Start Matchmaking</button>
+                <button class="Start" id="player">Lock In</button>
             </div>
         </div>
     </div>
     <script>
-        const lockInButton = document.getElementById('lock-in');
+        async function fetchAndRenderParticipants() {
+            try {
+                const response = await fetch('http://192.168.0.87:5000/show-participants');
+                if (!response.ok) {
+                    console.error('Failed to fetch participants:', response.status);
+                    return;
+                }
+                const result = await response.json();
 
-        lockInButton.onclick = async () => {
-            const name = document.getElementById('participantName').value;
-            const attribute = document.getElementById('attributes').value;
-            const dropdown = document.getElementById('college');
-            const college = dropdown.options[dropdown.selectedIndex].text;
+                const participants = result.participants || {};
+                const participantContainer = document.getElementById('users');
 
-            const response = await fetch('http://192.168.0.226:5000/submit-user-details', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: name, college: college, attribute: attribute })
-            });
+                if (!participantContainer) {
+                    console.error('No container element with id "users" found');
+                    return;
+                }
+
+                // Clear previous participants
+                participantContainer.innerHTML = '';
+
+                // Render each participant
+                Object.values(participants).forEach(participant => {
+                    const div = document.createElement('div');
+                    div.classList.add('player');
+                    div.innerHTML = `
+                        <div class="pfp"></div>
+                        <p>${participant.name}</p>
+                    `;
+                    participantContainer.appendChild(div);
+                });
+
+                // Update participant count in header
+                const headerCount = document.querySelector('.participant-header p');
+                    if (headerCount) {
+                        headerCount.textContent = `${Object.keys(participants).length} users joined`;
+                }
+
+            } catch (error) {
+                console.error('Error fetching participants:', error);
+            }
+        }
+
+        async function getStatus(){
+            const response = await fetch('http://192.168.0.87:5000/status');
+
+            if (!response.ok) {
+                console.error('Failed to fetch status:', response.status);
+                return;
+            }
 
             const result = await response.json();
+            const isServer = result.is_server;
+
+            if (isServer) {
+                document.querySelector('.Start').id = "master";
+                document.querySelector('.Start').innerHTML = 'Start Matching';
+            } else {
+                document.querySelector('.Start').id = "player";
+                document.querySelector('.Start').innerHTML = 'Lock In';
+            }
+        }
+
+        async function renderRoom(){
+            const response = await fetch('http://192.168.0.87:5000/room_code');
+            const result = await response.json();
+
+            if (result.success) {
+                document.getElementById('session_code').innerHTML = `Room #: ${result.room_code}`;
+            }
+        }
+
+        getStatus();
+        renderRoom();
+        fetchAndRenderParticipants();
+        setInterval(fetchAndRenderParticipants, 2000);
+
+        document.getElementById('player').addEventListener('click', async () => {
+            const name = document.getElementById('participantName').value.trim();
+            const collegeDropdown = document.getElementById('college');
+            const college = collegeDropdown.options[collegeDropdown.selectedIndex].value;
+            const attribute = document.getElementById('attributes').value.trim();
+
+            if (!name) {
+                alert("Please enter your name.");
+                return;
+            }
+            if(!college) {
+                alert("Please select your college.");
+                return;
+            }
+            if (!attribute) {
+                alert("Please enter your skills.");
+                return;
+            }
+
+            try {
+                const response = await fetch('http://192.168.0.87:5000/submit-user-details', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, college, attribute })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert("Details submitted successfully!");
+                    // Optionally clear inputs here:
+                    document.getElementById('participantName').value = '';
+                    document.getElementById('attributes').value = '';
+                    collegeDropdown.selectedIndex = 0;
+                }
+            } catch (error) {
+                console.error("Error submitting user details:", error);
+                alert("Error submitting details, please try again.");
+            }
+
+            const response = await fetch('http://192.168.0.87:5000/');
+            const result = await response.json();
+
             console.log(result);
 
             if (result.success) {
-                const response2 = await fetch('http://192.168.0.226:5000/show-participants');
-                const result2 = await response2.json();
-
-                const participants = result2.participants;
-
-                const participantContainer = document.getElementById('participants');
-                participantContainer.innerHTML = '';
-
-                Object.values(participants).forEach(participant => {
-                    const div = document.createElement('div');
-                    div.classList.add('users');
-                    div.innerHTML = `
-                        <div class="player">
-                            <div class="pfp"></div>
-                            <p>${participant.name}</p>
-                        </div>
-                    `;
-                    participantContainer.appendChild(div);
-                    console.log("moment")
-                });
+                document.getElementById('session_code').innerHTML = `Room #: ${result.session_code}`;
             }
-        };
+            
+            document.getElementById('start').onclick = () => {
+                window.location.href = "./Match.html";
+            }
+        });
     </script>
 </body>
 
