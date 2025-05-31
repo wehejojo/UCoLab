@@ -38,9 +38,9 @@ def save_json_file(filename, data):
 
 @app.before_request
 def assign_user():
-    session.permanent = True
     if 'user_id' not in session:
         session['user_id'] = f"user_{os.urandom(4).hex()}"
+        session.permanent = True  # Make the session persistent
 
 @app.route('/')
 def index():
@@ -134,7 +134,7 @@ def submitUserDetails():
     return jsonify({ "success" : True, "data": db })
 
 @app.route('/submit-answer', methods=['POST'])
-def submitAnswer():
+def submitAnswers():
     data = request.get_json()
     question_id = data.get('question_id')
     answer = data.get('answer')
@@ -154,7 +154,6 @@ def submitAnswer():
 
     db[user_id]["skills"][question_id] = answer
     save_json_file(DB, db)
-
     return jsonify({'success': True})
 
 @app.route('/start-matching', methods=['POST'])
