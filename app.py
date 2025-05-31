@@ -128,6 +128,7 @@ def submitUserDetails():
     db[user_id]["name"] = name
     db[user_id]["college"] = college
     db[user_id]["attribute"] = attribute
+    db[user_id]["skills"] = {}  # Initialize skills object
 
     save_json_file(DB, db)
     return jsonify({ "success" : True, "data": db })
@@ -150,7 +151,7 @@ def submitAnswer():
 
     if "skills" not in db[user_id]:
         db[user_id]["skills"] = {}
-    
+
     db[user_id]["skills"][question_id] = answer
     save_json_file(DB, db)
 

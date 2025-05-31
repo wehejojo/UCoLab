@@ -162,7 +162,7 @@
       let currentIndex = 0;
       let selectedAnswers = {};
 
-      function loadQuestion(index) {
+      async function loadQuestion(index) {
         const q = questions[index];
         document.getElementById("question-text").innerText = q.question;
         const optionsContainer = document.getElementById("options-container");
@@ -175,7 +175,7 @@
             div.classList.add("selected");
           }
           div.onclick = () => selectOption(div, q.id, choice);
-          div.innerHTML = `<h2>${choice}</h2><p>${choice}</p>`;
+          div.innerHTML = `<h2>${choice}</h2>`;
           optionsContainer.appendChild(div);
         });
 
@@ -206,6 +206,11 @@
 
           if (!response.ok) {
             throw new Error('Failed to submit answer');
+          }
+
+          const result = await response.json();
+          if (!result.success) {
+            throw new Error(result.error || 'Failed to submit answer');
           }
         } catch (error) {
           console.error("Error submitting answer:", error);
