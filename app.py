@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify, session, render_template
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
+from matchUsers import run_matching
 
 import string, random, secrets, json, os
 
@@ -66,14 +67,14 @@ def method_name():
     else:
         return jsonify({ 'success' : False, 'error' : "Invalid Code" })
 
-@app.route('/status')
+@app.route('/status', methods=['GET'])
 def getStatus():
     if userIsTheServer(request.remote_addr):
         return jsonify({ "success": True, "is_server": True })
     else:
         return jsonify({ "success": True, "is_server": False })
 
-@app.route('/room_code')
+@app.route('/room_code', methods=['GET'])
 def getRoomCode():
     return jsonify({
         "room_code": SESSION_CODE,
