@@ -6,7 +6,7 @@ import string, random, secrets, json, os
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
-CORS(app=app)
+CORS(app=app, supports_credentials=True)
 
 match_status = {
     "started": False
@@ -38,6 +38,7 @@ def save_json_file(filename, data):
 
 @app.before_request
 def assign_user():
+    session.permanent = True
     if 'user_id' not in session:
         session['user_id'] = f"user_{os.urandom(4).hex()}"
 
@@ -99,7 +100,6 @@ def match_users():
     groups = run_matching(users)
     return jsonify(groups)
 
-
 @app.route('/submit-code', methods=['POST'])
 def method_name():
     data = request.get_json()
@@ -130,7 +130,7 @@ def submitUserDetails():
     db[user_id]["attribute"] = attribute
 
     save_json_file(DB, db)
-    return jsonify({ "sucess" : True, "data": db })
+    return jsonify({ "success" : True, "data": db })
 
 @app.route('/submit-answer', methods=['POST'])
 def submitAnswer():
@@ -145,12 +145,12 @@ def submitAnswer():
         return jsonify({'error': 'Missing question_id or answer'}), 400
 
     db = load_json_file(DB)
-
     if user_id not in db:
-        db[user_id] = {}
+        return jsonify({'error': 'User details not found. Please submit user details first'}), 400
 
     if "skills" not in db[user_id]:
         db[user_id]["skills"] = {}
+    
     db[user_id]["skills"][question_id] = answer
     save_json_file(DB, db)
 
@@ -160,8 +160,6 @@ def submitAnswer():
 def start_matching():
     match_status["started"] = True
     return jsonify({"success": True})
-
-
 
 if __name__ == "__main__":
     app.run(

@@ -160,7 +160,7 @@
       ];
 
       let currentIndex = 0;
-      let selectedAnswers = [];
+      let selectedAnswers = {};
 
       function loadQuestion(index) {
         const q = questions[index];
@@ -171,7 +171,10 @@
         q.choices.forEach((choice) => {
           const div = document.createElement("div");
           div.className = "option";
-          div.onclick = () => selectOption(div);
+          if (selectedAnswers[q.id] === choice) {
+            div.classList.add("selected");
+          }
+          div.onclick = () => selectOption(div, q.id, choice);
           div.innerHTML = `<h2>${choice}</h2><p>${choice}</p>`;
           optionsContainer.appendChild(div);
         });
@@ -181,20 +184,42 @@
         } / ${questions.length}`;
       }
 
-      function selectOption(clickedDiv) {
+      async function selectOption(clickedDiv, questionId, answer) {
         document.querySelectorAll(".option").forEach((div) => {
           div.classList.remove("selected");
         });
         clickedDiv.classList.add("selected");
+        selectedAnswers[questionId] = answer;
 
-        const answer = clickedDiv.querySelector("h2").innerText;
-        selectedAnswers[currentIndex] = {
-          question_id: questions[currentIndex].id,
-          answer: answer,
-        };
+        try {
+          const response = await fetch("http://192.168.0.87:5000/submit-answer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              question_id: questionId,
+              answer: answer
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to submit answer');
+          }
+        } catch (error) {
+          console.error("Error submitting answer:", error);
+          alert("Failed to submit answer. Please try again.");
+        }
       }
 
       function nextQuestion() {
+        const currentQuestionId = questions[currentIndex].id;
+        if (!selectedAnswers[currentQuestionId]) {
+          alert("Please select an answer before proceeding.");
+          return;
+        }
+
         if (currentIndex < questions.length - 1) {
           currentIndex++;
           loadQuestion(currentIndex);
@@ -203,22 +228,6 @@
           const results = document.getElementById("results-container");
           results.style.display = "block";
           results.className = "results";
-
-          // Send answers to backend
-          fetch("http://192.168.0.87:5000/submit-answers", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ answers: selectedAnswers }),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log("Answer submission result:", data);
-            })
-            .catch((err) => {
-              console.error("Error submitting answers:", err);
-            });
 
           setTimeout(() => {
             document.getElementById("loading-message").style.display = "none";
