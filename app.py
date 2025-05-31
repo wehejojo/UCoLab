@@ -56,17 +56,6 @@ def getQuestions():
     questions = load_json_file(QUESTIONS)
     return jsonify(questions)
 
-
-@app.route('/submit-code', methods=['POST'])
-def method_name():
-    data = request.get_json()
-    code = data.get('code')
-
-    if code == SESSION_CODE:
-        return jsonify({ 'success' : True, 'redirect_url' : '/room' })
-    else:
-        return jsonify({ 'success' : False, 'error' : "Invalid Code" })
-
 @app.route('/status', methods=['GET'])
 def getStatus():
     if userIsTheServer(request.remote_addr):
@@ -80,6 +69,46 @@ def getRoomCode():
         "room_code": SESSION_CODE,
         "success": True
     })
+
+@app.route('/show-participants')
+def returnParticipantCount():
+    db = load_json_file(DB)
+    return jsonify({
+        "participant-count" : len(db),
+        "participants" : db
+    })
+
+@app.route('/quiz-redirect' , methods=['GET'])
+def quizRedirect():
+    global quiz_started
+    if userIsTheServer(request.remote_addr):
+        quiz_started = True
+        return jsonify({"success": True, "message": "Quiz started."})
+    else:
+        return jsonify({"success": quiz_started})
+
+@app.route('/check-matching', methods=['GET'])
+def check_matching():
+    return jsonify({"started": match_status["started"]})
+
+@app.route('/match', methods=['GET'])
+def match_users():
+    with open('json/users.json', 'r') as f:
+        users = json.load(f)
+
+    groups = run_matching(users)
+    return jsonify(groups)
+
+
+@app.route('/submit-code', methods=['POST'])
+def method_name():
+    data = request.get_json()
+    code = data.get('code')
+
+    if code == SESSION_CODE:
+        return jsonify({ 'success' : True, 'redirect_url' : '/room' })
+    else:
+        return jsonify({ 'success' : False, 'error' : "Invalid Code" })
 
 @app.route('/submit-user-details', methods=['POST'])
 def submitUserDetails():
@@ -102,7 +131,6 @@ def submitUserDetails():
 
     save_json_file(DB, db)
     return jsonify({ "sucess" : True, "data": db })
-
 
 @app.route('/submit-answer', methods=['POST'])
 def submitAnswer():
@@ -128,31 +156,12 @@ def submitAnswer():
 
     return jsonify({'success': True})
 
-@app.route('/show-participants')
-def returnParticipantCount():
-    db = load_json_file(DB)
-    return jsonify({
-        "participant-count" : len(db),
-        "participants" : db
-    })
-
-@app.route('/quiz-redirect')
-def quizRedirect():
-    global quiz_started
-    if userIsTheServer(request.remote_addr):
-        quiz_started = True
-        return jsonify({"success": True, "message": "Quiz started."})
-    else:
-        return jsonify({"success": quiz_started})
-
 @app.route('/start-matching', methods=['POST'])
 def start_matching():
     match_status["started"] = True
     return jsonify({"success": True})
 
-@app.route('/check-matching')
-def check_matching():
-    return jsonify({"started": match_status["started"]})
+
 
 if __name__ == "__main__":
     app.run(

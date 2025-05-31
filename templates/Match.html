@@ -151,17 +151,15 @@
                     }
                 });
             } else {
-                setInterval(async () => {
-                    try {
-                        const res = await fetch('http://192.168.0.87:5000/check-matching');
-                        const data = await res.json();
-                        if (data.started) {
-                            window.location.href = "./Quiz.html";
-                        }
-                    } catch (err) {
-                        console.error("Polling error:", err);
+                try {
+                    const res = await fetch('http://192.168.0.87:5000/check-matching');
+                    const data = await res.json();
+                    if (data.started) {
+                        window.location.href = "./Quiz.html";
                     }
-                }, 2000);
+                } catch (err) {
+                    console.error("Polling error:", err);
+                }
                 document.getElementById('player').addEventListener('click', async () => {
                     const name = document.getElementById('participantName').value.trim();
                     const collegeDropdown = document.getElementById('college');
