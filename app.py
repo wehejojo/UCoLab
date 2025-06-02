@@ -12,7 +12,7 @@ CORS(
     app,
     supports_credentials=True,
     origins=["http://192.168.0.87:5500"]
-)
+) 
 
 match_status = {
     "started": False
@@ -142,39 +142,13 @@ def submitUserDetails():
     save_json_file(DB, db)
     return jsonify({ "success" : True, "data": db })
 
-# @app.route('/submit-answer', methods=['POST'])
-# def submitAnswers():
-#     data = request.get_json()
-#     print("Cookies:", request.cookies)
-#     print("Session contents:", dict(session))
-
-#     question_id = data.get('question_id')
-#     answer = data.get('answer')
-#     user_id = session.get('user_id')
-#     print(user_id)
-
-#     if not user_id:
-#         return jsonify({'error': 'User session not found'}), 400
-#     if not question_id or answer is None:
-#         return jsonify({'error': 'Missing question_id or answer'}), 400
-
-#     db = load_json_file(DB)
-#     if user_id not in db: 
-#         return jsonify({'error': 'User details not found. Please submit user details first'}), 400
-
-#     if "skills" not in db[user_id]:
-#         db[user_id]["skills"] = {}
-
-#     db[user_id]["skills"][question_id] = answer
-#     save_json_file(DB, db)
-#     return jsonify({'success': True})
-
 @app.route('/submit-answer', methods=['POST'])
 def submit_answer():
     data = request.json
     user_id = session.get('user_id')
     question_id = data.get('question_id')
     answer = data.get('answer')
+    print("Received answer from user:", session.get('user_id'))
     
     if not user_id or not question_id or not answer:
         return jsonify({'success': False, 'error': 'Invalid data'}), 400
@@ -191,35 +165,6 @@ def submit_answer():
     save_json_file(DB, db)
     print("Saved:", db[user_id])  # Optional debug
     return jsonify({'success': True})
-
-
-@app.route('/update-skills', methods=['POST'])
-def update_skills():
-    user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({"success": False, "error": "No user ID in session"}), 400
-
-    data = request.get_json()
-    if not data or 'question_id' not in data or 'answer' not in data:
-        return jsonify({"success": False, "error": "Invalid data"}), 400
-
-    db = load_json_file(DB)
-
-    # Ensure the user exists in the DB
-    if user_id not in db:
-        db[user_id] = {"skills": {}}
-
-    # Ensure the "skills" key exists
-    if "skills" not in db[user_id]:
-        db[user_id]["skills"] = {}
-
-    # Update the skill
-    db[user_id]["skills"][data["question_id"]] = data["answer"]
-
-    save_json_file(DB, db)
-
-    return jsonify({"success": True})
-
 
 @app.route('/toggle-matching', methods=['POST'])
 def start_matching():
