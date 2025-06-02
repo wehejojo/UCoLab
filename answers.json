@@ -1,24 +1,10 @@
 {
-  "user_9740cfc7": {
-    "name": "joe",
+  "user_640bfb9f": {
+    "name": "HANS",
     "college": "CITCS",
-    "attribute": "programming",
+    "attribute": "HAROLD",
     "skills": {
-      "q1": "Hacker",
-      "q2": "Tech & Software",
-      "q3": "Flexible and go-with-the-flow",
-      "q4": "Solving hard problems",
-      "q5": "Listen and support others' contributions"
+      "q1": "Explorer"
     }
-  },
-  "user_0c1c94e8": {
-    "name": "TEST",
-    "college": "CITCS",
-    "attribute": "TEST"
-  },
-  "user_3c2e6e8c": {
-    "name": "wackfuck",
-    "college": "CITCS",
-    "attribute": "Death"
   }
 }

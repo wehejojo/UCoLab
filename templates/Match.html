@@ -140,7 +140,7 @@
 
                 document.getElementById('master').addEventListener('click', async () => {
                     try {
-                        const response = await fetch('http://192.168.0.87:5000/start-matching', { method: 'POST' });
+                        const response = await fetch('http://192.168.0.87:5000/toggle-matching', { method: 'POST' });
                         const result = await response.json();
 
                         if (result.success) {
@@ -151,15 +151,17 @@
                     }
                 });
             } else {
-                try {
-                    const res = await fetch('http://192.168.0.87:5000/check-matching');
-                    const data = await res.json();
-                    if (data.started) {
-                        window.location.href = "./Quiz.html";
+                setInterval(async () => {
+                    try {
+                        const res = await fetch('http://192.168.0.87:5000/check-matching');
+                        const data = await res.json();
+                        if (data.started) {
+                            window.location.href = "./Quiz.html";
+                        }
+                    } catch (err) {
+                        console.error("Polling error:", err);
                     }
-                } catch (err) {
-                    console.error("Polling error:", err);
-                }
+                }, 2000);
                 document.getElementById('player').addEventListener('click', async () => {
                     const name = document.getElementById('participantName').value.trim();
                     const collegeDropdown = document.getElementById('college');
@@ -174,6 +176,7 @@
                     try {
                         const response = await fetch('http://192.168.0.87:5000/submit-user-details', {
                             method: 'POST',
+                            credentials: "include",  // This is important!
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ name, college, attribute })
                         });

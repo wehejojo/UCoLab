@@ -160,9 +160,9 @@
       ];
 
       let currentIndex = 0;
-      let selectedAnswers = [];
+      let selectedAnswers = {};
 
-      function loadQuestion(index) {
+      async function loadQuestion(index) {
         const q = questions[index];
         document.getElementById("question-text").innerText = q.question;
         const optionsContainer = document.getElementById("options-container");
@@ -171,8 +171,11 @@
         q.choices.forEach((choice) => {
           const div = document.createElement("div");
           div.className = "option";
-          div.onclick = () => selectOption(div);
-          div.innerHTML = `<h2>${choice}</h2><p>${choice}</p>`;
+          if (selectedAnswers[q.id] === choice) {
+            div.classList.add("selected");
+          }
+          div.onclick = () => selectOption(div, q.id, choice);
+          div.innerHTML = `<h2>${choice}</h2>`;
           optionsContainer.appendChild(div);
         });
 
@@ -181,20 +184,45 @@
         } / ${questions.length}`;
       }
 
-      function selectOption(clickedDiv) {
+      async function selectOption(clickedDiv, questionId, answer) {
         document.querySelectorAll(".option").forEach((div) => {
           div.classList.remove("selected");
         });
         clickedDiv.classList.add("selected");
-
-        const answer = clickedDiv.querySelector("h2").innerText;
-        selectedAnswers[currentIndex] = {
-          question_id: questions[currentIndex].id,
-          answer: answer,
-        };
+        selectedAnswers[questionId] = answer;
       }
+      let userId = null; // Store globally
 
-      function nextQuestion() {
+      async function nextQuestion() {
+        const currentQuestionId = questions[currentIndex].id;
+        const answer = selectedAnswers[currentQuestionId];
+
+        if (!answer) {
+          alert("Please select an answer before proceeding.");
+          return;
+        }
+
+        try {
+          // Send to new endpoint
+          const response = await fetch("http://192.168.0.87:5000/submit-answer", {
+
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              body: JSON.stringify({ question_id: currentQuestionId, answer }),
+            }
+          );
+
+          const result = await response.json();
+          if (!result.success) {
+            throw new Error(result.error || "Failed to update skills");
+          }
+        } catch (error) {
+          console.error("Error submitting answer:", error);
+          alert("Failed to submit answer. Please try again.");
+          return;
+        }
+
         if (currentIndex < questions.length - 1) {
           currentIndex++;
           loadQuestion(currentIndex);
@@ -204,26 +232,26 @@
           results.style.display = "block";
           results.className = "results";
 
-          // Send answers to backend
-          fetch("http://192.168.0.87:5000/submit-answers", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ answers: selectedAnswers }),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log("Answer submission result:", data);
-            })
-            .catch((err) => {
-              console.error("Error submitting answers:", err);
-            });
-
           setTimeout(() => {
             document.getElementById("loading-message").style.display = "none";
             document.getElementById("final-cards").style.display = "block";
           }, 2500);
+        }
+      }
+
+      async function fetchUserId() {
+        try {
+          const response = await fetch("http://192.168.0.87:5000/get-user-id", {
+            credentials: "include",
+          });
+          if (!response.ok) throw new Error("Failed to fetch user ID");
+          const data = await response.json();
+          console.log("User ID:", data.user_id);
+          // You can now store this user_id in a global variable or use it wherever you want
+          return data.user_id;
+        } catch (error) {
+          console.error("Error fetching user ID:", error);
+          return null;
         }
       }
 

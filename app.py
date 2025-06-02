@@ -1,12 +1,18 @@
+import uuid
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from matchUsers import run_matching
+from flask import render_template
 
 import string, random, secrets, json, os
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
-CORS(app=app)
+CORS(
+    app,
+    supports_credentials=True,
+    origins=["http://192.168.0.87:5500"]
+)
 
 match_status = {
     "started": False
@@ -40,6 +46,7 @@ def save_json_file(filename, data):
 def assign_user():
     if 'user_id' not in session:
         session['user_id'] = f"user_{os.urandom(4).hex()}"
+        session.permanent = True
 
 @app.route('/')
 def index():
@@ -81,9 +88,10 @@ def returnParticipantCount():
 @app.route('/quiz-redirect' , methods=['GET'])
 def quizRedirect():
     global quiz_started
+    user_id = session.get('user_id')
     if userIsTheServer(request.remote_addr):
         quiz_started = True
-        return jsonify({"success": True, "message": "Quiz started."})
+        return jsonify({"success": True, "message": "Quiz started.", "user_id": user_id})
     else:
         return jsonify({"success": quiz_started})
 
@@ -98,7 +106,6 @@ def match_users():
 
     groups = run_matching(users)
     return jsonify(groups)
-
 
 @app.route('/submit-code', methods=['POST'])
 def method_name():
@@ -117,54 +124,111 @@ def submitUserDetails():
     college = data.get('college')
     attribute = data.get('attribute')
     user_id = session.get('user_id')
-
-    if not user_id:
-        return jsonify({'error': 'User session not found'}), 400
+    print(user_id)
+    
+    session['user_id'] = user_id 
     
     db = load_json_file(DB)
     if user_id not in db:
         db[user_id] = {}
+        
+    print(user_id)
     
     db[user_id]["name"] = name
     db[user_id]["college"] = college
     db[user_id]["attribute"] = attribute
+    db[user_id]["skills"] = {}  # Initialize skills object
 
     save_json_file(DB, db)
-    return jsonify({ "sucess" : True, "data": db })
+    return jsonify({ "success" : True, "data": db })
+
+# @app.route('/submit-answer', methods=['POST'])
+# def submitAnswers():
+#     data = request.get_json()
+#     print("Cookies:", request.cookies)
+#     print("Session contents:", dict(session))
+
+#     question_id = data.get('question_id')
+#     answer = data.get('answer')
+#     user_id = session.get('user_id')
+#     print(user_id)
+
+#     if not user_id:
+#         return jsonify({'error': 'User session not found'}), 400
+#     if not question_id or answer is None:
+#         return jsonify({'error': 'Missing question_id or answer'}), 400
+
+#     db = load_json_file(DB)
+#     if user_id not in db: 
+#         return jsonify({'error': 'User details not found. Please submit user details first'}), 400
+
+#     if "skills" not in db[user_id]:
+#         db[user_id]["skills"] = {}
+
+#     db[user_id]["skills"][question_id] = answer
+#     save_json_file(DB, db)
+#     return jsonify({'success': True})
 
 @app.route('/submit-answer', methods=['POST'])
-def submitAnswer():
-    data = request.get_json()
+def submit_answer():
+    data = request.json
+    user_id = session.get('user_id')
     question_id = data.get('question_id')
     answer = data.get('answer')
-    user_id = session.get('user_id')
-
-    if not user_id:
-        return jsonify({'error': 'User session not found'}), 400
-    if not question_id or answer is None:
-        return jsonify({'error': 'Missing question_id or answer'}), 400
+    
+    if not user_id or not question_id or not answer:
+        return jsonify({'success': False, 'error': 'Invalid data'}), 400
 
     db = load_json_file(DB)
 
     if user_id not in db:
-        db[user_id] = {}
+        db[user_id] = {"skills": {}}
 
     if "skills" not in db[user_id]:
         db[user_id]["skills"] = {}
+
     db[user_id]["skills"][question_id] = answer
     save_json_file(DB, db)
-
+    print("Saved:", db[user_id])  # Optional debug
     return jsonify({'success': True})
 
-@app.route('/start-matching', methods=['POST'])
-def start_matching():
-    match_status["started"] = True
+
+@app.route('/update-skills', methods=['POST'])
+def update_skills():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"success": False, "error": "No user ID in session"}), 400
+
+    data = request.get_json()
+    if not data or 'question_id' not in data or 'answer' not in data:
+        return jsonify({"success": False, "error": "Invalid data"}), 400
+
+    db = load_json_file(DB)
+
+    # Ensure the user exists in the DB
+    if user_id not in db:
+        db[user_id] = {"skills": {}}
+
+    # Ensure the "skills" key exists
+    if "skills" not in db[user_id]:
+        db[user_id]["skills"] = {}
+
+    # Update the skill
+    db[user_id]["skills"][data["question_id"]] = data["answer"]
+
+    save_json_file(DB, db)
+
     return jsonify({"success": True})
 
 
+@app.route('/toggle-matching', methods=['POST'])
+def start_matching():
+    global match_status
+    match_status["started"] = not match_status["started"]
+    return jsonify({"success": True})
 
 if __name__ == "__main__":
     app.run(
         debug=True,
         host="0.0.0.0"
-    )
+    ) 
