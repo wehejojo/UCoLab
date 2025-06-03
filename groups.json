@@ -1,0 +1,308 @@
+{
+  "group 1": {
+    "members": {
+      "user_005": {
+        "name": "Eva",
+        "skills": [
+          "Hustler",
+          "Sustainability",
+          "Structured and planned",
+          "Seeing tangible progress",
+          "I lead and organize ideas"
+        ]
+      },
+      "user_012": {
+        "name": "Leo",
+        "skills": [
+          "Explorer",
+          "Sustainability",
+          "I adapt to the team's rhythm",
+          "Brainstorming new ideas",
+          "I bring creative, out-of-the-box ideas"
+        ]
+      },
+      "user_61fe29b4": {
+        "name": "joe",
+        "skills": [
+          "Hacker",
+          "Sustainability",
+          "Structured and planned",
+          "Seeing tangible progress",
+          "I analyze and critique proposals"
+        ]
+      }
+    }
+  },
+  "group 2": {
+    "members": {
+      "user_004": {
+        "name": "David",
+        "skills": [
+          "Explorer",
+          "Education",
+          "I adapt to the team's rhythm",
+          "Collaborating with others",
+          "Listen and support others' contributions"
+        ]
+      },
+      "user_007": {
+        "name": "Grace",
+        "skills": [
+          "Hipster",
+          "Social Impact & Community",
+          "Flexible and go-with-the-flow",
+          "Collaborating with others",
+          "Listen and support others' contributions"
+        ]
+      },
+      "user_878d3bc7": {
+        "name": "11111111111111111",
+        "skills": [
+          "Hustler",
+          "Health & Wellness",
+          "I adapt to the team's rhythm",
+          "Collaborating with others",
+          "Listen and support others' contributions"
+        ]
+      }
+    }
+  },
+  "group 3": {
+    "members": {
+      "user_011": {
+        "name": "Kara",
+        "skills": [
+          "Hipster",
+          "Arts & Culture",
+          "Flexible and go-with-the-flow",
+          "Collaborating with others",
+          "Listen and support others' contributions"
+        ]
+      },
+      "user_8f51a178": {
+        "name": "HANSUNGLEE",
+        "skills": [
+          "Hustler",
+          "Health & Wellness",
+          "Flexible and go-with-the-flow",
+          "Collaborating with others",
+          "I bring creative, out-of-the-box ideas"
+        ]
+      },
+      "user_aae06222": {
+        "name": "Hansong",
+        "skills": [
+          "Hacker",
+          "Education",
+          "Flexible and go-with-the-flow",
+          "Collaborating with others",
+          "I analyze and critique proposals"
+        ]
+      }
+    }
+  },
+  "group 4": {
+    "members": {
+      "user_002": {
+        "name": "Bob",
+        "skills": [
+          "Hustler",
+          "Business & Finance",
+          "Flexible and go-with-the-flow",
+          "Seeing tangible progress",
+          "I analyze and critique proposals"
+        ]
+      },
+      "user_015": {
+        "name": "Olivia",
+        "skills": [
+          "Hipster",
+          "Arts & Culture",
+          "Flexible and go-with-the-flow",
+          "Collaborating with others",
+          "Listen and support others' contributions"
+        ]
+      },
+      "user_a4af892b": {
+        "name": "www",
+        "skills": [
+          "Hacker",
+          "Health & Wellness",
+          "Flexible and go-with-the-flow",
+          "Seeing tangible progress",
+          "I analyze and critique proposals"
+        ]
+      }
+    }
+  },
+  "group 5": {
+    "members": {
+      "user_003": {
+        "name": "Cara",
+        "skills": [
+          "Hipster",
+          "Arts & Culture",
+          "Fast Paced and action-oriented",
+          "Brainstorming new ideas",
+          "I bring creative, out-of-the-box ideas"
+        ]
+      },
+      "user_006": {
+        "name": "Frank",
+        "skills": [
+          "Hacker",
+          "Health & Wellness",
+          "Fast Paced and action-oriented",
+          "Solving hard problems",
+          "I analyze and critique proposals"
+        ]
+      },
+      "user_010": {
+        "name": "Jack",
+        "skills": [
+          "Hustler",
+          "Tech & Software",
+          "Fast Paced and action-oriented",
+          "Solving hard problems",
+          "I analyze and critique proposals"
+        ]
+      }
+    }
+  },
+  "group 6": {
+    "members": {
+      "user_019": {
+        "name": "Sam",
+        "skills": [
+          "Hipster",
+          "Sustainability",
+          "Flexible and go-with-the-flow",
+          "Collaborating with others",
+          "Listen and support others' contributions"
+        ]
+      },
+      "user_9778fadc": {
+        "name": "joe",
+        "skills": [
+          "Hacker",
+          "Tech & Software",
+          "Flexible and go-with-the-flow",
+          "Solving hard problems",
+          "Listen and support others' contributions"
+        ]
+      },
+      "user_4836ef56": {
+        "name": "Wack",
+        "skills": [
+          "Hustler",
+          "Health & Wellness",
+          "Flexible and go-with-the-flow",
+          "Collaborating with others",
+          "I bring creative, out-of-the-box ideas"
+        ]
+      }
+    }
+  },
+  "group 7": {
+    "members": {
+      "user_008": {
+        "name": "Henry",
+        "skills": [
+          "Explorer",
+          "Open to Anything",
+          "I adapt to the team's rhythm",
+          "Brainstorming new ideas",
+          "I bring creative, out-of-the-box ideas"
+        ]
+      },
+      "user_014": {
+        "name": "Noah",
+        "skills": [
+          "Hustler",
+          "Health & Wellness",
+          "Fast Paced and action-oriented",
+          "Solving hard problems",
+          "I analyze and critique proposals"
+        ]
+      },
+      "user_20f35146": {
+        "name": "joey",
+        "skills": [
+          "Hacker",
+          "Education",
+          "I adapt to the team's rhythm",
+          "Brainstorming new ideas",
+          "I analyze and critique proposals"
+        ]
+      }
+    }
+  },
+  "group 8": {
+    "members": {
+      "user_001": {
+        "name": "Alice",
+        "skills": [
+          "Hacker",
+          "Tech & Software",
+          "Structured and planned",
+          "Solving hard problems",
+          "I lead and organize ideas"
+        ]
+      },
+      "user_016": {
+        "name": "Paul",
+        "skills": [
+          "Explorer",
+          "Education",
+          "I adapt to the team's rhythm",
+          "Brainstorming new ideas",
+          "I bring creative, out-of-the-box ideas"
+        ]
+      },
+      "user_0b97bcc9": {
+        "name": "HANSONG",
+        "skills": [
+          "Hustler",
+          "Tech & Software",
+          "Structured and planned",
+          "Collaborating with others",
+          "I bring creative, out-of-the-box ideas"
+        ]
+      }
+    }
+  },
+  "group 9": {
+    "members": {
+      "user_009": {
+        "name": "Isabel",
+        "skills": [
+          "Hacker",
+          "Education",
+          "Structured and planned",
+          "Seeing tangible progress",
+          "I lead and organize ideas"
+        ]
+      },
+      "user_020": {
+        "name": "Tina",
+        "skills": [
+          "Explorer",
+          "Open to Anything",
+          "I adapt to the team's rhythm",
+          "Brainstorming new ideas",
+          "I bring creative, out-of-the-box ideas"
+        ]
+      },
+      "user_82697843": {
+        "name": "aaa",
+        "skills": [
+          "Hustler",
+          "Business & Finance",
+          "Flexible and go-with-the-flow",
+          "Seeing tangible progress",
+          "I bring creative, out-of-the-box ideas"
+        ]
+      }
+    }
+  }
+}

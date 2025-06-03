@@ -8,17 +8,15 @@ import string, random, secrets, json, os
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 app.secret_key = secrets.token_hex(32)
-CORS(
-    app,
-    supports_credentials=True,
-    origins=["http://192.168.0.87:5500"]
-) 
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://192.168.0.87:5500"}})
+
 
 match_status = {
     "started": False
 }
 
 DB = 'answers.json'
+GROUPS = 'groups.json'
 QUESTIONS = 'questions.json'
 SERVER_IP = '192.168.0.87' 
 # SERVER_IP = '192.168.0.147'
@@ -39,8 +37,15 @@ def load_json_file(filename):
         return json.load(f)
 
 def save_json_file(filename, data):
+    if os.path.exists(filename):
+        with open(filename, 'r') as f:
+            existing = json.load(f)
+        if existing == data:
+            print("Data unchanged. Skipping write.")
+            return
     with open(filename, 'w') as f:
         json.dump(data, f, indent=2)
+
 
 @app.before_request
 def assign_user():
@@ -85,33 +90,35 @@ def returnParticipantCount():
         "participants" : db
     })
 
-@app.route('/quiz-redirect' , methods=['GET'])
-def quizRedirect():
-    global quiz_started
-    user_id = session.get('user_id')
-    if userIsTheServer(request.remote_addr):
-        quiz_started = True
-        return jsonify({"success": True, "message": "Quiz started.", "user_id": user_id})
-    else:
-        return jsonify({"success": quiz_started})
-
 @app.route('/check-matching', methods=['GET'])
 def check_matching():
     return jsonify({"started": match_status["started"]})
 
 @app.route('/match', methods=['GET'])
 def match_users():
-    with open('answers.json', 'r') as f:
-        users = json.load(f)
+    db = load_json_file(DB)
+    gps = load_json_file(GROUPS)
 
-    if users and len(users) >= 3 and all('q5' in user.get('skills', {}) for user in users.values()):
-        groups = run_matching(users)
+    if db and len(db) >= 3 and all('q5' in user.get('skills', {}) for user in db.values()):
+        groups = run_matching(db)
         if groups:
-            return jsonify(groups)
+            # Only overwrite if groups have changed
+            if groups != gps:
+                print("New group structure detected. Overwriting saved groups.")
+                save_json_file(GROUPS, groups)
+            else:
+                print("Groups unchanged. Skipping file write.")
+
+            return jsonify({
+                "success": True,
+                "groups": groups,
+                "userID": session.get('user_id')
+            }), 200
         else:
             return jsonify({'error': 'Unable to form any groups'}), 400
     else:
         return jsonify({'error': 'Not all users have completed'}), 400
+
 
 @app.route('/submit-code', methods=['POST'])
 def method_name():

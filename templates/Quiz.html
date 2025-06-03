@@ -160,14 +160,19 @@
       ];
 
       let currentIndex = parseInt(localStorage.getItem("currentIndex")) || 0;
-      let selectedAnswers = JSON.parse(localStorage.getItem("selectedAnswers")) || {};
+      let selectedAnswers =
+        JSON.parse(localStorage.getItem("selectedAnswers")) || {};
 
       function saveProgress() {
         localStorage.setItem("currentIndex", currentIndex);
-        localStorage.setItem("selectedAnswers", JSON.stringify(selectedAnswers));
+        localStorage.setItem(
+          "selectedAnswers",
+          JSON.stringify(selectedAnswers)
+        );
       }
 
       async function loadQuestion(index) {
+        console.log(index);
         const q = questions[index];
         document.getElementById("question-text").innerText = q.question;
 
@@ -185,7 +190,9 @@
           optionsContainer.appendChild(div);
         });
 
-        document.getElementById("question-count").innerText = `Question ${index + 1} / ${questions.length}`;
+        document.getElementById("question-count").innerText = `Question ${
+          index + 1
+        } / ${questions.length}`;
       }
 
       function selectOption(clickedDiv, questionId, answer) {
@@ -207,12 +214,17 @@
         }
 
         try {
-          const response = await fetch("http://192.168.0.87:5000/submit-answer", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ question_id: currentQuestionId, answer }),
-          });
+          const response = await fetch(
+            "http://192.168.0.87:5000/submit-answer",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              body: JSON.stringify({ question_id: currentQuestionId, answer }),
+            }
+          );
+
+          console.log("onlick", currentIndex);
 
           const result = await response.json();
           console.log("Submit result:", result);
@@ -227,18 +239,7 @@
           saveProgress();
           loadQuestion(currentIndex);
         } else {
-          // Quiz finished
-          localStorage.clear();
-
-          document.getElementById("quiz-container").style.display = "none";
-          const results = document.getElementById("results-container");
-          results.style.display = "block";
-          results.className = "results";
-
-          setTimeout(() => {
-            document.getElementById("loading-message").style.display = "none";
-            document.getElementById("final-cards").style.display = "block";
-          }, 5000);
+          window.location.href = "./group.html";
         }
       }
 
@@ -248,7 +249,9 @@
           const result = await response.json();
 
           if (result.success) {
-            document.getElementById("session_code").innerHTML = `Room #: ${result.room_code}`;
+            document.getElementById(
+              "session_code"
+            ).innerHTML = `Room #: ${result.room_code}`;
           }
         } catch (err) {
           console.error("Failed to fetch room code:", err);
@@ -259,7 +262,7 @@
         renderRoom();
         loadQuestion(currentIndex);
 
-        document.querySelector(".Start").addEventListener("click", (e)=> {
+        document.querySelector(".Start").addEventListener("click", (e) => {
           e.preventDefault();
           nextQuestion();
         });

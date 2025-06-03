@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz</title>
+    <link rel="stylesheet" href="/static/main.css" />
+    <style>
+      .selected {
+        background-color: #dcdcdc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="top-bar">
+      <h1 id="session_code">Room #:</h1>
+    </div>
+
+    <div
+      id="results-container"
+      style="text-align: center"
+      class="results-container"
+    >
+      <h2 id="loading-message">
+        Finding best teammates based on your skills, interests, and working
+        style. This may take a moment...
+      </h2>
+      <div id="final-cards" style="display: none; margin-top: 2rem">
+        <h2 id="question-text">Here are your best matches</h2>
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+          "
+        >
+          <div class="question"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="bottom-message">
+        <p id="question-count">Analyzing Your Answers...</p>
+      </div>
+    </div>
+    <script>
+      async function getGroups() {
+        const response = await fetch("http://192.168.0.87:5000/match");
+        const data = await response.json();
+      }
+
+      async function renderRoom() {
+        try {
+          const response = await fetch("http://192.168.0.87:5000/room_code");
+          const result = await response.json();
+
+          if (result.success) {
+            document.getElementById(
+              "session_code"
+            ).innerHTML = `Room #: ${result.room_code}`;
+          }
+        } catch (err) {
+          console.error("Failed to fetch room code:", err);
+        }
+      }
+
+      async function showLoadingAndFetch() {
+        await delay(1000);
+        document.querySelector(
+          "#loading-message"
+        ).textContent = `We've found your match. Getting everything set...`;
+
+        await delay(1000);
+        document.getElementById("loading-message").style.display = "none";
+        document.getElementById("final-cards").style.display = "block";
+
+        try {
+          const response = await fetch("http://192.168.0.87:5000/match", {
+            method: 'GET',
+            credentials: 'include',
+          });
+          const result = await response.json();
+          const userID = result.userID;
+
+          console.log(userID);
+
+          if (result.success && typeof result.groups === "object") {
+            const finalCards = document.getElementById("final-cards");
+            finalCards.innerHTML = ""; // Clear previous content
+
+            let foundGroup = null;
+
+            // Step 1: Find the group that contains the user
+            Object.entries(result.groups).forEach(([groupName, groupData]) => {
+              if (groupData.members.hasOwnProperty(userID)) {
+                foundGroup = { groupName, groupData };
+              }
+            });
+
+            // Step 2: Display the group if found
+            if (foundGroup) {
+              const { groupName, groupData } = foundGroup;
+
+              const groupHeading = document.createElement("h2");
+              groupHeading.textContent = `${groupName} (You are here!)`;
+              finalCards.appendChild(groupHeading);
+
+              Object.values(groupData.members).forEach((memberData) => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+            <h3>${memberData.name}</h3>
+            <div class="card-bottom">
+              <p>Key Skills</p>
+              <div class="skills">
+                ${memberData.skills.map((skill) => `<p>${skill}</p>`).join("")}
+              </div>
+            </div>`;
+                finalCards.appendChild(card);
+              });
+            } else {
+              const notFound = document.createElement("p");
+              notFound.textContent = "You were not found in any group.";
+              finalCards.appendChild(notFound);
+            }
+          } else {
+            console.error("Unexpected format or no groups found:", result);
+          }
+        } catch (error) {
+          console.error("Error fetching match data:", error);
+        }
+      }
+
+      function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      window.onload = () => {
+        renderRoom();
+        localStorage.clear();
+
+        showLoadingAndFetch();
+      };
+    </script>
+  </body>
+</html>

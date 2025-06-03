@@ -82,7 +82,8 @@ def full_grouping_with_role_diversity(user_json):
         group_entry = {
             f"group {group_num}": {
                 "members": {
-                    u[1]["name"]: {
+                    u[0]: {  # u[0] is the user_id
+                        "name": u[1]["name"],
                         "skills": list(u[1]["skills"].values())
                     } for u in triplet
                 }
