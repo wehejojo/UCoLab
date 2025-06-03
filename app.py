@@ -8,7 +8,7 @@ import string, random, secrets, json, os
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 app.secret_key = secrets.token_hex(32)
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://192.168.0.87:5500"}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://192.168.0.104:5500"}})
 
 
 match_status = {
@@ -18,8 +18,7 @@ match_status = {
 DB = 'answers.json'
 GROUPS = 'groups.json'
 QUESTIONS = 'questions.json'
-SERVER_IP = '192.168.0.87' 
-# SERVER_IP = '192.168.0.147'
+SERVER_IP = '192.168.0.104' 
 
 def generateRandomSessionCode(length: int) -> str:
     characters: str = string.ascii_letters.upper() + string.digits
@@ -46,6 +45,10 @@ def save_json_file(filename, data):
     with open(filename, 'w') as f:
         json.dump(data, f, indent=2)
 
+def all_questions_answered(user_data):
+    if 'skills' not in user_data:
+        return False
+    return all(f'q{i}' in user_data['skills'] for i in range(1, 6))
 
 @app.before_request
 def assign_user():
@@ -99,10 +102,17 @@ def match_users():
     db = load_json_file(DB)
     gps = load_json_file(GROUPS)
 
-    if db and all('q5' in user.get('skills', {}) for user in db.values()):
+    # Check if all users have completed all questions
+    incomplete_users = [user_id for user_id, data in db.items() if not all_questions_answered(data)]
+    if incomplete_users:
+        return jsonify({
+            'error': 'Not all users have completed the quiz',
+            'incomplete_users': incomplete_users
+        }), 400
+
+    if db:
         groups = run_matching(db)
         if groups:
-            # Only overwrite if groups have changed
             if groups != gps:
                 print("New group structure detected. Overwriting saved groups.")
                 save_json_file(GROUPS, groups)
@@ -117,8 +127,7 @@ def match_users():
         else:
             return jsonify({'error': 'Unable to form any groups'}), 400
     else:
-        return jsonify({'error': 'Not all users have completed'}), 400
-
+        return jsonify({'error': 'No users found'}), 400
 
 @app.route('/submit-code', methods=['POST'])
 def method_name():
@@ -137,15 +146,12 @@ def submitUserDetails():
     college = data.get('college')
     attribute = data.get('attribute')
     user_id = session.get('user_id')
-    print(user_id)
     
     session['user_id'] = user_id 
     
     db = load_json_file(DB)
     if user_id not in db:
         db[user_id] = {}
-        
-    print(user_id)
     
     db[user_id]["name"] = name
     db[user_id]["college"] = college
@@ -161,7 +167,6 @@ def submit_answer():
     user_id = session.get('user_id')
     question_id = data.get('question_id')
     answer = data.get('answer')
-    print("Received answer from user:", session.get('user_id'))
     
     if not user_id or not question_id or not answer:
         return jsonify({'success': False, 'error': 'Invalid data'}), 400
@@ -176,7 +181,6 @@ def submit_answer():
 
     db[user_id]["skills"][question_id] = answer
     save_json_file(DB, db)
-    print("Saved:", db[user_id])  # Optional debug
     return jsonify({'success': True})
 
 @app.route("/toggle-matching", methods=["POST"])

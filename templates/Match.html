@@ -71,7 +71,7 @@
       async function fetchAndRenderParticipants() {
         try {
           const response = await fetch(
-            "http://192.168.0.87:5000/show-participants"
+            "http://192.168.0.104:5000/show-participants"
           );
           if (!response.ok) {
             console.error("Failed to fetch participants:", response.status);
@@ -111,7 +111,7 @@
       }
 
       async function getStatus() {
-        const response = await fetch("http://192.168.0.87:5000/status");
+        const response = await fetch("http://192.168.0.104:5000/status");
 
         if (!response.ok) {
           console.error("Failed to fetch status:", response.status);
@@ -132,7 +132,7 @@
       }
 
       async function renderRoom() {
-        const response = await fetch("http://192.168.0.87:5000/room_code");
+        const response = await fetch("http://192.168.0.104:5000/room_code");
         const result = await response.json();
 
         if (result.success) {
@@ -157,7 +157,7 @@
             .addEventListener("click", async () => {
               try {
                 const response = await fetch(
-                  "http://192.168.0.87:5000/toggle-matching",
+                  "http://192.168.0.104:5000/toggle-matching",
                   { method: "POST" }
                 );
                 const result = await response.json();
@@ -170,7 +170,7 @@
               }
             });
         } else {
-          const socket = io("http://192.168.0.87:5000");
+          const socket = io("http://192.168.0.104:5000");
           // const socket = io("http://192.168.0.147:5000");
           
           socket.on("connect", () => {
@@ -206,7 +206,7 @@
 
               try {
                 const response = await fetch(
-                  "http://192.168.0.87:5000/submit-user-details",
+                  "http://192.168.0.104:5000/submit-user-details",
                   {
                     method: "POST",
                     credentials: "include", // This is important!
