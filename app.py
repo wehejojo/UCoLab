@@ -99,7 +99,7 @@ def match_users():
     db = load_json_file(DB)
     gps = load_json_file(GROUPS)
 
-    if db and len(db) >= 3 and all('q5' in user.get('skills', {}) for user in db.values()):
+    if db and all('q5' in user.get('skills', {}) for user in db.values()):
         groups = run_matching(db)
         if groups:
             # Only overwrite if groups have changed

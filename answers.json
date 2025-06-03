@@ -418,5 +418,62 @@
       "q4": "Solving hard problems",
       "q5": "I bring creative, out-of-the-box ideas"
     }
+  },
+  "user_a58f12ac": {
+    "name": "NIGGAS IN PARIS",
+    "college": "CITCS",
+    "attribute": "WWWWWW",
+    "skills": {
+      "q1": "Hacker",
+      "q2": "Business & Finance",
+      "q3": "Flexible and go-with-the-flow",
+      "q4": "Seeing tangible progress",
+      "q5": "I bring creative, out-of-the-box ideas"
+    }
+  },
+  "user_05ab29c3": {
+    "name": "death",
+    "college": "CITCS",
+    "attribute": "health",
+    "skills": {
+      "q1": "Hacker",
+      "q2": "Tech & Software",
+      "q3": "Flexible and go-with-the-flow",
+      "q4": "Collaborating with others",
+      "q5": "Listen and support others' contributions"
+    }
+  },
+  "user_0351ff26": {
+    "name": "JESTER",
+    "college": "CITCS",
+    "attribute": "SLAVERY",
+    "skills": {
+      "q1": "Hacker",
+      "q2": "Tech & Software",
+      "q3": "Flexible and go-with-the-flow",
+      "q4": "Solving hard problems",
+      "q5": "I analyze and critique proposals"
+    }
+  },
+  "user_f1723fcf": {
+    "name": "lamaw",
+    "college": "CITCS",
+    "attribute": "isang big niqqa",
+    "skills": {
+      "q1": "Hipster",
+      "q2": "Open to Anything",
+      "q3": "Flexible and go-with-the-flow",
+      "q4": "Collaborating with others",
+      "q5": "I bring creative, out-of-the-box ideas"
+    }
+  },
+  "user_d207e0db": {
+    "skills": {
+      "q1": "Hacker",
+      "q2": "Sustainability",
+      "q3": "Structured and planned",
+      "q4": "Seeing tangible progress",
+      "q5": "I lead and organize ideas"
+    }
   }
 }
