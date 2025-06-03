@@ -215,6 +215,30 @@
           "I bring creative, out-of-the-box ideas"
         ]
       },
+      "user_0b97bcc9": {
+        "name": "HANSONG",
+        "skills": [
+          "Hustler",
+          "Tech & Software",
+          "Structured and planned",
+          "Collaborating with others",
+          "I bring creative, out-of-the-box ideas"
+        ]
+      },
+      "user_71ff1a22": {
+        "name": "JESTER",
+        "skills": [
+          "Hacker",
+          "Tech & Software",
+          "Structured and planned",
+          "Solving hard problems",
+          "I bring creative, out-of-the-box ideas"
+        ]
+      }
+    }
+  },
+  "group 8": {
+    "members": {
       "user_014": {
         "name": "Noah",
         "skills": [
@@ -223,30 +247,6 @@
           "Fast Paced and action-oriented",
           "Solving hard problems",
           "I analyze and critique proposals"
-        ]
-      },
-      "user_20f35146": {
-        "name": "joey",
-        "skills": [
-          "Hacker",
-          "Education",
-          "I adapt to the team's rhythm",
-          "Brainstorming new ideas",
-          "I analyze and critique proposals"
-        ]
-      }
-    }
-  },
-  "group 8": {
-    "members": {
-      "user_001": {
-        "name": "Alice",
-        "skills": [
-          "Hacker",
-          "Tech & Software",
-          "Structured and planned",
-          "Solving hard problems",
-          "I lead and organize ideas"
         ]
       },
       "user_016": {
@@ -259,14 +259,14 @@
           "I bring creative, out-of-the-box ideas"
         ]
       },
-      "user_0b97bcc9": {
-        "name": "HANSONG",
+      "user_20f35146": {
+        "name": "joey",
         "skills": [
-          "Hustler",
-          "Tech & Software",
-          "Structured and planned",
-          "Collaborating with others",
-          "I bring creative, out-of-the-box ideas"
+          "Hacker",
+          "Education",
+          "I adapt to the team's rhythm",
+          "Brainstorming new ideas",
+          "I analyze and critique proposals"
         ]
       }
     }

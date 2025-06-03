@@ -406,5 +406,17 @@
       "q4": "Collaborating with others",
       "q5": "Listen and support others' contributions"
     }
+  },
+  "user_71ff1a22": {
+    "name": "JESTER",
+    "college": "CITCS",
+    "attribute": "NIGGAS",
+    "skills": {
+      "q1": "Hacker",
+      "q2": "Tech & Software",
+      "q3": "Structured and planned",
+      "q4": "Solving hard problems",
+      "q5": "I bring creative, out-of-the-box ideas"
+    }
   }
 }
