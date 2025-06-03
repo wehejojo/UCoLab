@@ -31,67 +31,9 @@
         Finding best teammates based on your skills, interests, and working
         style. This may take a moment...
       </h2>
-      <div id="final-cards" style="display: none; margin-top: 2rem">
-        <h2 id="question-text">Here are your best matches</h2>
-        <div
-          style="
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-          "
-        >
-          <div class="question"></div>
-          <div class="card">
-            <h3>Hacker</h3>
-            <div class="card-bottom">
-              <h2>Joselito Cruz</h2>
-              <p>BS-Information Technology 3</p>
-              <p>Key Skills</p>
-              <div class="skills">
-                <p>Web Dev</p>
-                <p>Mobile App</p>
-              </div>
-              <p>Interest</p>
-              <div class="interests">
-                <p>Tech & Software</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Hustler</h3>
-            <div class="card-bottom">
-              <h2>Bea Santos</h2>
-              <p>BS-Marketing Management</p>
-              <p>Key Skills</p>
-              <div class="skills">
-                <p>Marketing</p>
-                <p>Pitching</p>
-              </div>
-              <p>Interest</p>
-              <div class="interests">
-                <p>Business & Finance</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Hipster</h3>
-            <div class="card-bottom">
-              <h2>John Ortega</h2>
-              <p>BS-Crim 3</p>
-              <p>Key Skills</p>
-              <div class="skills">
-                <p>Legal Research</p>
-                <p>Critical Thinking</p>
-              </div>
-              <p>Interest</p>
-              <div class="interests">
-                <p>Social Impact & Community</p>
-              </div>
-            </div>
-          </div>
+      <div id="matched-groups" style="display: none; margin-top: 2rem">
+        <h2>Here are your best matches</h2>
+        <div id="groups-container" class="groups-container" style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
         </div>
       </div>
     </div>
@@ -194,7 +136,61 @@
         });
         clickedDiv.classList.add("selected");
         selectedAnswers[questionId] = answer;
-        saveProgress(); // Save after selecting
+        saveProgress();
+      }
+
+      async function getMatches() {
+        try {
+          const response = await fetch("http://192.168.0.87:5000/match", {
+            credentials: "include"
+          });
+          
+          if (!response.ok) {
+            throw new Error('Failed to get matches');
+          }
+
+          const groups = await response.json();
+          return groups;
+        } catch (error) {
+          console.error("Error getting matches:", error);
+          return null;
+        }
+      }
+
+      function renderGroups(groups) {
+        const container = document.getElementById("groups-container");
+        container.innerHTML = "";
+
+        Object.entries(groups).forEach(([groupName, groupData]) => {
+          const members = groupData.members;
+          
+          Object.entries(members).forEach(([name, data]) => {
+            const card = document.createElement("div");
+            card.className = "card";
+            
+            const role = data.skills[0]; // First skill is the role (q1)
+            const interest = data.skills[1]; // Second skill is interest (q2)
+            
+            card.innerHTML = `
+              <h3>${role}</h3>
+              <div class="card-bottom">
+                <h2>${name}</h2>
+                <p>Interest</p>
+                <div class="interests">
+                  <p>${interest}</p>
+                </div>
+                <p>Working Style</p>
+                <div class="skills">
+                  <p>${data.skills[2]}</p>
+                  <p>${data.skills[3]}</p>
+                  <p>${data.skills[4]}</p>
+                </div>
+              </div>
+            `;
+            
+            container.appendChild(card);
+          });
+        });
       }
 
       async function nextQuestion() {
@@ -214,8 +210,9 @@
             body: JSON.stringify({ question_id: currentQuestionId, answer }),
           });
 
-          const result = await response.json();
-          console.log("Submit result:", result);
+          if (!response.ok) {
+            throw new Error('Failed to submit answer');
+          }
         } catch (error) {
           console.error("Error submitting answer:", error);
           alert("Failed to submit answer. Please try again.");
@@ -229,16 +226,29 @@
         } else {
           // Quiz finished
           localStorage.clear();
-
           document.getElementById("quiz-container").style.display = "none";
           const results = document.getElementById("results-container");
           results.style.display = "block";
           results.className = "results";
 
-          setTimeout(() => {
-            document.getElementById("loading-message").style.display = "none";
-            document.getElementById("final-cards").style.display = "block";
-          }, 5000);
+          // Hide the bottom bar
+          document.querySelector(".bottom-bar").style.display = "none";
+
+          // Wait for all users to complete and get matches
+          const checkForMatches = async () => {
+            const matches = await getMatches();
+            if (matches && !matches.error) {
+              document.getElementById("loading-message").style.display = "none";
+              document.getElementById("matched-groups").style.display = "block";
+              renderGroups(matches);
+            } else {
+              // If no matches yet, try again in 5 seconds
+              setTimeout(checkForMatches, 5000);
+            }
+          };
+
+          // Start checking for matches
+          checkForMatches();
         }
       }
 
@@ -259,7 +269,7 @@
         renderRoom();
         loadQuestion(currentIndex);
 
-        document.querySelector(".Start").addEventListener("click", (e)=> {
+        document.querySelector(".Start").addEventListener("click", (e) => {
           e.preventDefault();
           nextQuestion();
         });
