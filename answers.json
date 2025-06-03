@@ -1,10 +1,251 @@
 {
-  "user_13d98441": {
-    "name": "wa",
+  "user_001": {
+    "name": "Alice",
     "college": "CITCS",
-    "attribute": "wa",
+    "attribute": "Collaborative",
     "skills": {
-      "q1": "Hacker"
+      "q1": "Hacker",
+      "q2": "Tech & Software",
+      "q3": "Structured and planned",
+      "q4": "Solving hard problems",
+      "q5": "I lead and organize ideas"
+    }
+  },
+  "user_002": {
+    "name": "Bob",
+    "college": "CITCS",
+    "attribute": "Analytical",
+    "skills": {
+      "q1": "Hustler",
+      "q2": "Business & Finance",
+      "q3": "Flexible and go-with-the-flow",
+      "q4": "Seeing tangible progress",
+      "q5": "I analyze and critique proposals"
+    }
+  },
+  "user_003": {
+    "name": "Cara",
+    "college": "CITCS",
+    "attribute": "Creative",
+    "skills": {
+      "q1": "Hipster",
+      "q2": "Arts & Culture",
+      "q3": "Fast Paced and action-oriented",
+      "q4": "Brainstorming new ideas",
+      "q5": "I bring creative, out-of-the-box ideas"
+    }
+  },
+  "user_004": {
+    "name": "David",
+    "college": "CITCS",
+    "attribute": "Supportive",
+    "skills": {
+      "q1": "Explorer",
+      "q2": "Education",
+      "q3": "I adapt to the team's rhythm",
+      "q4": "Collaborating with others",
+      "q5": "Listen and support others' contributions"
+    }
+  },
+  "user_005": {
+    "name": "Eva",
+    "college": "CITCS",
+    "attribute": "Visionary",
+    "skills": {
+      "q1": "Hustler",
+      "q2": "Sustainability",
+      "q3": "Structured and planned",
+      "q4": "Seeing tangible progress",
+      "q5": "I lead and organize ideas"
+    }
+  },
+  "user_006": {
+    "name": "Frank",
+    "college": "CITCS",
+    "attribute": "Critical Thinker",
+    "skills": {
+      "q1": "Hacker",
+      "q2": "Health & Wellness",
+      "q3": "Fast Paced and action-oriented",
+      "q4": "Solving hard problems",
+      "q5": "I analyze and critique proposals"
+    }
+  },
+  "user_007": {
+    "name": "Grace",
+    "college": "CITCS",
+    "attribute": "Empathetic",
+    "skills": {
+      "q1": "Hipster",
+      "q2": "Social Impact & Community",
+      "q3": "Flexible and go-with-the-flow",
+      "q4": "Collaborating with others",
+      "q5": "Listen and support others' contributions"
+    }
+  },
+  "user_008": {
+    "name": "Henry",
+    "college": "CITCS",
+    "attribute": "Innovative",
+    "skills": {
+      "q1": "Explorer",
+      "q2": "Open to Anything",
+      "q3": "I adapt to the team's rhythm",
+      "q4": "Brainstorming new ideas",
+      "q5": "I bring creative, out-of-the-box ideas"
+    }
+  },
+  "user_009": {
+    "name": "Isabel",
+    "college": "CITCS",
+    "attribute": "Organized",
+    "skills": {
+      "q1": "Hacker",
+      "q2": "Education",
+      "q3": "Structured and planned",
+      "q4": "Seeing tangible progress",
+      "q5": "I lead and organize ideas"
+    }
+  },
+  "user_010": {
+    "name": "Jack",
+    "college": "CITCS",
+    "attribute": "Strategic",
+    "skills": {
+      "q1": "Hustler",
+      "q2": "Tech & Software",
+      "q3": "Fast Paced and action-oriented",
+      "q4": "Solving hard problems",
+      "q5": "I analyze and critique proposals"
+    }
+  },
+  "user_011": {
+    "name": "Kara",
+    "college": "CITCS",
+    "attribute": "Optimistic",
+    "skills": {
+      "q1": "Hipster",
+      "q2": "Arts & Culture",
+      "q3": "Flexible and go-with-the-flow",
+      "q4": "Collaborating with others",
+      "q5": "Listen and support others' contributions"
+    }
+  },
+  "user_012": {
+    "name": "Leo",
+    "college": "CITCS",
+    "attribute": "Inventive",
+    "skills": {
+      "q1": "Explorer",
+      "q2": "Sustainability",
+      "q3": "I adapt to the team's rhythm",
+      "q4": "Brainstorming new ideas",
+      "q5": "I bring creative, out-of-the-box ideas"
+    }
+  },
+  "user_013": {
+    "name": "Mia",
+    "college": "CITCS",
+    "attribute": "Resourceful",
+    "skills": {
+      "q1": "Hacker",
+      "q2": "Business & Finance",
+      "q3": "Structured and planned",
+      "q4": "Seeing tangible progress",
+      "q5": "I lead and organize ideas"
+    }
+  },
+  "user_014": {
+    "name": "Noah",
+    "college": "CITCS",
+    "attribute": "Decisive",
+    "skills": {
+      "q1": "Hustler",
+      "q2": "Health & Wellness",
+      "q3": "Fast Paced and action-oriented",
+      "q4": "Solving hard problems",
+      "q5": "I analyze and critique proposals"
+    }
+  },
+  "user_015": {
+    "name": "Olivia",
+    "college": "CITCS",
+    "attribute": "Artistic",
+    "skills": {
+      "q1": "Hipster",
+      "q2": "Arts & Culture",
+      "q3": "Flexible and go-with-the-flow",
+      "q4": "Collaborating with others",
+      "q5": "Listen and support others' contributions"
+    }
+  },
+  "user_016": {
+    "name": "Paul",
+    "college": "CITCS",
+    "attribute": "Curious",
+    "skills": {
+      "q1": "Explorer",
+      "q2": "Education",
+      "q3": "I adapt to the team's rhythm",
+      "q4": "Brainstorming new ideas",
+      "q5": "I bring creative, out-of-the-box ideas"
+    }
+  },
+  "user_017": {
+    "name": "Quinn",
+    "college": "CITCS",
+    "attribute": "Detail-Oriented",
+    "skills": {
+      "q1": "Hacker",
+      "q2": "Social Impact & Community",
+      "q3": "Structured and planned",
+      "q4": "Seeing tangible progress",
+      "q5": "I lead and organize ideas"
+    }
+  },
+  "user_018": {
+    "name": "Rosa",
+    "college": "CITCS",
+    "attribute": "Logical",
+    "skills": {
+      "q1": "Hustler",
+      "q2": "Tech & Software",
+      "q3": "Fast Paced and action-oriented",
+      "q4": "Solving hard problems",
+      "q5": "I analyze and critique proposals"
+    }
+  },
+  "user_019": {
+    "name": "Sam",
+    "college": "CITCS",
+    "attribute": "Friendly",
+    "skills": {
+      "q1": "Hipster",
+      "q2": "Sustainability",
+      "q3": "Flexible and go-with-the-flow",
+      "q4": "Collaborating with others",
+      "q5": "Listen and support others' contributions"
+    }
+  },
+  "user_020": {
+    "name": "Tina",
+    "college": "CITCS",
+    "attribute": "Free-spirited",
+    "skills": {
+      "q1": "Explorer",
+      "q2": "Open to Anything",
+      "q3": "I adapt to the team's rhythm",
+      "q4": "Brainstorming new ideas",
+      "q5": "I bring creative, out-of-the-box ideas"
+    }
+  },
+  "user_c40fa177": {
+    "skills": {
+      "q1": "Hustler",
+      "q2": "Sustainability",
+      "q3": "I adapt to the team's rhythm",
+      "q4": "Collaborating with others",
+      "q5": "Listen and support others' contributions"
     }
   }
 }

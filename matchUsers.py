@@ -55,34 +55,45 @@ def group_score(group_data):
     return 0.4 * q1_diversity + 0.3 * q2_same + 0.3 * sim_score
 
 # Create optimal groups of 3
-def full_grouping_algorithm(user_json):
+def full_grouping_with_role_diversity(user_json):
     users = list(user_json.items())
-    random.shuffle(users)
+    valid_triplets = []
+
+    # Step 1: Generate all valid triplets with unique roles
+    for triplet in combinations(users, 3):
+        roles = [u[1]["skills"]["q1"] for u in triplet]
+        if len(set(roles)) == 3:
+            group_data = [u[1] for u in triplet]
+            score = group_score(group_data)
+            valid_triplets.append((score, triplet))
+
+    # Step 2: Sort triplets by descending score
+    valid_triplets.sort(reverse=True, key=lambda x: x[0])
+
     used_ids = set()
     final_groups = {}
     group_num = 1
 
-    while len(used_ids) <= len(users) - 3:
-        for triplet in combinations(users, 3):
-            ids = [u[0] for u in triplet]
-            if any(uid in used_ids for uid in ids):
-                continue
-            group_data = [u[1] for u in triplet]
-            group_entry = {
-                f"group {group_num}": {
-                    "members": {
-                        u[1]["name"]: {
-                            "skills": list(u[1]["skills"].values())
-                        } for u in triplet
-                    }
+    # Step 3: Greedily pick best non-overlapping groups
+    for score, triplet in valid_triplets:
+        ids = [u[0] for u in triplet]
+        if any(uid in used_ids for uid in ids):
+            continue
+        group_entry = {
+            f"group {group_num}": {
+                "members": {
+                    u[1]["name"]: {
+                        "skills": list(u[1]["skills"].values())
+                    } for u in triplet
                 }
             }
-            final_groups.update(group_entry)
-            used_ids.update(ids)
-            group_num += 1
-            break
+        }
+        final_groups.update(group_entry)
+        used_ids.update(ids)
+        group_num += 1
 
     return final_groups
 
+
 def run_matching(user_json):
-    return full_grouping_algorithm(user_json)
+    return full_grouping_with_role_diversity(user_json)

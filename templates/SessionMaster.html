@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UCoLab</title>
-    <link rel="stylesheet" href="/static/main.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/static/main.css" />
+  </head>
+  <body>
     <div class="sessionmaster">
-        <!-- <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo"> -->
-        <h1 id="session_code">Session Code:</h1>
-        <button id="start" class="session-start">Start Matching!</button>
+      <!-- <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo"> -->
+      <h1 id="session_code">Session Code:</h1>
+      <button id="start" class="session-start">Start Matching!</button>
     </div>
 
     <script>
-        window.onload = async () => {
-            const response = await fetch('http://192.168.0.87:5000/');
-            const result = await response.json();
+      window.onload = async () => {
+        const response = await fetch("http://192.168.0.87:5000/");
+        const result = await response.json();
 
-            console.log(result);
+        console.log(result);
 
-            if (result.success) {
-                document.getElementById('session_code').innerHTML = `Session Code: ${result.session_code}`;
-            }
-            
-            document.getElementById('start').onclick = () => {
-                window.location.href = "./Match.html";
-            }
+        if (result.success) {
+          document.getElementById(
+            "session_code"
+          ).innerHTML = `Session Code: ${result.session_code}`;
+        }
+
+        document.getElementById("start").onclick = () => {
+          window.location.href = "./Match.html";
         };
+      };
     </script>
-</body>
+  </body>
 </html>

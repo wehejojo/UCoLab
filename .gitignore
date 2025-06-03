@@ -1,9 +1,1 @@
-*.json
 __pycache__/
-
-git rm -r --cached __pycache__/
-# Then, commit the change. This will remove the __pycache__ directories from your repository, and they will be ignored going forward.
-
-
-!questions.json
-!answers.json

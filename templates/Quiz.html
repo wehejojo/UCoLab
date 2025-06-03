@@ -102,9 +102,7 @@
       </div>
 
       <div class="bottom-button">
-        <button type="button" class="Start" onclick="nextQuestion()">
-          Next
-        </button>
+        <button type="button" class="Start">Next</button>
       </div>
     </div>
 
@@ -161,12 +159,18 @@
         },
       ];
 
-      let currentIndex = 0;
-      let selectedAnswers = {};
+      let currentIndex = parseInt(localStorage.getItem("currentIndex")) || 0;
+      let selectedAnswers = JSON.parse(localStorage.getItem("selectedAnswers")) || {};
+
+      function saveProgress() {
+        localStorage.setItem("currentIndex", currentIndex);
+        localStorage.setItem("selectedAnswers", JSON.stringify(selectedAnswers));
+      }
 
       async function loadQuestion(index) {
         const q = questions[index];
         document.getElementById("question-text").innerText = q.question;
+
         const optionsContainer = document.getElementById("options-container");
         optionsContainer.innerHTML = "";
 
@@ -181,20 +185,17 @@
           optionsContainer.appendChild(div);
         });
 
-        document.getElementById("question-count").innerText = `Question ${
-          index + 1
-        } / ${questions.length}`;
+        document.getElementById("question-count").innerText = `Question ${index + 1} / ${questions.length}`;
       }
 
-      async function selectOption(clickedDiv, questionId, answer) {
+      function selectOption(clickedDiv, questionId, answer) {
         document.querySelectorAll(".option").forEach((div) => {
           div.classList.remove("selected");
         });
         clickedDiv.classList.add("selected");
         selectedAnswers[questionId] = answer;
-        console.log("Selected answers so far:", selectedAnswers); // <-- Add this
+        saveProgress(); // Save after selecting
       }
-      let userId = null; // Store globally
 
       async function nextQuestion() {
         const currentQuestionId = questions[currentIndex].id;
@@ -206,15 +207,12 @@
         }
 
         try {
-          const response = await fetch(
-            "http://192.168.0.87:5000/submit-answer",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              credentials: "include",
-              body: JSON.stringify({ question_id: currentQuestionId, answer }),
-            }
-          );
+          const response = await fetch("http://192.168.0.87:5000/submit-answer", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ question_id: currentQuestionId, answer }),
+          });
 
           const result = await response.json();
           console.log("Submit result:", result);
@@ -226,10 +224,12 @@
 
         if (currentIndex < questions.length - 1) {
           currentIndex++;
+          saveProgress();
           loadQuestion(currentIndex);
-          console.log(currentIndex);
-          console.log("Submitting answer for:", currentQuestionId, answer);
         } else {
+          // Quiz finished
+          localStorage.clear();
+
           document.getElementById("quiz-container").style.display = "none";
           const results = document.getElementById("results-container");
           results.style.display = "block";
@@ -238,25 +238,31 @@
           setTimeout(() => {
             document.getElementById("loading-message").style.display = "none";
             document.getElementById("final-cards").style.display = "block";
-          }, 2500);
+          }, 5000);
         }
       }
 
       async function renderRoom() {
-        const response = await fetch("http://192.168.0.87:5000/room_code");
-        const result = await response.json();
+        try {
+          const response = await fetch("http://192.168.0.87:5000/room_code");
+          const result = await response.json();
 
-        if (result.success) {
-          document.getElementById(
-            "session_code"
-          ).innerHTML = `Room #: ${result.room_code}`;
+          if (result.success) {
+            document.getElementById("session_code").innerHTML = `Room #: ${result.room_code}`;
+          }
+        } catch (err) {
+          console.error("Failed to fetch room code:", err);
         }
       }
 
-      renderRoom();
       window.onload = () => {
-        console.log("Page loaded with currentIndex:", currentIndex);
+        renderRoom();
         loadQuestion(currentIndex);
+
+        document.querySelector(".Start").addEventListener("click", (e)=> {
+          e.preventDefault();
+          nextQuestion();
+        });
       };
     </script>
   </body>

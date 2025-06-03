@@ -1,12 +1,12 @@
-import uuid
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
+from flask_socketio import SocketIO
 from matchUsers import run_matching
-from flask import render_template
 
 import string, random, secrets, json, os
 
 app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins="*")
 app.secret_key = secrets.token_hex(32)
 CORS(
     app,
@@ -101,11 +101,17 @@ def check_matching():
 
 @app.route('/match', methods=['GET'])
 def match_users():
-    with open('json/users.json', 'r') as f:
+    with open('answers.json', 'r') as f:
         users = json.load(f)
 
-    groups = run_matching(users)
-    return jsonify(groups)
+    if users and len(users) >= 3 and all('q5' in user.get('skills', {}) for user in users.values()):
+        groups = run_matching(users)
+        if groups:
+            return jsonify(groups)
+        else:
+            return jsonify({'error': 'Unable to form any groups'}), 400
+    else:
+        return jsonify({'error': 'Not all users have completed'}), 400
 
 @app.route('/submit-code', methods=['POST'])
 def method_name():
@@ -166,14 +172,22 @@ def submit_answer():
     print("Saved:", db[user_id])  # Optional debug
     return jsonify({'success': True})
 
-@app.route('/toggle-matching', methods=['POST'])
-def start_matching():
-    global match_status
-    match_status["started"] = not match_status["started"]
-    return jsonify({"success": True})
+@app.route("/toggle-matching", methods=["POST"])
+def start_quiz():
+    socketio.emit(
+        "start_quiz",
+        {"type": "start_quiz"},
+        namespace='/'
+    )
+    match_status["started"] = True
+    return {"success": True}
+
+@socketio.on('connect')
+def handle_connect():
+    print("Client connected:", request.sid)
 
 if __name__ == "__main__":
-    app.run(
-        debug=True,
-        host="0.0.0.0"
-    ) 
+    socketio.run(
+        app, host="0.0.0.0", 
+        port=5000, use_reloader=False
+    )

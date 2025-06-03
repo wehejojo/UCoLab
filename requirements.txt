@@ -1,3 +1,4 @@
 flask
 flask_cors
 scikit-learn
+flask_socketio

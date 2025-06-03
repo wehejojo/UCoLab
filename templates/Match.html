@@ -1,203 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Match</title>
     <link href="/static/main.css" rel="stylesheet" />
-</head>
+  </head>
 
-<body>
+  <body>
     <div>
-        <div class="top-bar">
-            <h1 id="session_code">Room #: </h1>
-        </div>
-        <div class="details">
-            <div class="participants">  
-                <div class="participant-header">
-                    <h2>Participants</h2>
-                    <p>0 users joined</p>
-                </div>
+      <div class="top-bar">
+        <h1 id="session_code">Room #:</h1>
+      </div>
+      <div class="details">
+        <div class="participants">
+          <div class="participant-header">
+            <h2>Participants</h2>
+            <p>0 users joined</p>
+          </div>
 
-                <div class="users" id="users">
-
-                </div>
-            </div>
-            <div class="participant-form">
-                <h1>Details</h1>
-                <p>Enter your name</p>
-                <input type="text" id="participantName" placeholder="Your Name" required>
-                <p>What College are you part of?</p>
-                <select name="college" id="college">
-                    <option value="CITCS">College of Information Technology and Computer Science</option>
-                    <option value="CON">College of Nursing</option>
-                    <option value="CEA">College of Engineering</option>
-                    <option value="CBA">College of Business Administration</option>
-                    <option value="CAS">College of Art and Sciences</option>
-                    <option value="COA">College of Accountancy</option>
-                    <option value="CHTM">College of Hospitality Tourism Management</option>
-                    <option value="CCJE">College of Criminal Justice Education</option>
-                    <option value="CTE">College of Teacher Education</option>
-                </select>
-                <p>What are your skills</p>
-                <input type="text" placeholder="Search Skills" id="attributes" required>
-            </div>
+          <div class="users" id="users"></div>
         </div>
-        <div class="bottom-bar">
-            <div class="bottom-message">
-                <p>Waiting for host to start matchmaking...</p>
-            </div>
-            <div class="bottom-button">
-                <button class="Start" id="player">Lock In</button>
-            </div>
+        <div class="participant-form">
+          <h1>Details</h1>
+          <p>Enter your name</p>
+          <input
+            type="text"
+            id="participantName"
+            placeholder="Your Name"
+            required
+          />
+          <p>What College are you part of?</p>
+          <select name="college" id="college">
+            <option value="CITCS">
+              College of Information Technology and Computer Science
+            </option>
+            <option value="CON">College of Nursing</option>
+            <option value="CEA">College of Engineering</option>
+            <option value="CBA">College of Business Administration</option>
+            <option value="CAS">College of Art and Sciences</option>
+            <option value="COA">College of Accountancy</option>
+            <option value="CHTM">
+              College of Hospitality Tourism Management
+            </option>
+            <option value="CCJE">College of Criminal Justice Education</option>
+            <option value="CTE">College of Teacher Education</option>
+          </select>
+          <p>What are your skills</p>
+          <input
+            type="text"
+            placeholder="Search Skills"
+            id="attributes"
+            required
+          />
         </div>
+      </div>
+      <div class="bottom-bar">
+        <div class="bottom-message">
+          <p>Waiting for host to start matchmaking...</p>
+        </div>
+        <div class="bottom-button">
+          <button class="Start" id="player">Lock In</button>
+        </div>
+      </div>
     </div>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script>
-        let isServer = false;
+      let isServer = false;
 
-        async function fetchAndRenderParticipants() {
-            try {
-                const response = await fetch('http://192.168.0.87:5000/show-participants');
-                if (!response.ok) {
-                    console.error('Failed to fetch participants:', response.status);
-                    return;
-                }
-                const result = await response.json();
+      async function fetchAndRenderParticipants() {
+        try {
+          const response = await fetch(
+            "http://192.168.0.87:5000/show-participants"
+          );
+          if (!response.ok) {
+            console.error("Failed to fetch participants:", response.status);
+            return;
+          }
+          const result = await response.json();
 
-                const participants = result.participants || {};
-                const participantContainer = document.getElementById('users');
+          const participants = result.participants || {};
+          const participantContainer = document.getElementById("users");
 
-                if (!participantContainer) {
-                    console.error('No container element with id "users" found');
-                    return;
-                }
+          if (!participantContainer) {
+            console.error('No container element with id "users" found');
+            return;
+          }
+          participantContainer.innerHTML = "";
 
-                // Clear previous participants
-                participantContainer.innerHTML = '';
-
-                // Render each participant
-                Object.values(participants).forEach(participant => {
-                    const div = document.createElement('div');
-                    div.classList.add('player');
-                    div.innerHTML = `
+          Object.values(participants).forEach((participant) => {
+            const div = document.createElement("div");
+            div.classList.add("player");
+            div.innerHTML = `
                         <div class="pfp"></div>
                         <p>${participant.name}</p>
                     `;
-                    participantContainer.appendChild(div);
-                });
+            participantContainer.appendChild(div);
+          });
 
-                // Update participant count in header
-                const headerCount = document.querySelector('.participant-header p');
-                    if (headerCount) {
-                        headerCount.textContent = `${Object.keys(participants).length} users joined`;
+          // Update participant count in header
+          const headerCount = document.querySelector(".participant-header p");
+          if (headerCount) {
+            headerCount.textContent = `${
+              Object.keys(participants).length
+            } users joined`;
+          }
+        } catch (error) {
+          console.error("Error fetching participants:", error);
+        }
+      }
+
+      async function getStatus() {
+        const response = await fetch("http://192.168.0.87:5000/status");
+
+        if (!response.ok) {
+          console.error("Failed to fetch status:", response.status);
+          return;
+        }
+
+        const result = await response.json();
+        const isServer = result.is_server;
+
+        if (isServer) {
+          document.querySelector(".Start").id = "master";
+          document.querySelector(".Start").innerHTML = "Start Matching";
+        } else {
+          document.querySelector(".Start").id = "player";
+          document.querySelector(".Start").innerHTML = "Lock In";
+        }
+        return isServer;
+      }
+
+      async function renderRoom() {
+        const response = await fetch("http://192.168.0.87:5000/room_code");
+        const result = await response.json();
+
+        if (result.success) {
+          document.getElementById(
+            "session_code"
+          ).innerHTML = `Room #: ${result.room_code}`;
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", async () => {
+        renderRoom();
+        fetchAndRenderParticipants();
+        setInterval(fetchAndRenderParticipants, 2000);
+
+        isServer = await getStatus();
+
+        if (isServer) {
+          document.querySelector(".participant-form").style.display = "none";
+
+          document
+            .getElementById("master")
+            .addEventListener("click", async () => {
+              try {
+                const response = await fetch(
+                  "http://192.168.0.87:5000/toggle-matching",
+                  { method: "POST" }
+                );
+                const result = await response.json();
+
+                if (result.success) {
+                  alert("Quiz has started.");
                 }
+              } catch (error) {
+                console.error("Error starting match:", error);
+              }
+            });
+        } else {
+          const socket = io("http://192.168.0.87:5000");
+          // const socket = io("http://192.168.0.147:5000");
+          
+          socket.on("connect", () => {
+            console.log("Connected to WebSocket server");
+          });
 
-            } catch (error) {
-                console.error('Error fetching participants:', error);
-            }
-        }
+          socket.on("start_quiz", (data) => {
+            console.log("Quiz started:", data);
+            window.location.href = "./Quiz.html";
+          });
 
-        async function getStatus(){
-            const response = await fetch('http://192.168.0.87:5000/status');
+          socket.on("disconnect", () => {
+            console.warn("Disconnected from WebSocket server.");
+          });
 
-            if (!response.ok) {
-                console.error('Failed to fetch status:', response.status);
+          document
+            .getElementById("player")
+            .addEventListener("click", async () => {
+              const name = document
+                .getElementById("participantName")
+                .value.trim();
+              const collegeDropdown = document.getElementById("college");
+              const college =
+                collegeDropdown.options[collegeDropdown.selectedIndex].value;
+              const attribute = document
+                .getElementById("attributes")
+                .value.trim();
+
+              if (!name || !college || !attribute) {
+                alert("Please fill out all fields.");
                 return;
-            }
+              }
 
-            const result = await response.json();
-            const isServer = result.is_server;
+              try {
+                const response = await fetch(
+                  "http://192.168.0.87:5000/submit-user-details",
+                  {
+                    method: "POST",
+                    credentials: "include", // This is important!
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, college, attribute }),
+                  }
+                );
 
-            if (isServer) {
-                document.querySelector('.Start').id = "master";
-                document.querySelector('.Start').innerHTML = 'Start Matching';
-            } else {
-                document.querySelector('.Start').id = "player";
-                document.querySelector('.Start').innerHTML = 'Lock In';
-            }
-            return isServer;
+                const result = await response.json();
+
+                if (result.success) {
+                  alert("Details submitted successfully!");
+                  document.getElementById("participantName").value = "";
+                  document.getElementById("attributes").value = "";
+                  collegeDropdown.selectedIndex = 0;
+                }
+              } catch (error) {
+                console.error("Error submitting user details:", error);
+                alert("Error submitting details, please try again.");
+              }
+          });
         }
-
-        async function renderRoom(){
-            const response = await fetch('http://192.168.0.87:5000/room_code');
-            const result = await response.json();
-
-            if (result.success) {
-                document.getElementById('session_code').innerHTML = `Room #: ${result.room_code}`;
-            }
-        }
-        
-        window.addEventListener('DOMContentLoaded', async () => {
-            renderRoom();
-            fetchAndRenderParticipants();
-            setInterval(fetchAndRenderParticipants, 2000);
-
-            isServer = await getStatus();
-
-            if(isServer){
-                document.querySelector('.participant-form').style.display = 'none';
-
-                document.getElementById('master').addEventListener('click', async () => {
-                    try {
-                        const response = await fetch('http://192.168.0.87:5000/toggle-matching', { method: 'POST' });
-                        const result = await response.json();
-
-                        if (result.success) {
-                            alert("Quiz has started.");
-                        }
-                    } catch (error) {
-                        console.error("Error starting match:", error);
-                    }
-                });
-            } else {
-                setInterval(async () => {
-                    try {
-                        const res = await fetch('http://192.168.0.87:5000/check-matching');
-                        const data = await res.json();
-                        if (data.started) {
-                            window.location.href = "./Quiz.html";
-                        }
-                    } catch (err) {
-                        console.error("Polling error:", err);
-                    }
-                }, 2000);
-                document.getElementById('player').addEventListener('click', async () => {
-                    const name = document.getElementById('participantName').value.trim();
-                    const collegeDropdown = document.getElementById('college');
-                    const college = collegeDropdown.options[collegeDropdown.selectedIndex].value;
-                    const attribute = document.getElementById('attributes').value.trim();
-
-                    if (!name || !college || !attribute) {
-                        alert("Please fill out all fields.");
-                        return;
-                    }
-
-                    try {
-                        const response = await fetch('http://192.168.0.87:5000/submit-user-details', {
-                            method: 'POST',
-                            credentials: "include",  // This is important!
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ name, college, attribute })
-                        });
-
-                        const result = await response.json();
-
-                        if (result.success) {
-                            alert("Details submitted successfully!");
-                            document.getElementById('participantName').value = '';
-                            document.getElementById('attributes').value = '';
-                            collegeDropdown.selectedIndex = 0;
-                        }
-                    } catch (error) {
-                        console.error("Error submitting user details:", error);
-                        alert("Error submitting details, please try again.");
-                    }
-                });
-            }
-        });
-
+      });
     </script>
-</body>
-
+  </body>
 </html>
