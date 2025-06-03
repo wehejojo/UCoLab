@@ -159,17 +159,21 @@
         },
       ];
 
-      let currentIndex = parseInt(localStorage.getItem("currentIndex")) || 0;
-      let selectedAnswers = JSON.parse(localStorage.getItem("selectedAnswers")) || {};
+      let currentQuestionIndex = 0;
+      let userAnswers = {};
 
-      function saveProgress() {
-        localStorage.setItem("currentIndex", currentIndex);
-        localStorage.setItem("selectedAnswers", JSON.stringify(selectedAnswers));
+      function selectOption(clickedDiv, questionId, answer) {
+        document.querySelectorAll(".option").forEach((div) => {
+          div.classList.remove("selected");
+        });
+        clickedDiv.classList.add("selected");
+        userAnswers[questionId] = answer;
       }
 
       async function loadQuestion(index) {
         const q = questions[index];
         document.getElementById("question-text").innerText = q.question;
+        document.getElementById("question-count").innerText = `Question ${index + 1} / ${questions.length}`;
 
         const optionsContainer = document.getElementById("options-container");
         optionsContainer.innerHTML = "";
@@ -177,29 +181,18 @@
         q.choices.forEach((choice) => {
           const div = document.createElement("div");
           div.className = "option";
-          if (selectedAnswers[q.id] === choice) {
+          if (userAnswers[q.id] === choice) {
             div.classList.add("selected");
           }
           div.onclick = () => selectOption(div, q.id, choice);
           div.innerHTML = `<h2>${choice}</h2>`;
           optionsContainer.appendChild(div);
         });
-
-        document.getElementById("question-count").innerText = `Question ${index + 1} / ${questions.length}`;
-      }
-
-      function selectOption(clickedDiv, questionId, answer) {
-        document.querySelectorAll(".option").forEach((div) => {
-          div.classList.remove("selected");
-        });
-        clickedDiv.classList.add("selected");
-        selectedAnswers[questionId] = answer;
-        saveProgress();
       }
 
       async function nextQuestion() {
-        const currentQuestionId = questions[currentIndex].id;
-        const answer = selectedAnswers[currentQuestionId];
+        const currentQuestion = questions[currentQuestionIndex];
+        const answer = userAnswers[currentQuestion.id];
 
         if (!answer) {
           alert("Please select an answer before proceeding.");
@@ -211,29 +204,26 @@
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify({ question_id: currentQuestionId, answer }),
+            body: JSON.stringify({
+              question_id: currentQuestion.id,
+              answer: answer
+            })
           });
 
-          const result = await response.json();
-          console.log("Submit result:", result);
+          if (!response.ok) {
+            throw new Error('Failed to submit answer');
+          }
 
-          if (currentIndex < questions.length - 1) {
-            currentIndex++;
-            saveProgress();
-            loadQuestion(currentIndex);
+          if (currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion(currentQuestionIndex);
           } else {
-            // Clear localStorage before showing results
-            localStorage.removeItem("currentIndex");
-            localStorage.removeItem("selectedAnswers");
-            
-            // Hide quiz container and show results
             document.getElementById("quiz-container").style.display = "none";
             document.querySelector(".bottom-bar").style.display = "none";
             const results = document.getElementById("results-container");
             results.style.display = "block";
             results.className = "results";
 
-            // Show final cards after delay
             setTimeout(() => {
               document.getElementById("loading-message").style.display = "none";
               document.getElementById("final-cards").style.display = "block";
@@ -258,17 +248,9 @@
         }
       }
 
-      // Check if quiz is already completed
-      if (currentIndex >= questions.length) {
-        localStorage.removeItem("currentIndex");
-        localStorage.removeItem("selectedAnswers");
-        currentIndex = 0;
-        selectedAnswers = {};
-      }
-
       window.onload = () => {
         renderRoom();
-        loadQuestion(currentIndex);
+        loadQuestion(currentQuestionIndex);
 
         document.querySelector(".Start").addEventListener("click", (e) => {
           e.preventDefault();
