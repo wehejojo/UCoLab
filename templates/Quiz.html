@@ -215,7 +215,7 @@
 
         try {
           const response = await fetch(
-            "http://192.168.0.104:5000/submit-answer",
+            "http://192.168.0.87:5000/submit-answer",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -245,7 +245,7 @@
 
       async function renderRoom() {
         try {
-          const response = await fetch("http://192.168.0.104:5000/room_code");
+          const response = await fetch("http://192.168.0.87:5000/room_code");
           const result = await response.json();
 
           if (result.success) {

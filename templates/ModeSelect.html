@@ -58,7 +58,7 @@
       submitButton.onclick = async () => {
         const codeInput = document.getElementById("code").value;
 
-        const response = await fetch("http://192.168.0.104:5000/submit-code", {
+        const response = await fetch("http://192.168.0.87:5000/submit-code", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

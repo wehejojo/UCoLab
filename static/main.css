@@ -125,7 +125,7 @@ input {
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-md);
-  height: calc(65vh)
+  height: calc(65vh);
 }
 
 .participants,

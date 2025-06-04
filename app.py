@@ -6,9 +6,9 @@ from matchUsers import run_matching
 import string, random, secrets, json, os
 
 app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins=["http://192.168.0.87:5500"], manage_session=True)
 app.secret_key = secrets.token_hex(32)
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://192.168.0.104:5500"}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://192.168.0.87:5500"}})
 
 
 match_status = {
@@ -18,7 +18,7 @@ match_status = {
 DB = 'answers.json'
 GROUPS = 'groups.json'
 QUESTIONS = 'questions.json'
-SERVER_IP = '192.168.0.104' 
+SERVER_IP = '192.168.0.87' 
 
 def generateRandomSessionCode(length: int) -> str:
     characters: str = string.ascii_letters.upper() + string.digits
@@ -142,31 +142,35 @@ def method_name():
 @app.route('/submit-user-details', methods=['POST'])
 def submitUserDetails():
     data = request.get_json()
+    user_id = data.get('user_id')  # <-- now explicitly passed
     name = data.get('name')
     college = data.get('college')
     attribute = data.get('attribute')
-    user_id = session.get('user_id')
-    
-    session['user_id'] = user_id 
-    
+
+    if not user_id:
+        return jsonify({"success": False, "error": "No user ID"}), 400
+
     db = load_json_file(DB)
     if user_id not in db:
         db[user_id] = {}
-    
+
     db[user_id]["name"] = name
     db[user_id]["college"] = college
     db[user_id]["attribute"] = attribute
-    db[user_id]["skills"] = {}  # Initialize skills object
+    if "skills" not in db[user_id]:
+        db[user_id]["skills"] = {}
 
     save_json_file(DB, db)
-    return jsonify({ "success" : True, "data": db })
+    return jsonify({"success": True, "data": db})
+
 
 @app.route('/submit-answer', methods=['POST'])
 def submit_answer():
-    data = request.json
-    user_id = session.get('user_id')
+    data = request.get_json()
+    user_id = data.get('user_id')  # Get it from frontend!
     question_id = data.get('question_id')
     answer = data.get('answer')
+
     
     if not user_id or not question_id or not answer:
         return jsonify({'success': False, 'error': 'Invalid data'}), 400
@@ -200,5 +204,5 @@ def handle_connect():
 if __name__ == "__main__":
     socketio.run(
         app, host="0.0.0.0", 
-        port=5000, use_reloader=False
+        port=5000, debug=True   
     )

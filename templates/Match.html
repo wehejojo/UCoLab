@@ -60,7 +60,7 @@
           <p>Waiting for host to start matchmaking...</p>
         </div>
         <div class="bottom-button">
-          <button class="Start" id="player">Lock In</button>
+          <button class="Start" id="player" type="button">Lock In</button>
         </div>
       </div>
     </div>
@@ -68,10 +68,12 @@
     <script>
       let isServer = false;
 
+
+
       async function fetchAndRenderParticipants() {
         try {
           const response = await fetch(
-            "http://192.168.0.104:5000/show-participants"
+            "http://192.168.0.87:5000/show-participants"
           );
           if (!response.ok) {
             console.error("Failed to fetch participants:", response.status);
@@ -110,8 +112,18 @@
         }
       }
 
+      function ensureUserID() {
+  let uid = localStorage.getItem('user_id');
+  if (!uid) {
+    uid = 'user_' + Math.random().toString(36).substring(2, 10);
+    localStorage.setItem('user_id', uid);
+  }
+  return uid;
+}
+
+
       async function getStatus() {
-        const response = await fetch("http://192.168.0.104:5000/status");
+        const response = await fetch("http://192.168.0.87:5000/status");
 
         if (!response.ok) {
           console.error("Failed to fetch status:", response.status);
@@ -130,19 +142,46 @@
         }
         return isServer;
       }
+      
 
       async function renderRoom() {
-        const response = await fetch("http://192.168.0.104:5000/room_code");
+        const response = await fetch("http://192.168.0.87:5000/room_code");
         const result = await response.json();
 
         if (result.success) {
           document.getElementById(
             "session_code"
           ).innerHTML = `Room #: ${result.room_code}`;
+          localStorage.clear();
         }
       }
 
       window.addEventListener("DOMContentLoaded", async () => {
+        // On page load, restore from localStorage
+const savedName = localStorage.getItem("participantName");
+const savedCollege = localStorage.getItem("college");
+const savedAttributes = localStorage.getItem("attributes");
+
+if (savedName && savedCollege && savedAttributes) {
+  const nameInput = document.getElementById("participantName");
+  const collegeDropdown = document.getElementById("college");
+  const attributeInput = document.getElementById("attributes");
+
+  nameInput.value = savedName;
+  nameInput.disabled = true;
+
+  attributeInput.value = savedAttributes;
+  attributeInput.disabled = true;
+
+  collegeDropdown.value = savedCollege;
+  collegeDropdown.disabled = true;
+
+  // Optionally disable the button too
+  const button = document.getElementById("player");
+  button.disabled = true;
+  button.textContent = "Locked In!";
+}
+
         renderRoom();
         fetchAndRenderParticipants();
         setInterval(fetchAndRenderParticipants, 2000);
@@ -157,7 +196,7 @@
             .addEventListener("click", async () => {
               try {
                 const response = await fetch(
-                  "http://192.168.0.104:5000/toggle-matching",
+                  "http://192.168.0.87:5000/toggle-matching",
                   { method: "POST" }
                 );
                 const result = await response.json();
@@ -170,7 +209,7 @@
               }
             });
         } else {
-          const socket = io("http://192.168.0.104:5000");
+          const socket = io("http://192.168.0.87:5000");
           // const socket = io("http://192.168.0.147:5000");
           
           socket.on("connect", () => {
@@ -186,18 +225,20 @@
             console.warn("Disconnected from WebSocket server.");
           });
 
+          function saveDetails(){
+            localStorage.setItem("participantName", document.getElementById("participantName").value);
+            localStorage.setItem("college", document.getElementById("college").value); 
+            localStorage.setItem("attributes", document.getElementById("attributes").value);
+          }
+
           document
             .getElementById("player")
             .addEventListener("click", async () => {
-              const name = document
-                .getElementById("participantName")
-                .value.trim();
+              event.preventDefault();
+              const name = document.getElementById("participantName").value.trim();
               const collegeDropdown = document.getElementById("college");
-              const college =
-                collegeDropdown.options[collegeDropdown.selectedIndex].value;
-              const attribute = document
-                .getElementById("attributes")
-                .value.trim();
+              const college = collegeDropdown.options[collegeDropdown.selectedIndex].value;
+              const attribute = document.getElementById("attributes").value.trim();
 
               if (!name || !college || !attribute) {
                 alert("Please fill out all fields.");
@@ -205,22 +246,45 @@
               }
 
               try {
+                const user_id = ensureUserID();
+
                 const response = await fetch(
-                  "http://192.168.0.104:5000/submit-user-details",
+                  "http://192.168.0.87:5000/submit-user-details",
                   {
                     method: "POST",
                     credentials: "include", // This is important!
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ name, college, attribute }),
+                    body: JSON.stringify({ user_id, name, college, attribute }),
                   }
                 );
 
                 const result = await response.json();
 
                 if (result.success) {
+
+                  localStorage.setItem("participantName", name);
+                  localStorage.setItem("college", college);
+                  localStorage.setItem("attributes", attribute);
+
                   alert("Details submitted successfully!");
-                  document.getElementById("participantName").value = "";
-                  document.getElementById("attributes").value = "";
+
+                  document.getElementById("participantName").disabled = true;
+                  document.getElementById("attributes").disabled = true;
+                  collegeDropdown.disabled = true;
+
+                  const button = document.getElementById("player");
+                  button.disabled = true;
+                  button.textContent = "Locked In!";
+                  
+                  alert("Details submitted successfully!");
+                  // document.getElementById("participantName").value = "";
+                  // document.getElementById("attributes").value = "";
+                  document.getElementById("participantName").getAttribute('readonly', true);
+                  document.getElementById("participantName").disabled = true;
+
+                  document.getElementById("attributes").getAttribute('readonly', true);
+                  document.getElementById("attributes").disabled = true;
+                  
                   collegeDropdown.selectedIndex = 0;
                 }
               } catch (error) {
