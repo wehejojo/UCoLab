@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Match</title>
+    <link href="/static/main.css" rel="stylesheet" />
+  </head>
+
+  <body>
+      <!-- id="matchForm"
+      action="{{ url_for('sessionPage', session_code=session_code) }}"
+      method="POST" -->
+    <div>
+      <div class="top-bar">
+        <h1 id="session_code">Room #: {{ session_code }} </h1>
+      </div>
+      <div class="details">
+        <div class="participants">
+          <div class="participant-header">
+            <h2>Participants</h2>
+            <p>{{ participants | length }} users joined</p>
+          </div>
+
+          <div class="users" id="users">
+            {% for participant in participants %}
+            <div class="player">
+              <div class="pfp"></div>
+              <p>{{ participant.name }}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        
+      </div>
+      <div class="bottom-bar">
+        <div class="bottom-message">
+          <p>Waiting for host to start matchmaking...</p>
+        </div>
+        <div class="bottom-button">
+          <button class="Start" id="master" type="button">Start Matching</button>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script>
+      const socket = io();
+
+      document.getElementById('master').addEventListener('click', () => {
+        socket.emit('start_matching');
+      });
+
+      socket.on('update', (data) => {
+        const participants = data.participants;
+        const count = data.count;
+
+        const container = document.getElementById("users");
+        container.innerHTML = '';
+        participants.forEach(p => {
+            const div = document.createElement("div");
+            div.classList.add("player");
+            div.innerHTML = `<div class="pfp"></div><p>${p.name}</p>`;
+            container.appendChild(div);
+        });
+
+        const headerCount = document.querySelector(".participant-header p");
+        if (headerCount) {
+            headerCount.textContent = `${count} users joined`;
+        }
+      });
+    </script>
+  </body>
+</html>

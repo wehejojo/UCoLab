@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Match</title>
+    <link href="/static/main.css" rel="stylesheet" />
+  </head>
+
+  <body>
+      <!-- id="matchForm"
+      action="{{ url_for('sessionPage', session_code=session_code) }}"
+      method="POST" -->
+    <div>
+      <div class="top-bar">
+        <h1 id="session_code">Room #: {{ session_code }} </h1>
+      </div>
+      <div class="details">
+        <div class="participants">
+          <div class="participant-header">
+            <h2>Participants</h2>
+            <p>{{ participants | length }} users joined</p>
+          </div>
+
+          <div class="users" id="users">
+            {% for participant in participants %}
+            <div class="player">
+              <div class="pfp"></div>
+              <p>{{ participant.name }}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="participant-form">
+          <h1>Details</h1>
+          <p>Enter your name</p>
+          <input
+            type="text"
+            id="participantName"
+            name="participantName"
+            placeholder="Your Name"
+            required
+          />
+          <p>What College are you part of?</p>
+          <select name="college" id="college">
+            <option value="CITCS">
+              College of Information Technology and Computer Science
+            </option>
+            <option value="CON">College of Nursing</option>
+            <option value="CEA">College of Engineering</option>
+            <option value="CBA">College of Business Administration</option>
+            <option value="CAS">College of Art and Sciences</option>
+            <option value="COA">College of Accountancy</option>
+            <option value="CHTM">
+              College of Hospitality Tourism Management
+            </option>
+            <option value="CCJE">College of Criminal Justice Education</option>
+            <option value="CTE">College of Teacher Education</option>
+          </select>
+          <p>What are your skills</p>
+          <input
+            type="text"
+            placeholder="Please keep it short"
+            id="attributes"
+            name="attributes"
+            required
+          />
+        </div>
+      </div>
+      <div class="bottom-bar">
+        <div class="bottom-message">
+          <p>Waiting for host to start matchmaking...</p>
+        </div>
+        <div class="bottom-button">
+          <button class="Start" id="player" type="button">Lock In</button>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script>
+      const socket = io();
+
+      document.getElementById('player').addEventListener('click', () => {
+        const name = document.getElementById('participantName').value;
+        const college = document.getElementById('college').value;
+        const skills = document.getElementById('attributes').value;
+
+        socket.emit('join', { name, college, skills });
+      });
+
+      socket.on('update', (data) => {
+        const participants = data.participants;
+        const count = data.count;
+
+        const container = document.getElementById("users");
+        container.innerHTML = '';
+        participants.forEach(p => {
+            const div = document.createElement("div");
+            div.classList.add("player");
+            div.innerHTML = `<div class="pfp"></div><p>${p.name}</p>`;
+            container.appendChild(div);
+        });
+
+        const headerCount = document.querySelector(".participant-header p");
+        if (headerCount) {
+            headerCount.textContent = `${count} users joined`;
+        }
+      });
+
+      socket.on('redirect_to_quiz', (data) => {
+        window.location.href = data.url;
+      });
+    </script>
+  </body>
+</html>

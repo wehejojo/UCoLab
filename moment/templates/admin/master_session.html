@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Master</title>
+</head>
+<body>
+    <form class="sessionmaster" action="/master/session" method="POST">
+      <h1 id="session_code">Session Code: {{ session_code }} </h1>
+      <button id="start" class="session-start">Start Matching!</button>
+    </form>
+    <script>
+      document.getElementById('start').addEventListener('click', () => {
+        document.getElementById('start').innerHTML = 'Stopping Matching...';
+      });
+    </script>
+</body>
+</html>
