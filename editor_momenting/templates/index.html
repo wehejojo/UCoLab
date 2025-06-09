@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Editor.js</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</head>
+            `
+<body>
+    <div id="editorjs"></div>
+
+    <script type="module">
+        import EditorJS from 'https://cdn.skypack.dev/@editorjs/editorjs';
+        import Header from 'https://cdn.skypack.dev/@editorjs/header';
+        import List from 'https://cdn.skypack.dev/@editorjs/list';
+
+        const socket = io("http://192.168.0.147:5000");
+
+        const editor = new EditorJS({
+            holder: 'editorjs',
+            tools: {
+                header: Header,
+                list: List
+            },
+            onChange: async () => {
+                const output = await editor.save();
+                socket.emit("update_doc", output);
+            }
+        });
+
+        socket.on("load_doc", (data) => {
+            editor.isReady
+                .then(() => {
+                    editor.render(data);
+                })
+                .catch((error) => {
+                    console.error("EditorJS initialization failed: ", error);
+                });
+        });
+
+        socket.on("doc_updated", (data) => {
+            editor.isReady
+                .then(() => {
+                    editor.render(data);
+                })
+                .catch((error) => {
+                    console.error("Error rendering doc from others: ", error);
+                });
+        });
+    </script>
+</body>
+
+</html>
