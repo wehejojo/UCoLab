@@ -1,54 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
+<style>
+    .remote-cursor {
+        position: absolute;
+        width: 2px;
+        height: 1em;
+        background-color: red;
+        pointer-events: none;
+        z-index: 9999;
+        animation: blink 1s step-start 0s infinite;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <title>Editor.js</title>
-    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-</head>
-            `
-<body>
+    @keyframes blink {
+        50% { opacity: 0; }
+    }
+</style>
+
+<div id="editor-container" style="position: relative;">
     <div id="editorjs"></div>
+</div>
 
-    <script type="module">
-        import EditorJS from 'https://cdn.skypack.dev/@editorjs/editorjs';
-        import Header from 'https://cdn.skypack.dev/@editorjs/header';
-        import List from 'https://cdn.skypack.dev/@editorjs/list';
+<script type="module">
+    import EditorJS from 'https://cdn.skypack.dev/@editorjs/editorjs';
+    import Header from 'https://cdn.skypack.dev/@editorjs/header';
+    import List from 'https://cdn.skypack.dev/@editorjs/list';
 
-        const socket = io("http://192.168.0.147:5000");
+    const socket = io("http://192.168.0.147:5000");
 
-        const editor = new EditorJS({
-            holder: 'editorjs',
-            tools: {
-                header: Header,
-                list: List
-            },
-            onChange: async () => {
-                const output = await editor.save();
-                socket.emit("update_doc", output);
-            }
-        });
+    const editor = new EditorJS({
+        holder: 'editorjs',
+        tools: {
+            header: Header,
+            list: List
+        },
+        onChange: async () => {
+            const output = await editor.save();
+            socket.emit("update_doc", output);
+        }
+    });
 
-        socket.on("load_doc", (data) => {
-            editor.isReady
-                .then(() => {
-                    editor.render(data);
-                })
-                .catch((error) => {
-                    console.error("EditorJS initialization failed: ", error);
-                });
-        });
+    socket.on("load_doc", (data) => {
+        editor.isReady.then(() => editor.render(data));
+    });
 
-        socket.on("doc_updated", (data) => {
-            editor.isReady
-                .then(() => {
-                    editor.render(data);
-                })
-                .catch((error) => {
-                    console.error("Error rendering doc from others: ", error);
-                });
-        });
-    </script>
-</body>
+    socket.on("doc_updated", (data) => {
+        editor.isReady.then(() => editor.render(data));
+    });
 
-</html>
+    // Track cursor movement
+    document.addEventListener("selectionchange", () => {
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            socket.emit("cursor_move", {
+                top: rect.top + window.scrollY,
+                left: rect.left + window.scrollX
+            });
+        }
+    });
+
+    // Render other users' cursors
+    const remoteCursors = {};
+
+    socket.on("cursor_update", ({ user_id, top, left }) => {
+        let cursor = remoteCursors[user_id];
+        if (!cursor) {
+            cursor = document.createElement("div");
+            cursor.classList.add("remote-cursor");
+            document.body.appendChild(cursor);
+            remoteCursors[user_id] = cursor;
+        }
+        cursor.style.top = `${top}px`;
+        cursor.style.left = `${left}px`;
+    });
+</script>

@@ -1,11 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    quiz moment
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz</title>
+    <link rel="stylesheet" href="/static/main.css" />
+    <style>
+      .selected {
+        background-color: #dcdcdc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="top-bar">
+      <h1 id="session_code">Room #: {{ session_code }}</h1>
+    </div>
+
+    <div id="quiz-container">
+      <div class="middle-container">
+        <div class="question">
+          <h2 id="question-text">Loading...</h2>
+        </div>
+        <div class="options" id="options-container"></div>
+      </div>
+    </div>
+
+    <div id="results-container" style="display: none; text-align: center">
+      <h2 id="loading-message">
+        Finding best teammates based on your skills, interests, and working
+        style. This may take a moment...
+      </h2>
+      <div id="final-cards" style="display: none; margin-top: 2rem">
+        <h2 id="question-text">Here are your best matches</h2>
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+          "
+        >
+          <div class="question"></div>
+          <div class="card">
+            <h3>Hacker</h3>
+            <div class="card-bottom">
+              <h2>Joselito Cruz</h2>
+              <p>BS-Information Technology 3</p>
+              <p>Key Skills</p>
+              <div class="skills">
+                <p>Web Dev</p>
+                <p>Mobile App</p>
+              </div>
+              <p>Interest</p>
+              <div class="interests">
+                <p>Tech & Software</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Hustler</h3>
+            <div class="card-bottom">
+              <h2>Bea Santos</h2>
+              <p>BS-Marketing Management</p>
+              <p>Key Skills</p>
+              <div class="skills">
+                <p>Marketing</p>
+                <p>Pitching</p>
+              </div>
+              <p>Interest</p>
+              <div class="interests">
+                <p>Business & Finance</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Hipster</h3>
+            <div class="card-bottom">
+              <h2>John Ortega</h2>
+              <p>BS-Crim 3</p>
+              <p>Key Skills</p>
+              <div class="skills">
+                <p>Legal Research</p>
+                <p>Critical Thinking</p>
+              </div>
+              <p>Interest</p>
+              <div class="interests">
+                <p>Social Impact & Community</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="bottom-message">
+        <p id="question-count">Question 1 / 5</p>
+      </div>
+
+      <div class="bottom-button">
+        <button type="button" class="Start">Next</button>
+      </div>
+    </div>
+
+    <script>
+      const SESSION_CODE = "{{ session_code }}";
+      const questions = [
+        {
+          id: "q1",
+          question: "What is your primary strength in a team?",
+          choices: ["Hacker", "Hustler", "Hipster", "Explorer"],
+        },
+        {
+          id: "q2",
+          question: "What type of projects are you most interested in?",
+          choices: [
+            "Tech & Software",
+            "Sustainability",
+            "Health & Wellness",
+            "Arts & Culture",
+            "Business & Finance",
+            "Education",
+            "Social Impact & Community",
+            "Open to Anything",
+          ],
+        },
+        {
+          id: "q3",
+          question: "How do you prefer to collaborate?",
+          choices: [
+            "Fast Paced and action-oriented",
+            "Structured and planned",
+            "Flexible and go-with-the-flow",
+            "I adapt to the team's rhythm",
+          ],
+        },
+        {
+          id: "q4",
+          question: "What energizes you most during a project",
+          choices: [
+            "Brainstorming new ideas",
+            "Seeing tangible progress",
+            "Collaborating with others",
+            "Solving hard problems",
+          ],
+        },
+        {
+          id: "q5",
+          question: "How do you usually contribute to a team discussion?",
+          choices: [
+            "I lead and organize ideas",
+            "I analyze and critique proposals",
+            "I bring creative, out-of-the-box ideas",
+            "Listen and support others' contributions",
+          ],
+        },
+      ];
+
+      let currentIndex = 0;
+      let selectedAnswers = {};
+
+      async function loadQuestion(index) {
+        console.log(index);
+        const q = questions[index];
+        document.getElementById("question-text").innerText = q.question;
+
+        const optionsContainer = document.getElementById("options-container");
+        optionsContainer.innerHTML = "";
+
+        q.choices.forEach((choice) => {
+          const div = document.createElement("div");
+          div.className = "option";
+          if (selectedAnswers[q.id] === choice) {
+            div.classList.add("selected");
+          }
+          div.onclick = () => selectOption(div, q.id, choice);
+          div.innerHTML = `<h2>${choice}</h2>`;
+          optionsContainer.appendChild(div);
+        });
+
+        document.getElementById("question-count").innerText = `Question ${
+          index + 1
+        } / ${questions.length}`;
+      }
+
+      function selectOption(clickedDiv, questionId, answer) {
+        document.querySelectorAll(".option").forEach((div) => {
+          div.classList.remove("selected");
+        });
+        clickedDiv.classList.add("selected");
+        selectedAnswers[questionId] = answer;
+      }
+
+      async function nextQuestion() {
+        const currentQuestionId = questions[currentIndex].id;
+        const answer = selectedAnswers[currentQuestionId];
+
+        if (!answer) {
+          alert("Please select an answer before proceeding.");
+          return;
+        }
+
+        try {
+          console.log(localStorage.getItem('name'), currentQuestionId, answer)
+          const response = await fetch('/quiz/submit', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              name: localStorage.getItem('name'),
+              question_id: currentQuestionId,
+              answer: answer,
+            }),
+          });
+
+          const result = await response.json();
+          console.log("Submit result:", result);
+        } catch (error) {
+          console.error("Error submitting answer:", error);
+          alert("Failed to submit answer. Please try again.");
+          return;
+        }
+
+        if (currentIndex < questions.length - 1) {
+          currentIndex++;
+          loadQuestion(currentIndex);
+        } else {
+          window.location.href = "/group";
+        }
+      }
+
+      window.onload = () => {
+        currentIndex = 0;
+        selectedAnswers = {};
+        loadQuestion(currentIndex);
+
+        document.querySelector(".Start").addEventListener("click", (e) => {
+          e.preventDefault();
+          nextQuestion();
+        });
+      };
+    </script>
+  </body>
 </html>

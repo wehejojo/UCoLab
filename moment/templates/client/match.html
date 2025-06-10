@@ -78,12 +78,17 @@
     </div>
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script>
-      const socket = io();
+      const socket = io({
+        withCredentials: true
+      });
+
 
       document.getElementById('player').addEventListener('click', () => {
         const name = document.getElementById('participantName').value;
         const college = document.getElementById('college').value;
         const skills = document.getElementById('attributes').value;
+
+        localStorage.setItem('name', name);
 
         socket.emit('join', { name, college, skills });
       });
@@ -95,15 +100,15 @@
         const container = document.getElementById("users");
         container.innerHTML = '';
         participants.forEach(p => {
-            const div = document.createElement("div");
-            div.classList.add("player");
-            div.innerHTML = `<div class="pfp"></div><p>${p.name}</p>`;
-            container.appendChild(div);
+          const div = document.createElement("div");
+          div.classList.add("player");
+          div.innerHTML = `<div class="pfp"></div><p>${p.name}</p>`;
+          container.appendChild(div);
         });
 
         const headerCount = document.querySelector(".participant-header p");
         if (headerCount) {
-            headerCount.textContent = `${count} users joined`;
+          headerCount.textContent = `${count} users joined`;
         }
       });
 

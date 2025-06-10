@@ -64,5 +64,12 @@
     "college": "CITCS",
     "attribute": "aaaa",
     "skills": {}
+  },
+  "anonymous": {
+    "q2": "Tech & Software",
+    "q1": "Hustler",
+    "q3": "Structured and planned",
+    "q4": "Solving hard problems",
+    "q5": "Listen and support others' contributions"
   }
 }
