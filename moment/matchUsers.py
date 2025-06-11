@@ -47,10 +47,10 @@ def style_similarity(vecs):
 
 # Group scoring function
 def group_score(group_data):
-    group_vecs = [encode_user_skills(u["skills"]) for u in group_data]
-    q1_roles = [u["skills"]["q1"] for u in group_data]
+    group_vecs = [encode_user_skills(u["answers"]) for u in group_data]
+    q1_roles = [u["answers"]["q1"] for u in group_data]
     q1_diversity = len(set(q1_roles)) / 3.0
-    q2_same = len(set(u["skills"]["q2"] for u in group_data)) == 1
+    q2_same = len(set(u["answers"]["q2"] for u in group_data)) == 1
     sim_score = style_similarity(group_vecs)
     return 0.4 * q1_diversity + 0.3 * q2_same + 0.3 * sim_score
 
@@ -61,7 +61,7 @@ def full_grouping_with_role_diversity(user_json):
 
     # Step 1: Generate all valid triplets with unique roles
     for triplet in combinations(users, 3):
-        roles = [u[1]["skills"]["q1"] for u in triplet]
+        roles = [u[1]["answers"]["q1"] for u in triplet]
         if len(set(roles)) == 3:
             group_data = [u[1] for u in triplet]
             score = group_score(group_data)
@@ -83,8 +83,8 @@ def full_grouping_with_role_diversity(user_json):
             f"group {group_num}": {
                 "members": {
                     u[0]: {  # u[0] is the user_id
-                        "name": u[1]["name"],
-                        "skills": list(u[1]["skills"].values())
+                        "name": u[0],
+                        "skills": list(u[1]["answers"].values())
                     } for u in triplet
                 }
             }

@@ -20,7 +20,6 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 DB = os.path.join(os.path.dirname(__file__), 'db', 'answers.json')
 GROUPS = os.path.join(os.path.dirname(__file__), 'db', 'groups.json')
 
-# GROUPS = './db/groups.json'
 
 def generateRandomSessionCode(length: int) -> str:
     characters: str = string.ascii_letters.upper() + string.digits
@@ -43,9 +42,10 @@ def save_json_file(filename, data):
         json.dump(data, f, indent=2)
 
 def all_questions_answered(user_data):
-    if 'skills' not in user_data:
+    if 'answers' not in user_data:
         return False
-    return all(f'q{i}' in user_data['skills'] for i in range(1, 6))
+    return all(f'q{i}' in user_data['answers'] for i in range(1, 6))
+
 
 
 
@@ -74,6 +74,7 @@ def masterMatch():
 def modeSelect():
     if request.method == 'POST':
         user_code = request.form.get('code')
+        print(user_code)
         
         if not user_code:
             return render_template(
@@ -97,11 +98,25 @@ def modeSelect():
 
 @app.route('/session/<session_code>')
 def sessionPage(session_code):
+    db = load_json_file(DB)
+    participants = [{
+            'name': name,
+            'college': info.get('college', ''),
+            'skills': info.get('skills', '')
+        } for name, info in db.items() ]
+    
     return render_template(
         '/client/match.html',
         session_code=session_code,
-        participants=participants_list,
-        length=len(participants_list)
+        participants=participants,
+        length=len(participants)
+    )
+
+@app.route('/master/quiz')
+def masterQuiz():
+    return render_template(
+        '/admin/quiz.html',
+        session_code=SESSION_CODE
     )
 
 @app.route('/<session_code>/quiz')
@@ -135,7 +150,7 @@ def submitQuiz():
 
     if name not in db:
         db[name] = {}
-    
+
     if 'answers' not in db[name]:
         db[name]['answers'] = {}
     
@@ -150,17 +165,21 @@ def submitQuiz():
 
 @app.route('/quiz/group', methods=['GET'])
 def groups():
-    return render_template('/client/groups.html')
+    return render_template(
+        '/client/groups.html',
+        session_code = SESSION_CODE
+    )
 
-@app.route('/match', methods=['GET'])
+@app.route('/match', methods=['POST'])
 def match_users():
     db = load_json_file(DB)
-    gps = load_json_file()
+    gps = load_json_file(GROUPS)
 
-    data = request.get_json()
-    name = data.get('name')
+    incomplete_users = [
+        name for name, data in db.items()
+        if not all_questions_answered(data)
+    ]
 
-    incomplete_users = [name for name, data in db.items() if not all_questions_answered(data)]
     if incomplete_users:
         return jsonify({
             'error': 'Not all users have completed the quiz',
@@ -179,19 +198,54 @@ def match_users():
             return jsonify({
                 "success": True,
                 "groups": groups,
-                "currentUser": name
             }), 200
         else:
             return jsonify({'error': 'Unable to form any groups'}), 400
     else:
         return jsonify({'error': 'No users found'}), 400
 
+@app.route('/getGroups', methods=['GET'])
+def get_groups():
+    name = request.args.get("name")
+    groups = load_json_file(GROUPS)
+
+    if not groups:
+        return jsonify({"success": False, "error": "No groups available yet"}), 404
+
+    user_group = None
+    for group_name, group_data in groups.items():
+        for member in group_data["members"].values():
+            if member.get("name") == name:
+                user_group = {group_name: group_data}
+                break
+        if user_group:
+            break
+
+    if user_group:
+        return jsonify({
+            "success": True,
+            "groups": user_group,
+            "currentuser": name
+        }), 200
+    else:
+        return jsonify({
+            "success": False,
+            "error": "User not found in any group"
+        }), 404
+
+
 
 @socketio.on('connect')
 def handle_connect():
+    db = load_json_file(DB)
+    participants = [{ 'name': name, 
+            'college': info.get('college', ''),
+            'skills': info.get('skills', '')
+        } for name, info in db.items() ]
+    
     emit('update', {
-        'participants': participants_list,
-        'count': len(participants_list)
+        'participants': participants,
+        'count': len(participants)
     })
 
 @socketio.on('join')
@@ -211,8 +265,11 @@ def handle_join(data):
     participants_list.append(data)
 
     emit('update', {
-        'participants': participants_list,
-        'count': len(participants_list)
+        'participants': [
+            {'name': n, 'college': d['college'], 'skills': d['skills']} 
+            for n, d in db.items()
+        ],
+        'count': len(db)
     }, broadcast=True)
 
 

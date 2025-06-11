@@ -48,6 +48,8 @@
 
       document.getElementById('master').addEventListener('click', () => {
         socket.emit('start_matching');
+
+        window.location.href = '/master/quiz';
       });
 
       socket.on('update', (data) => {

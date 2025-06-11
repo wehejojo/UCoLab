@@ -1,1 +1,134 @@
-{}
+{
+  "Anne Dominique Soriano": {
+    "college": "CITCS",
+    "skills": "marketing",
+    "answers": {
+      "q1": "Explorer",
+      "q2": "Business & Finance",
+      "q3": "Flexible and go-with-the-flow",
+      "q4": "Collaborating with others",
+      "q5": "Listen and support others' contributions"
+    }
+  },
+  "Christine Josephine L. Gumatic": {
+    "college": "CITCS",
+    "skills": "Creative Designer",
+    "answers": {
+      "q1": "Hustler",
+      "q2": "Arts & Culture",
+      "q3": "Flexible and go-with-the-flow",
+      "q4": "Collaborating with others",
+      "q5": "I analyze and critique proposals"
+    }
+  },
+  "Augnina Krizel Reburiano": {
+    "college": "CITCS",
+    "skills": "",
+    "answers": {
+      "q1": "Hustler",
+      "q2": "Business & Finance",
+      "q3": "Structured and planned",
+      "q4": "Brainstorming new ideas",
+      "q5": "I lead and organize ideas"
+    }
+  },
+  "Nicholette": {
+    "college": "CBA",
+    "skills": "Bookkeeping",
+    "answers": {
+      "q1": "Explorer",
+      "q2": "Business & Finance",
+      "q3": "Structured and planned",
+      "q4": "Seeing tangible progress",
+      "q5": "I analyze and critique proposals"
+    }
+  },
+  "Rib": {
+    "college": "CITCS",
+    "skills": "Creative Designer",
+    "answers": {
+      "q1": "Hipster",
+      "q2": "Arts & Culture",
+      "q3": "I adapt to the team's rhythm",
+      "q4": "Seeing tangible progress",
+      "q5": "Listen and support others' contributions"
+    }
+  },
+  "Ma. Franchesca G. Urbi": {
+    "college": "CITCS",
+    "skills": "Creative Design",
+    "answers": {
+      "q1": "Hipster",
+      "q2": "Tech & Software",
+      "q3": "Structured and planned",
+      "q4": "Seeing tangible progress",
+      "q5": "I bring creative, out-of-the-box ideas"
+    }
+  },
+  "Enrico Tiongco": {
+    "college": "CBA",
+    "skills": "Marketing",
+    "answers": {
+      "q1": "Explorer",
+      "q2": "Education",
+      "q3": "I adapt to the team's rhythm",
+      "q4": "Collaborating with others",
+      "q5": "Listen and support others' contributions"
+    }
+  },
+  "Patricia Bernadette Aspillaga": {
+    "college": "CITCS",
+    "skills": "System Design",
+    "answers": {
+      "q1": "Hustler",
+      "q2": "Open to Anything",
+      "q3": "I adapt to the team's rhythm",
+      "q4": "Seeing tangible progress",
+      "q5": "I analyze and critique proposals"
+    }
+  },
+  "Rodrigo Maglatang Jr.": {
+    "college": "CITCS",
+    "skills": "Coding/Editing",
+    "answers": {
+      "q1": "Hacker",
+      "q2": "Tech & Software",
+      "q3": "Flexible and go-with-the-flow",
+      "q4": "Collaborating with others",
+      "q5": "Listen and support others' contributions"
+    }
+  },
+  "Larkaholic": {
+    "college": "CITCS",
+    "skills": "Programming",
+    "answers": {
+      "q1": "Hacker",
+      "q2": "Tech & Software",
+      "q3": "Structured and planned",
+      "q4": "Solving hard problems",
+      "q5": "I analyze and critique proposals"
+    }
+  },
+  "Joumongochangco": {
+    "college": "CITCS",
+    "skills": "Eating",
+    "answers": {
+      "q1": "Hacker",
+      "q2": "Tech & Software",
+      "q3": "I adapt to the team's rhythm",
+      "q4": "Solving hard problems",
+      "q5": "I analyze and critique proposals"
+    }
+  },
+  "Jes": {
+    "college": "CITCS",
+    "skills": "Coding?",
+    "answers": {
+      "q1": "Hacker",
+      "q2": "Tech & Software",
+      "q3": "Flexible and go-with-the-flow",
+      "q4": "Seeing tangible progress",
+      "q5": "I lead and organize ideas"
+    }
+  }
+}

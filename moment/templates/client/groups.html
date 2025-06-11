@@ -10,11 +10,12 @@
         background-color: #dcdcdc;
       }
     </style>
+    <link rel="stylesheet" href="/static/main.css" />
   </head>
 
   <body>
     <div class="top-bar">
-      <h1 id="session_code">Room #:</h1>
+      <h1 id="session_code">Room #: {{ session_code }}</h1>
     </div>
 
     <div
@@ -58,17 +59,21 @@
         document.getElementById("final-cards").style.display = "block";
 
         try {
-          const response = await fetch("/match", {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: localStorage.getItem('name') }),
-            credentials: "include",
-          });
+          const userName = localStorage.getItem("name");
+          if (!userName) {
+            console.error("No name found in localStorage.");
+            return;
+          }
+
+          const response = await fetch(
+            `/getGroups?name=${encodeURIComponent(userName)}`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
 
           const result = await response.json();
-          const name = result.name;
-
-          console.log(userID);
 
           if (result.success && typeof result.groups === "object") {
             const finalCards = document.getElementById("final-cards");
@@ -76,13 +81,20 @@
 
             let foundGroup = null;
 
-            Object.entries(result.groups).forEach(([groupName, groupData]) => {
-              if (groupData.members.hasOwnProperty(userID)) {
+            // Find the group that contains the user
+            for (const [groupName, groupData] of Object.entries(
+              result.groups
+            )) {
+              const memberList = Object.values(groupData.members);
+              const isUserInGroup = memberList.some(
+                (member) => member.name === userName
+              );
+              if (isUserInGroup) {
                 foundGroup = { groupName, groupData };
+                break;
               }
-            });
+            }
 
-            // Step 2: Display the group if found
             if (foundGroup) {
               const { groupName, groupData } = foundGroup;
 
@@ -94,13 +106,15 @@
                 const card = document.createElement("div");
                 card.className = "card";
                 card.innerHTML = `
-            <h3>${memberData.name}</h3>
-            <div class="card-bottom">
-              <p>Key Skills</p>
-              <div class="skills">
-                ${memberData.skills.map((skill) => `<p>${skill}</p>`).join("")}
-              </div>
-            </div>`;
+              <h3>${memberData.name}</h3>
+              <div class="card-bottom">
+                <p>Key Skills</p>
+                <div class="skills">
+                  ${memberData.skills
+                    .map((skill) => `<p>${skill}</p>`)
+                    .join("")}
+                </div>
+              </div>`;
                 finalCards.appendChild(card);
               });
             } else {

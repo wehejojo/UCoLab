@@ -1,11 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link href="/static/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <button id="match-users">Match Users</button>
     
-</body>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script>
+      const socket = io();
+      
+      document
+        .querySelector("#match-users")
+        .addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          try {
+            const response = await fetch("/match", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+              alert("Users successfully matched!");
+              socket.emit("matching_complete");
+            } else {
+              alert(`Error: ${result.error || "Unknown error"}`);
+              if (result.incomplete_users) {
+                console.log("Incomplete users:", result.incomplete_users);
+              }
+            }
+          } catch (error) {
+            console.error("Match error:", error);
+            alert("An error occurred while matching users.");
+          }
+        });
+    </script>
+  </body>
 </html>

@@ -1,1 +1,104 @@
-{}
+{
+  "group 1": {
+    "members": {
+      "Anne Dominique Soriano": {
+        "name": "Anne Dominique Soriano",
+        "skills": [
+          "Explorer",
+          "Business & Finance",
+          "Flexible and go-with-the-flow",
+          "Collaborating with others",
+          "Listen and support others' contributions"
+        ]
+      },
+      "Christine Josephine L. Gumatic": {
+        "name": "Christine Josephine L. Gumatic",
+        "skills": [
+          "Hustler",
+          "Arts & Culture",
+          "Flexible and go-with-the-flow",
+          "Collaborating with others",
+          "I analyze and critique proposals"
+        ]
+      },
+      "Rodrigo Maglatang Jr.": {
+        "name": "Rodrigo Maglatang Jr.",
+        "skills": [
+          "Hacker",
+          "Tech & Software",
+          "Flexible and go-with-the-flow",
+          "Collaborating with others",
+          "Listen and support others' contributions"
+        ]
+      }
+    }
+  },
+  "group 2": {
+    "members": {
+      "Nicholette": {
+        "name": "Nicholette",
+        "skills": [
+          "Explorer",
+          "Business & Finance",
+          "Structured and planned",
+          "Seeing tangible progress",
+          "I analyze and critique proposals"
+        ]
+      },
+      "Rib": {
+        "name": "Rib",
+        "skills": [
+          "Hipster",
+          "Arts & Culture",
+          "I adapt to the team's rhythm",
+          "Seeing tangible progress",
+          "Listen and support others' contributions"
+        ]
+      },
+      "Patricia Bernadette Aspillaga": {
+        "name": "Patricia Bernadette Aspillaga",
+        "skills": [
+          "Hustler",
+          "Open to Anything",
+          "I adapt to the team's rhythm",
+          "Seeing tangible progress",
+          "I analyze and critique proposals"
+        ]
+      }
+    }
+  },
+  "group 3": {
+    "members": {
+      "Augnina Krizel Reburiano": {
+        "name": "Augnina Krizel Reburiano",
+        "skills": [
+          "Hustler",
+          "Business & Finance",
+          "Structured and planned",
+          "Brainstorming new ideas",
+          "I lead and organize ideas"
+        ]
+      },
+      "Ma. Franchesca G. Urbi": {
+        "name": "Ma. Franchesca G. Urbi",
+        "skills": [
+          "Hipster",
+          "Tech & Software",
+          "Structured and planned",
+          "Seeing tangible progress",
+          "I bring creative, out-of-the-box ideas"
+        ]
+      },
+      "Larkaholic": {
+        "name": "Larkaholic",
+        "skills": [
+          "Hacker",
+          "Tech & Software",
+          "Structured and planned",
+          "Solving hard problems",
+          "I analyze and critique proposals"
+        ]
+      }
+    }
+  }
+}
