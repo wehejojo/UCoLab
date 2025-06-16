@@ -1,53 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Collaborative Editor</title>
+    <title>UColab</title>
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script src="https://unpkg.com/textarea-caret@3.1.0/index.js"></script>
-    <style>
-      textarea {
-        width: 90%;
-        height: 300px;
-        font-family: monospace;
-        font-size: 16px;
-      }
-      #debug {
-        font-family: monospace;
-        background: #f0f0f0;
-        border: 1px solid #ccc;
-        padding: 8px;
-        margin-top: 10px;
-        width: 90%;
-        white-space: pre-wrap;
-      }
-    </style>
-    <style>
-  .editor-container {
-    position: relative;
-    width: 90%;
-  }
-
-  #cursors {
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 1000;
-  }
-
-  textarea {
-    width: 100%;
-    height: 300px;
-    font-family: monospace;
-    font-size: 16px;
-    position: relative;
-    z-index: 1;
-  }
-</style>
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
   </head>
   <body>
-    <h1>UCoLab</h1>
+    <div class="header"></div>
     <div class="editor-container">
       <div id="cursors"></div>
       <textarea id="editor"></textarea>
@@ -60,7 +20,7 @@
       const textarea = document.getElementById('editor')
       const debug = document.getElementById('debug')
       let revision = 0
-      let suppress = false
+      let suppress = false  
       let previousValue = ''
 
       function getLineAndCol(pos, lines) {
@@ -69,7 +29,7 @@
           if (pos <= total + lines[i].length) {
             return { line: i, col: pos - total }
           }
-          total += lines[i].length + 1 // for '\n'
+          total += lines[i].length + 1
         }
         return { line: lines.length - 1, col: lines[lines.length - 1].length }
       }
