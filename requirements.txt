@@ -3,3 +3,5 @@ flask_cors
 scikit-learn
 flask_socketio
 eventlet
+Flask-SQLAlchemy
+Flask-Migrate
