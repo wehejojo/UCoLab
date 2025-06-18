@@ -4,10 +4,13 @@
     <title>UColab</title>
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script src="https://unpkg.com/textarea-caret@3.1.0/index.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='main.css') }}"
+    />
   </head>
   <body>
-    <div class="header"></div>
+    <div class="header">Editing Group: {{ group_name }}</div>
     <div class="editor-container">
       <div id="cursors"></div>
       <textarea id="editor"></textarea>
@@ -16,217 +19,227 @@
     <pre id="debug">[Debug output]</pre>
 
     <script>
-      const socket = io()
-      const textarea = document.getElementById('editor')
-      const debug = document.getElementById('debug')
-      let revision = 0
-      let suppress = false  
-      let previousValue = ''
+      const socket = io({ query: {
+        group: "{{ group_number }}"
+      }});
+
+      const textarea = document.getElementById("editor");
+      const debug = document.getElementById("debug");
+      let revision = 0;
+      let suppress = false;
+      let previousValue = "";
 
       function getLineAndCol(pos, lines) {
-        let total = 0
+        let total = 0;
         for (let i = 0; i < lines.length; i++) {
           if (pos <= total + lines[i].length) {
-            return { line: i, col: pos - total }
+            return { line: i, col: pos - total };
           }
-          total += lines[i].length + 1
+          total += lines[i].length + 1;
         }
-        return { line: lines.length - 1, col: lines[lines.length - 1].length }
+        return { line: lines.length - 1, col: lines[lines.length - 1].length };
       }
 
       function getFlatPos(line, col, lines) {
-        let total = 0
+        let total = 0;
         for (let i = 0; i < line; i++) {
-          total += lines[i].length + 1
+          total += lines[i].length + 1;
         }
-        return total + col
+        return total + col;
       }
 
-      function updateDebug(message = '') {
-        const cursorPos = textarea.selectionStart
-        const lines = textarea.value.split('\n')
-        const { line, col } = getLineAndCol(cursorPos, lines)
-        debug.textContent = `Cursor Pos: ${cursorPos}\nLine: ${line}, Col: ${col}\nRevision: ${revision}\n${message}`
+      function updateDebug(message = "") {
+        const cursorPos = textarea.selectionStart;
+        const lines = textarea.value.split("\n");
+        const { line, col } = getLineAndCol(cursorPos, lines);
+        debug.textContent = `Cursor Pos: ${cursorPos}\nLine: ${line}, Col: ${col}\nRevision: ${revision}\n${message}`;
       }
 
-      socket.on('init', (data) => {
-        textarea.value = data.text
-        textarea._lastLength = textarea.value.length
-        previousValue = textarea.value
-        revision = data.rev || 0
-        updateDebug('[Init received]')
-      })
+      socket.on("init", (data) => {
+        textarea.value = data.text;
+        textarea._lastLength = textarea.value.length;
+        previousValue = textarea.value;
+        revision = data.rev || 0;
+        updateDebug("[Init received]");
+      });
 
-      textarea.addEventListener('input', (e) => {
-        if (suppress) return
+      textarea.addEventListener("input", (e) => {
+        if (suppress) return;
 
-        const newText = textarea.value
-        const oldText = previousValue
-        const newLength = newText.length
-        const oldLength = oldText.length
+        const newText = textarea.value;
+        const oldText = previousValue;
+        const newLength = newText.length;
+        const oldLength = oldText.length;
 
         if (Math.abs(newLength - oldLength) > 1) {
-          console.warn('Multi-char change detected. Not yet handled.')
-          previousValue = newText
-          return
+          console.warn("Multi-char change detected. Not yet handled.");
+          previousValue = newText;
+          return;
         }
 
         const diffIndex = (() => {
-          const len = Math.min(newLength, oldLength)
+          const len = Math.min(newLength, oldLength);
           for (let i = 0; i < len; i++) {
-            if (newText[i] !== oldText[i]) return i
+            if (newText[i] !== oldText[i]) return i;
           }
-          return len
-        })()
+          return len;
+        })();
 
-        const newLines = newText.split('\n')
-        const oldLines = oldText.split('\n')
+        const newLines = newText.split("\n");
+        const oldLines = oldText.split("\n");
 
         // INSERT
         if (newLength > oldLength) {
-          const insertedChar = newText[diffIndex]
-          const { line, col } = getLineAndCol(diffIndex, newLines)
+          const insertedChar = newText[diffIndex];
+          const { line, col } = getLineAndCol(diffIndex, newLines);
 
-          socket.emit('operation', {
-            type: 'insert',
+          socket.emit("operation", {
+            type: "insert",
             line,
             col,
             char: insertedChar,
-            rev: revision
-          })
+            rev: revision,
+          });
 
-          revision += 1
-          updateDebug(`[Insert] "${insertedChar}" at line ${line}, col ${col}`)
+          revision += 1;
+          updateDebug(`[Insert] "${insertedChar}" at line ${line}, col ${col}`);
 
-        // DELETE
+          // DELETE
         } else if (newLength < oldLength) {
-          const { line, col } = getLineAndCol(diffIndex, oldLines)
+          const { line, col } = getLineAndCol(diffIndex, oldLines);
 
-          socket.emit('operation', {
-            type: 'delete',
+          socket.emit("operation", {
+            type: "delete",
             line,
             col,
-            rev: revision
-          })
+            rev: revision,
+          });
 
-          revision += 1
-          updateDebug(`[Delete] at line ${line}, col ${col}`)
+          revision += 1;
+          updateDebug(`[Delete] at line ${line}, col ${col}`);
         }
 
-        previousValue = newText
-      })
+        previousValue = newText;
+      });
 
-      socket.on('remote_op', (data) => {
-        const originalLines = textarea.value.split('\n')
-        const cursorPos = textarea.selectionStart
-        const remoteFlatPos = getFlatPos(data.line, data.col, originalLines)
+      socket.on("remote_op", (data) => {
+        const originalLines = textarea.value.split("\n");
+        const cursorPos = textarea.selectionStart;
+        const remoteFlatPos = getFlatPos(data.line, data.col, originalLines);
 
-        let lines = [...originalLines]
-        suppress = true
+        let lines = [...originalLines];
+        suppress = true;
 
-        if (data.type === 'insert') {
-          if (!lines[data.line]) lines[data.line] = ''
-          if (data.char === '\n') {
-            const before = lines[data.line].slice(0, data.col)
-            const after = lines[data.line].slice(data.col)
-            lines[data.line] = before
-            lines.splice(data.line + 1, 0, after)
+        if (data.type === "insert") {
+          if (!lines[data.line]) lines[data.line] = "";
+          if (data.char === "\n") {
+            const before = lines[data.line].slice(0, data.col);
+            const after = lines[data.line].slice(data.col);
+            lines[data.line] = before;
+            lines.splice(data.line + 1, 0, after);
           } else {
-            lines[data.line] = lines[data.line].slice(0, data.col) + data.char + lines[data.line].slice(data.col)
+            lines[data.line] =
+              lines[data.line].slice(0, data.col) +
+              data.char +
+              lines[data.line].slice(data.col);
           }
-        } else if (data.type === 'delete') {
+        } else if (data.type === "delete") {
           if (lines[data.line] && data.col < lines[data.line].length) {
-            lines[data.line] = lines[data.line].slice(0, data.col) + lines[data.line].slice(data.col + 1)
-          } else if (data.col === lines[data.line].length && data.line + 1 < lines.length) {
-            lines[data.line] += lines[data.line + 1]
-            lines.splice(data.line + 1, 1)
+            lines[data.line] =
+              lines[data.line].slice(0, data.col) +
+              lines[data.line].slice(data.col + 1);
+          } else if (
+            data.col === lines[data.line].length &&
+            data.line + 1 < lines.length
+          ) {
+            lines[data.line] += lines[data.line + 1];
+            lines.splice(data.line + 1, 1);
           }
         }
 
-        const newText = lines.join('\n')
-        let newCursor = cursorPos
+        const newText = lines.join("\n");
+        let newCursor = cursorPos;
 
-        if (data.type === 'insert' && remoteFlatPos <= cursorPos) {
-          newCursor += data.char.length
-        } else if (data.type === 'delete' && remoteFlatPos < cursorPos) {
-          newCursor = Math.max(0, newCursor - 1)
+        if (data.type === "insert" && remoteFlatPos <= cursorPos) {
+          newCursor += data.char.length;
+        } else if (data.type === "delete" && remoteFlatPos < cursorPos) {
+          newCursor = Math.max(0, newCursor - 1);
         }
 
-        textarea.value = newText
-        textarea.setSelectionRange(newCursor, newCursor)
-        textarea._lastLength = newText.length
-        previousValue = newText
-        revision += 1
-        suppress = false
+        textarea.value = newText;
+        textarea.setSelectionRange(newCursor, newCursor);
+        textarea._lastLength = newText.length;
+        previousValue = newText;
+        revision += 1;
+        suppress = false;
 
-        updateDebug(`[Remote ${data.type}] at line ${data.line}, col ${data.col}`)
-      })
+        updateDebug(
+          `[Remote ${data.type}] at line ${data.line}, col ${data.col}`
+        );
+      });
 
-      textarea._lastLength = textarea.value.length
-      previousValue = textarea.value
-      const cursorLayer = document.getElementById('cursors')
-const userId = 'Guest ' + Math.floor(Math.random() * 1000)
-const caretColors = {}
+      textarea._lastLength = textarea.value.length;
+      previousValue = textarea.value;
+      const cursorLayer = document.getElementById("cursors");
+      const userId = "Guest " + Math.floor(Math.random() * 1000);
+      const caretColors = {};
 
-function sendCursorUpdate() {
-  const pos = textarea.selectionStart
-  const { line, col } = getLineAndCol(pos, textarea.value.split('\n'))
-  socket.emit('cursor', { user: userId, line, col })
-}
+      function sendCursorUpdate() {
+        const pos = textarea.selectionStart;
+        const { line, col } = getLineAndCol(pos, textarea.value.split("\n"));
+        socket.emit("cursor", { user: userId, line, col });
+      }
 
-textarea.addEventListener('keyup', sendCursorUpdate)
-textarea.addEventListener('click', sendCursorUpdate)
-textarea.addEventListener('mouseup', sendCursorUpdate)
+      textarea.addEventListener("keyup", sendCursorUpdate);
+      textarea.addEventListener("click", sendCursorUpdate);
+      textarea.addEventListener("mouseup", sendCursorUpdate);
 
-socket.on('cursor_update', (data) => {
-  const { user, line, col } = data
-  if (user === userId) return // ignore our own
+      socket.on("cursor_update", (data) => {
+        const { user, line, col } = data;
+        if (user === userId) return; // ignore our own
 
-  caretColors[user] ??= getRandomColor()
+        caretColors[user] ??= getRandomColor();
 
-  updateRemoteCaret(user, line, col)
-})
+        updateRemoteCaret(user, line, col);
+      });
 
-function updateRemoteCaret(user, line, col) {
-  const lines = textarea.value.split('\n')
-  const caretIndex = getFlatPos(line, col, lines)
+      function updateRemoteCaret(user, line, col) {
+        const lines = textarea.value.split("\n");
+        const caretIndex = getFlatPos(line, col, lines);
 
-  const coords = getCaretCoordinates(textarea, caretIndex)
+        const coords = getCaretCoordinates(textarea, caretIndex);
 
-  // Instead of using getBoundingClientRect (which gives screen coordinates),
-  // we use scroll and padding directly.
-  const offsetLeft = coords.left - textarea.scrollLeft
-  const offsetTop = coords.top - textarea.scrollTop
+        // Instead of using getBoundingClientRect (which gives screen coordinates),
+        // we use scroll and padding directly.
+        const offsetLeft = coords.left - textarea.scrollLeft;
+        const offsetTop = coords.top - textarea.scrollTop;
 
-  const existing = document.getElementById(`caret-${user}`)
-  if (existing) existing.remove()
+        const existing = document.getElementById(`caret-${user}`);
+        if (existing) existing.remove();
 
-  const caret = document.createElement('div')
-  caret.id = `caret-${user}`
-  caret.textContent = '| ' + user
-  caret.style.position = 'absolute'
-  caret.style.left = `${offsetLeft}px`
-  caret.style.top = `${offsetTop}px`
-  caret.style.fontSize = '12px'
-  caret.style.color = caretColors[user]
-  caret.style.pointerEvents = 'none'
-  caret.style.zIndex = 9999
-  caret.style.whiteSpace = 'nowrap'
+        const caret = document.createElement("div");
+        caret.id = `caret-${user}`;
+        caret.textContent = "| " + user;
+        caret.style.position = "absolute";
+        caret.style.left = `${offsetLeft}px`;
+        caret.style.top = `${offsetTop}px`;
+        caret.style.fontSize = "12px";
+        caret.style.color = caretColors[user];
+        caret.style.pointerEvents = "none";
+        caret.style.zIndex = 9999;
+        caret.style.whiteSpace = "nowrap";
 
-  cursorLayer.appendChild(caret)
+        cursorLayer.appendChild(caret);
 
-  // Optional: auto-remove after inactivity
-  setTimeout(() => {
-    caret.remove()
-  }, 10000)
-}
+        // Optional: auto-remove after inactivity
+        setTimeout(() => {
+          caret.remove();
+        }, 10000);
+      }
 
-
-
-function getRandomColor() {
-  return `hsl(${Math.floor(Math.random() * 360)}, 100%, 40%)`
-}
-
+      function getRandomColor() {
+        return `hsl(${Math.floor(Math.random() * 360)}, 100%, 40%)`;
+      }
     </script>
   </body>
 </html>

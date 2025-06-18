@@ -1,105 +1,160 @@
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
-from dataclasses import dataclass
-import json
-import os
-import eventlet
 from ot import InsertOp, DeleteOp
 from eventlet.semaphore import Semaphore
+from collections import defaultdict
 
-import time
+import os
+import json
 
-last_save_time = time.time()
-SAVE_INTERVAL = 0.5  
-
+# App Setup
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
-DOC_FILE = 'document.json'
+# Constants
+BASE_DIR = os.path.dirname(__file__)
+DATA_FILE = os.path.join(BASE_DIR, "group_data.json")
+SAVE_INTERVAL = 0.5  # Currently unused
 
-def save_document(lines):
-    formatted = {f"line{idx+1}": line.replace('\n', '') for idx, line in enumerate(lines)}
-    with open(DOC_FILE, 'w') as f:
-        json.dump(formatted, f, indent=2)
-        
-def maybe_save_document():
-    global last_save_time
-    now = time.time()
-    if now - last_save_time > SAVE_INTERVAL:
-        with write_lock:
-            save_document(document_lines)
-        last_save_time = now
-
-def load_document():
-    if os.path.exists(DOC_FILE):
-        with open(DOC_FILE, 'r') as f:
-            data = json.load(f)
-            return [data[key] for key in sorted(data.keys(), key=lambda k: int(k.replace("line", "")))]
-    return [""]
-
-document_lines = load_document()
-document_lines = [line if isinstance(line, str) else "" for line in document_lines]
-history = []
-client_revisions = {}
+# In-memory state
+documents = {}            # group_name -> list of lines
+histories = {}            # group_name -> list of ops
+client_revisions = {}     # sid -> revision index
+client_groups = {}        # sid -> group_name
 write_lock = Semaphore()
+
+
+# ------------- Helper Functions --------------
+
+def get_group_file(group):
+    return os.path.join(BASE_DIR, f'document_{group}.json')
+
+
+def load_data():
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r") as f:
+            raw = json.load(f)
+            return defaultdict(lambda: {"text": "", "rev": 0}, raw)
+    return defaultdict(lambda: {"text": "", "rev": 0})
+
+def save_data():
+    with open(DATA_FILE, "w") as f:
+        json.dump(dict(group_data), f, indent=2)
+
+
+def load_document(file_path):
+    if not os.path.exists(file_path):
+        return [""]
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+    return [data[key] for key in sorted(data.keys(), key=lambda k: int(k.replace("line", "")))]
+
+
+def save_document(lines, file_path):
+    formatted = {f"line{idx+1}": line.replace('\n', '') for idx, line in enumerate(lines)}
+    with open(file_path, 'w') as f:
+        json.dump(formatted, f, indent=2)
+
+
+def load_group(group):
+    file_path = get_group_file(group)
+    documents[group] = [line if isinstance(line, str) else "" for line in load_document(file_path)]
+    histories[group] = []
+
+
+# ------------- Routes --------------
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
+@app.route('/doc/<group_name>')
+def generate_doc(group_name):
+    return render_template('index.html', group_name=group_name)
+
+
+# ------------- Socket.IO Events --------------
+
 @socketio.on('connect')
-def connect():
+def handle_connect():
     sid = request.sid
-    client_revisions[sid] = len(history)
+    group = request.args.get('group')
+
+    if not group:
+        emit('error', {'message': 'Missing group parameter'})
+        return
+
+    if group not in documents:
+        load_group(group)
+
+    client_groups[sid] = group
+    client_revisions[sid] = len(histories[group])
+
     emit('init', {
-        'text': "\n".join(document_lines),
-        'rev': len(history)
+        'text': "\n".join(documents[group]),
+        'rev': len(histories[group])
     })
-    
-@socketio.on('cursor')
-def handle_cursor(data):
-    data['sid'] = request.sid
-    emit('cursor_update', data, broadcast=True, include_self=False)
 
 
 @socketio.on('operation')
 def handle_operation(data):
-    global document_lines
-
     sid = request.sid
-    base_rev = data['rev']
-    op_type = data['type']
-    line = data['line']
-    col = data['col']
+    group = client_groups.get(sid)
+    if not group:
+        return
+
+    base_rev = data.get('rev', 0)
+    op_type = data.get('type')
+    line = data.get('line')
+    col = data.get('col')
     char = data.get('char')
 
-    # Rebuild operation object
-    if op_type == 'insert':
-        op = InsertOp(line, col, char)
-    else:
-        op = DeleteOp(line, col)
+    op = InsertOp(line, col, char) if op_type == 'insert' else DeleteOp(line, col)
 
-    # Transform against newer operations since client's last known revision
-    for i in range(base_rev, len(history)):
-        op = op.transform_against(history[i])
+    for i in range(base_rev, len(histories[group])):
+        op = op.transform_against(histories[group][i])
         if op is None:
             return
 
-    # Apply operation
-    document_lines = op.apply(document_lines)
+    documents[group] = op.apply(documents[group])
+
     with write_lock:
-        save_document(document_lines)
-    history.append(op)
-    client_revisions[sid] = len(history)
+        save_document(documents[group], get_group_file(group))
+
+        group_data[group] = {
+            "text": "\n".join(documents[group]),
+            "rev": len(histories[group]) + 1
+        }
+        save_data()
+
+    histories[group].append(op)
+    client_revisions[sid] = len(histories[group])
 
     emit('remote_op', {
         'type': op_type,
         'line': op.line,
         'col': op.col,
         'char': getattr(op, 'char', None),
-        'rev': len(history)
+        'rev': len(histories[group])
     }, broadcast=True, include_self=False)
 
 
+@socketio.on('cursor')
+def handle_cursor(data):
+    data['sid'] = request.sid
+    emit('cursor_update', data, broadcast=True, include_self=False)
+
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    sid = request.sid
+    client_groups.pop(sid, None)
+    client_revisions.pop(sid, None)
+
+
+# ------------- Main Entry --------------
+
 if __name__ == '__main__':
+    group_data = load_data()
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
