@@ -146,7 +146,7 @@ def match_users():
     for group_name, group_info in groups_data.items():
         group = Group(name=group_name)
         db.session.add(group)
-        db.session.flush()  # Ensures group.id is populated
+        db.session.flush()
 
         for user_data in group_info['members'].values():
             user = User.query.filter_by(name=user_data['name']).first()

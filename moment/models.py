@@ -16,10 +16,16 @@ class Answer(db.Model):
     answer = db.Column(db.String(120), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
+    def __repr__(self):
+        return f"User ID: {self.user_id}, Question: {self.question_id}, Answer: {self.answer}"
+
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     users = db.relationship('User', secondary='group_membership')
+
+    def __repr__(self):
+        return f"Group ID: {self.id}, Group Name: {self.name}, Members: {self.users}"
 
 class GroupMembership(db.Model):
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), primary_key=True)

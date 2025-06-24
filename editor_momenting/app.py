@@ -38,8 +38,12 @@ def load_data():
     return defaultdict(lambda: {"text": "", "rev": 0})
 
 def save_data():
-    with open(DATA_FILE, "w") as f:
-        json.dump(dict(group_data), f, indent=2)
+    try:
+        with open(DATA_FILE, "w") as f:
+            json.dump(dict(group_data), f, indent=2)
+        print(f"[Saved] group_data written to {DATA_FILE}")
+    except Exception as e:
+        print(f"[Error saving data]: {e}")
 
 
 def load_document(file_path):
@@ -99,8 +103,11 @@ def handle_connect():
 
 @socketio.on('operation')
 def handle_operation(data):
+    global group_data
+
     sid = request.sid
     group = client_groups.get(sid)
+    print(group)
     if not group:
         return
 
@@ -111,6 +118,8 @@ def handle_operation(data):
     char = data.get('char')
 
     op = InsertOp(line, col, char) if op_type == 'insert' else DeleteOp(line, col)
+
+    print(base_rev, op_type, line, col, char, op)
 
     for i in range(base_rev, len(histories[group])):
         op = op.transform_against(histories[group][i])
@@ -152,9 +161,12 @@ def handle_disconnect():
     client_groups.pop(sid, None)
     client_revisions.pop(sid, None)
 
+@socketio.on('*')
+def catch_all(event, data):
+    print(f"Received unhandled event: {event} with data: {data}")
+
 
 # ------------- Main Entry --------------
-
+group_data = load_data()
 if __name__ == '__main__':
-    group_data = load_data()
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)

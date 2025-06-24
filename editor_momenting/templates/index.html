@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>UColab</title>
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js"></script>
     <script src="https://unpkg.com/textarea-caret@3.1.0/index.js"></script>
     <link
       rel="stylesheet"
@@ -19,8 +19,8 @@
     <pre id="debug">[Debug output]</pre>
 
     <script>
-      const socket = io({ query: {
-        group: "{{ group_number }}"
+      const socket = io("http://192.168.0.87:5000/", { query: {
+        group: "{{ group_name }}"
       }});
 
       const textarea = document.getElementById("editor");
@@ -100,6 +100,8 @@
             char: insertedChar,
             rev: revision,
           });
+
+          console.log(`line: ${line}, col: ${col}, char: ${insertedChar}, rev: ${revision}`);
 
           revision += 1;
           updateDebug(`[Insert] "${insertedChar}" at line ${line}, col ${col}`);
