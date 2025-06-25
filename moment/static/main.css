@@ -1,13 +1,10 @@
-/* @font-face {
-    font-family: Poppins;
-    src: url(/static/fonts/Poppins-Regular.ttf) format('truetype');
-} */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+/* Root Variables (from main.css preferred) */
 :root {
-  --primary-bg: #f9f9f9;
-  --secondary-bg: #e7e7e7;
-  --text-color: rgb(13, 41, 31);
+  --primary-bg: #121126;
+  --secondary-bg: linear-gradient(#707070FF, #00000000); /* from main.css */
+  --text-color: rgb(255, 255, 255);
   --accent-color: #0F161E;
   --border-radius-sm: 10px;
   --border-radius-md: 20px;
@@ -17,27 +14,8 @@
   --spacing-md: 2rem;
   --spacing-lg: 3rem;
 }
-.sessionmaster{
-    margin: 10% auto;
-    width:  50%;
-    height: 50vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #f9f9f9;
-    border-radius: 20px;
-}
 
-.session-start{
-    background-color: var(--accent-color);
-    padding: 1rem;
-    border-radius: 40px;
-    color: var(--primary-bg)
-
-}
-
-
+/* Reset + Base (from main.css preferred) */
 * {
   margin: 0;
   padding: 0;
@@ -45,30 +23,100 @@
 }
 
 body {
+  background-color: var(--primary-bg); /* from main.css */
   font-family: 'Poppins', sans-serif;
   color: var(--text-color);
   min-height: 100vh;
   padding: var(--spacing-sm);
 }
 
+.background-prop{
+    width: 50vw;
+    height: 50vw;
+    position: absolute;
+    z-index: -1;
+}
+/* MOMENTING IT */
+.background-prop-actors1{
+    position: absolute;
+    width: 25vw;
+    height: 25vw;
+    background-color: #FF0000;
+    top: 20%;
+    left: 50%;
+    filter: blur(5.5rem);
+    border-radius: 360px;
+    mix-blend-mode: screen;
+}
+.background-prop-actors2{
+    position: absolute;
+    width: 25vw;
+    height: 25vw;
+    background-color: #FF8000;
+        filter: blur(5.5rem);
+    border-radius: 360px;
+mix-blend-mode: screen;
+    top: 30%;
+    left: 50%;
+}
+.background-prop-actors3{
+    position: absolute;
+    width: 25vw;
+    height: 25vw;
+    background-color: #FF9D00;
+        filter: blur(5.5rem);
+    border-radius: 360px;
+    mix-blend-mode: screen;
+    top: 35%;
+    left: 30%;
+}
+.background-prop-actors4{
+    position: absolute;
+    width: 25vw;
+    height: 25vw;
+    background-color: #00FF09;
+        filter: blur(5.5rem);
+    border-radius: 360px;
+    mix-blend-mode: screen;
+    top: 25%;
+    left: 20%;
+}
+.background-prop-actors5{
+    position: absolute;
+    width: 25vw;
+    height: 25vw;
+    background-color: #0022FF;
+    filter: blur(5.5rem);
+    border-radius: 360px;
+    mix-blend-mode: screen;
+    top: 15%;
+    left: 30%;
+}
+
+/* Typography */
 h1, h2, h3, p {
   font-family: 'Poppins', sans-serif;
   color: var(--text-color);
 }
 
+/* Matching Container */
 .matching-container {
   width: min(90%, 1200px);
   margin: 5vh auto;
-  background-color: var(--primary-bg);
+  background: var(--secondary-bg);
   text-align: center;
   padding: var(--spacing-md);
+  border: 1px solid white;
+  border-radius: 16px
 }
 
 .matching-container h1 {
   font-size: clamp(2rem, 5vw, 3.8rem);
   font-weight: 700;
+  color: white; /* from index.css, added */
 }
 
+/* Shared Container Structures */
 .query-container {
   display: flex;
   flex-wrap: wrap;
@@ -80,22 +128,32 @@ h1, h2, h3, p {
 .type-container {
   flex: 1;
   min-width: min(100%, 20rem);
-  background-color: var(--secondary-bg);
+  background: var(--secondary-bg); /* from main.css */
   padding: var(--spacing-md);
   border-radius: var(--border-radius-lg);
+  border: 1px solid white; /* from main.css */
 }
 
 .type-container h2 {
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 700;
+  color:white;
 }
 
+/* Forms */
 input {
   width: 100%;
   padding: 0.75rem var(--spacing-md);
   border-radius: var(--border-radius-lg);
   border: none;
   outline: none;
+}
+
+#college {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 20px;
 }
 
 .code-submit {
@@ -114,25 +172,34 @@ input {
   cursor: pointer;
 }
 
+/* IM TOP BARING IT */
 .top-bar {
-  background-color: var(--secondary-bg);
+  background: var(--secondary-bg); 
   padding: var(--spacing-md);
   border-radius: var(--border-radius-md);
   margin-bottom: var(--spacing-md);
+  border: 1px solid white;
+  backdrop-filter: blur(50px); 
 }
 
+#session_code {
+  color: white;
+}
+
+/* Details Section */
 .details {
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-md);
-  height: calc(65vh);
+  height: calc(65vh); /* from main.css preferred over min-height */
 }
 
 .participants,
 .participant-form {
-  background-color: var(--secondary-bg);
+  background: var(--secondary-bg);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-md);
+  border: 1px solid white; /* from main.css */
 }
 
 .participants {
@@ -166,10 +233,6 @@ input {
   margin-top: var(--spacing-md);
   max-height: 60vh;
   overflow-y: auto;
-  /* display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: var(--spacing-sm); */
 }
 
 .player {
@@ -186,14 +249,16 @@ input {
   border-radius: 50%;
 }
 
+/* Bottom Bar */
 .bottom-bar {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  background-color: var(--secondary-bg);
+  background: var(--secondary-bg);
   padding: var(--spacing-md);
   border-radius: var(--border-radius-md);
   margin-top: var(--spacing-md);
+  border: 1px solid white; /* from main.css */
 }
 
 .bottom-message {
@@ -216,18 +281,19 @@ input {
   cursor: pointer;
 }
 
+/* Containers */
 .middle-container,
 .results {
   text-align: center;
   margin: var(--spacing-md) 0;
-  height: calc(65vh)
+  height: calc(65vh); /* from main.css */
 }
 
-.quiz-container{
-    height: calc(65vh)
-
+.quiz-container {
+  height: calc(65vh); /* from main.css only */
 }
 
+/* Quiz Styles */
 .question h2 {
   font-size: clamp(1.5rem, 4vw, 2.5rem);
   font-weight: 400;
@@ -242,7 +308,7 @@ input {
 }
 
 .option {
-  background-color: var(--secondary-bg);
+  background: var(--secondary-bg); /* from main.css uses `background` over `background-color` */
   border-radius: var(--border-radius-md);
   padding: var(--spacing-md);
   cursor: pointer;
@@ -259,6 +325,7 @@ input {
   border: 1px solid #007bff;
 }
 
+/* Cards */
 .card {
   width: min(100%, 20rem);
   margin: var(--spacing-sm);
@@ -284,13 +351,6 @@ input {
   margin: var(--spacing-sm) 0;
 }
 
-#college{
-    width:100%;
-    padding:0.5rem;
-    border: none;
-    border-radius:20px;
-}
-
 .skills p,
 .interests p {
   padding: var(--spacing-xs) var(--spacing-sm);
@@ -300,25 +360,30 @@ input {
   text-align: center;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   :root {
     --spacing-md: 1.5rem;
     --spacing-lg: 2rem;
   }
-  
+
   .matching-container {
     width: 95%;
     margin: 2vh auto;
   }
-  
+
+  .matching-container h1 {
+    color: white;
+  }
+
   .type-container {
     min-width: 100%;
   }
-  
+
   .details {
     flex-direction: column;
   }
-  
+
   .participants,
   .participant-form {
     width: 100%;
@@ -330,17 +395,37 @@ input {
     --spacing-sm: 0.75rem;
     --spacing-md: 1rem;
   }
-  
+
   .bottom-bar {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .bottom-button {
     width: 100%;
   }
-  
+
   .options {
     grid-template-columns: 1fr;
   }
+}
+
+/* Extra Styles from main.css only */
+.sessionmaster {
+  margin: 10% auto;
+  width: 50%;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-bg);
+  border-radius: 20px;
+}
+
+.session-start {
+  background-color: var(--accent-color);
+  padding: 1rem;
+  border-radius: 40px;
+  color: var(--primary-bg);
 }

@@ -30,3 +30,13 @@ class Group(db.Model):
 class GroupMembership(db.Model):
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+
+class Document(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('group.id'), unique=True, nullable=False)
+    text = db.Column(db.Text, default="")
+    revision = db.Column(db.Integer, default=0)
+    group = db.relationship('Group', backref=db.backref('document', uselist=False))
+
+    def __repr__(self):
+        return f"<Document group={self.group.name}, revision={self.revision}>"

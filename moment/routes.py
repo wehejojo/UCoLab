@@ -37,15 +37,23 @@ def masterSession():
 
 @main.route('/master/match', methods=['GET'])
 def masterMatch():
-    return render_template('/admin/match.html', session_code=SESSION_CODE)
+    users = User.query.all()
+    participants = [{
+        'name': user.name,
+        'college': user.college,
+        'skills': user.skills
+    } for user in users]
+    return render_template(
+        '/admin/match.html', session_code=SESSION_CODE,
+        participants=participants, length=len(participants)
+    )
 
 @main.route('/mode-select', methods=['GET', 'POST'])
 def modeSelect():
     if request.method == 'POST':
         user_code = request.form.get('code')
-        print(user_code)
         if not user_code:
-            return render_template('error.html', error_message="Please enter a code.")
+            return render_template('error.html', error_message="Please enter a code.")  
         if user_code == SESSION_CODE:
             return redirect(url_for('main.sessionPage', session_code=SESSION_CODE))
         return render_template('error.html', error_message="Wrong Code!!")
@@ -144,7 +152,7 @@ def match_users():
     db.session.commit()
 
     for group_name, group_info in groups_data.items():
-        group = Group(name=group_name)
+        group = Group(name=group_name, id=group_name)
         db.session.add(group)
         db.session.flush()
 
@@ -199,6 +207,10 @@ def get_groups():
         },
         "currentuser": name
     }), 200
+
+@main.route('/doc/<group_name>')
+def generate_doc(group_name):
+    return render_template('client/editor.html', group_name=group_name)
 
 # -------------------- Socket.IO Events -------------------- #
 

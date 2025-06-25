@@ -27,4 +27,7 @@ def create_app():
     from moment.routes import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
+    from moment.utils.socket_handlers import init_handlers
+    init_handlers()
+
     return app

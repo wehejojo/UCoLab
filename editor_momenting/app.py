@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 from ot import InsertOp, DeleteOp
 from eventlet.semaphore import Semaphore
@@ -7,21 +7,11 @@ from collections import defaultdict
 import os
 import json
 
-# App Setup
+
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
-# Constants
-BASE_DIR = os.path.dirname(__file__)
-DATA_FILE = os.path.join(BASE_DIR, "group_data.json")
-SAVE_INTERVAL = 0.5  # Currently unused
 
-# In-memory state
-documents = {}            # group_name -> list of lines
-histories = {}            # group_name -> list of ops
-client_revisions = {}     # sid -> revision index
-client_groups = {}        # sid -> group_name
-write_lock = Semaphore()
 
 
 # ------------- Helper Functions --------------
@@ -80,90 +70,7 @@ def generate_doc(group_name):
 
 # ------------- Socket.IO Events --------------
 
-@socketio.on('connect')
-def handle_connect():
-    sid = request.sid
-    group = request.args.get('group')
 
-    if not group:
-        emit('error', {'message': 'Missing group parameter'})
-        return
-
-    if group not in documents:
-        load_group(group)
-
-    client_groups[sid] = group
-    client_revisions[sid] = len(histories[group])
-
-    emit('init', {
-        'text': "\n".join(documents[group]),
-        'rev': len(histories[group])
-    })
-
-
-@socketio.on('operation')
-def handle_operation(data):
-    global group_data
-
-    sid = request.sid
-    group = client_groups.get(sid)
-    print(group)
-    if not group:
-        return
-
-    base_rev = data.get('rev', 0)
-    op_type = data.get('type')
-    line = data.get('line')
-    col = data.get('col')
-    char = data.get('char')
-
-    op = InsertOp(line, col, char) if op_type == 'insert' else DeleteOp(line, col)
-
-    print(base_rev, op_type, line, col, char, op)
-
-    for i in range(base_rev, len(histories[group])):
-        op = op.transform_against(histories[group][i])
-        if op is None:
-            return
-
-    documents[group] = op.apply(documents[group])
-
-    with write_lock:
-        save_document(documents[group], get_group_file(group))
-
-        group_data[group] = {
-            "text": "\n".join(documents[group]),
-            "rev": len(histories[group]) + 1
-        }
-        save_data()
-
-    histories[group].append(op)
-    client_revisions[sid] = len(histories[group])
-
-    emit('remote_op', {
-        'type': op_type,
-        'line': op.line,
-        'col': op.col,
-        'char': getattr(op, 'char', None),
-        'rev': len(histories[group])
-    }, broadcast=True, include_self=False)
-
-
-@socketio.on('cursor')
-def handle_cursor(data):
-    data['sid'] = request.sid
-    emit('cursor_update', data, broadcast=True, include_self=False)
-
-
-@socketio.on('disconnect')
-def handle_disconnect():
-    sid = request.sid
-    client_groups.pop(sid, None)
-    client_revisions.pop(sid, None)
-
-@socketio.on('*')
-def catch_all(event, data):
-    print(f"Received unhandled event: {event} with data: {data}")
 
 
 # ------------- Main Entry --------------
