@@ -147,16 +147,20 @@ def match_users():
         }
     }), 200
 
+@main.route('/quiz/group', methods=["GET"])
+def render_group():
+    return render_template('/client/groups.html', session_code=SESSION_CODE)
+
 @main.route('/getGroups', methods=['GET'])
 def get_groups():
     name = request.args.get("name")
     if not name:
         return jsonify({"success": False, "error": "Missing 'name' parameter"}), 400
-    
+
     user = User.query.filter_by(name=name).first()
     if not user:
         return jsonify({"success": False, "error": "User not found"}), 404
-    
+
     group = (
         db.session.query(Group)
         .join(GroupMembership, Group.id == GroupMembership.group_id)
@@ -167,24 +171,29 @@ def get_groups():
 
     if not group:
         return jsonify({"success": False, "error": "User not found in any group"}), 404
-    
-    members = [
-        {
-            "name": u.name,
-            "college": u.college,
-            "skills": u.skills
-        }
-        for u in db.session.query(User)
+
+    group_users = (
+        db.session.query(User)
         .join(GroupMembership)
         .filter(GroupMembership.group_id == group.id)
         .all()
-    ]
+    )
+
+    members = []
+    for u in group_users:
+        answers_dict = {a.question_id: a.answer for a in u.answers}
+        members.append({
+            "name": u.name,
+            "college": u.college,
+            "skills": u.skills.split(",") if u.skills else [],
+            "answers": answers_dict
+        })
 
     return jsonify({
         "success": True,
         "groups": {
             group.name: {
-                "members": {str(i+1): member for i, member in enumerate(members)}
+                "members": {str(i + 1): member for i, member in enumerate(members)}
             }
         },
         "currentuser": name

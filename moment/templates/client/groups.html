@@ -81,7 +81,6 @@
 
             let foundGroup = null;
 
-            // Find the group that contains the user
             for (const [groupName, groupData] of Object.entries(
               result.groups
             )) {
@@ -106,15 +105,16 @@
                 const card = document.createElement("div");
                 card.className = "card";
                 card.innerHTML = `
-              <h3>${memberData.name}</h3>
-              <div class="card-bottom">
-                <p>Key Skills</p>
-                <div class="skills">
-                  ${memberData.skills
-                    .map((skill) => `<p>${skill}</p>`)
-                    .join("")}
-                </div>
-              </div>`;
+                  <div class="card-bottom">
+                    <h3 style='text-align: center;'>${memberData.name}</h3>
+                    <p><strong>College:</strong> ${memberData.college}</p>
+                    <p><strong>Role</strong> ${memberData.answers?.q1 || "N/A"}</p>
+                    <p><strong>Interest</strong> ${memberData.answers?.q2 || "N/A"}</p>
+                    <p><strong>Key Skills</strong></p>
+                    <div class="skills">
+                      ${memberData.skills.map((skill) => `<p>${skill}</p>`).join("")}
+                    </div>
+                  </div>`;
                 finalCards.appendChild(card);
               });
             } else {
