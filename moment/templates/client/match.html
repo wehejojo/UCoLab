@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Match</title>
     <link href="/static/main.css" rel="stylesheet" />
+        <link rel="stylesheet" href="../static/backgroundprop.css">
+
   </head>
 
   <body>
-      <div class="background-prop">
-    <div class="background-prop-actors1"></div>
-    <div class="background-prop-actors2"></div>
-    <div class="background-prop-actors3"></div>
-    <div class="background-prop-actors4"></div>
-    <div class="background-prop-actors5"></div>
-  </div>
+        <div class="svg-container"><img src="../static/background.svg" alt="" /></div>
+
     <div>
       <div class="top-bar">
         <h1 id="session_code">Room #: {{ session_code }} </h1>
@@ -25,7 +22,6 @@
             <h2>Participants</h2>
             <p>{{ participants | length }} users joined</p>
           </div>
-
           <div class="users" id="users">
             {% for participant in participants %}
             <div class="player">
@@ -80,6 +76,7 @@
         </div>
       </div>
     </div>
+    <script src="../static/script.js"></script>
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script>
       const socket = io({

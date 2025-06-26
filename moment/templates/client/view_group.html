@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js"></script>
+    <link rel="stylesheet" href="/static/main.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <h1>Your Dream Team is Ready!</h1>
+      <p>
+        You've just unlocked a team that shares your goals, skills, and passion.
+        Let's build something great.
+      </p>
+      <div class="team-overview">
+        <h2>Team Overview</h2>
+        <div class="team-container">
+          <h3>{{ group_name.capitalize() }}</h3>
+          {% for member in members %}
+          <div>
+            <strong>{{ member.name }}</strong> from {{ member.college }}<br />
+            Skills: {{ member.skills | join(", ") }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="container-right">
+        <a href="/doc/{{ group_name }}">
+          <button>Create a Project -> (leads to group document)</button>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

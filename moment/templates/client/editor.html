@@ -6,22 +6,31 @@
     <script src="https://unpkg.com/textarea-caret@3.1.0/index.js"></script>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='main.css') }}"
+      href="{{ url_for('static', filename='editor.css') }}"
     />
+    <link rel="stylesheet" href="../static/backgroundprop.css" />
   </head>
   <body>
-    <div class="header">Editing Group: {{ group_name.capitalize().replace('-', ' ') }}</div>
-    <div class="editor-container">
-      <div id="cursors"></div>
-      <textarea id="editor"></textarea>
+    <div class="svg-container">
+      <img src="../static/background.svg" alt="" />
     </div>
-
+    <div class="document-container" style="z-index: 99999;">
+      <div class="header">
+        Editing Group: {{ group_name.capitalize().replace('-', ' ') }}
+      </div>
+      <div class="editor-container">
+        <div id="cursors"></div>
+        <textarea id="editor"></textarea>
+      </div>
+    </div>
     <pre id="debug">[Debug output]</pre>
-
+    <script src="../static/script.js"></script>
     <script>
-      const socket = io("http://192.168.0.87:5000/", { query: {
-        group: "{{ group_name }}"
-      }});
+      const socket = io("http://192.168.0.87:5000/", {
+        query: {
+          group: "{{ group_name }}",
+        },
+      });
 
       const textarea = document.getElementById("editor");
       const debug = document.getElementById("debug");
@@ -101,7 +110,9 @@
             rev: revision,
           });
 
-          console.log(`line: ${line}, col: ${col}, char: ${insertedChar}, rev: ${revision}`);
+          console.log(
+            `line: ${line}, col: ${col}, char: ${insertedChar}, rev: ${revision}`
+          );
 
           revision += 1;
           updateDebug(`[Insert] "${insertedChar}" at line ${line}, col ${col}`);

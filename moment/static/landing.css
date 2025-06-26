@@ -6,9 +6,13 @@ body {
     padding: 0;
     height: 100%;
     width: 100%;
-    background-color: #121126;
     box-sizing: border-box;
     overflow: hidden;
+}
+
+html{
+    background-color: #121126;
+
 }
 
 *,
@@ -16,30 +20,6 @@ body {
 *::after {
     box-sizing: inherit;
 }
-
-.svg-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 200%;
-  height: 200%;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.svg-container img {
-  width: 35%;
-  height: auto;
-  transition: transform 0.1s ease-out;
-  will-change: transform;
-  pointer-events: none; 
-  position: absolute;
-  top: 0;
-  left: -5%;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
 
 .dashboard {
     display: grid;
