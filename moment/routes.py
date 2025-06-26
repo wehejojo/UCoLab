@@ -5,7 +5,7 @@ from flask import (
 from moment import socketio
 from flask_socketio import emit
 
-from moment.matchUsers import run_matching
+from moment.matchUsers import run_matching_sqlalchemy
 from moment.models import db, User, Answer, Group, GroupMembership
 
 import string, random
@@ -111,59 +111,41 @@ def submitQuiz():
     db.session.commit()
     return jsonify({'success': True, 'message': 'Answer submitted successfully'})
 
-@main.route('/quiz/group', methods=['GET'])
-def groups():
-    return render_template('/client/groups.html', session_code=SESSION_CODE)
-
 @main.route('/match', methods=['POST'])
 def match_users():
     users = User.query.all()
+    complete_users = [u for u in users if len(u.answers) == 5]
 
-    db_data = {}
-    incomplete_users = []
+    if not complete_users:
+        return jsonify({'error': 'No users with complete answers found'}), 400
 
-    for user in users:
-        answers = {a.question_id: a.answer for a in user.answers}
-        if len(answers) < 5:
-            incomplete_users.append(user.name)
-            continue
-
-        db_data[user.name] = {
-            'college': user.college,
-            'skills': user.skills,
-            'answers': answers
-        }
-
-    if incomplete_users:
-        return jsonify({
-            'error': 'Not all users have completed the quiz',
-            'incomplete_users': incomplete_users
-        }), 400
-    
-    if not db_data:
-        return jsonify({'error': 'No users found'}), 400
-    
-    groups_data = run_matching(db_data)
+    groups_data = run_matching_sqlalchemy(complete_users)
     if not groups_data:
         return jsonify({'error': 'Unable to form any groups'}), 400
-    
+
     GroupMembership.query.delete()
     Group.query.delete()
     db.session.commit()
 
     for group_name, group_info in groups_data.items():
-        group = Group(name=group_name, id=group_name)
+        group = Group(name=group_name)
+        group.users = group_info["user_objs"]
         db.session.add(group)
-        db.session.flush()
-
-        for user_data in group_info['members'].values():
-            user = User.query.filter_by(name=user_data['name']).first()
-            if user:
-                membership = GroupMembership(group_id=group.id, user_id=user.id)
-                db.session.add(membership)
 
     db.session.commit()
-    return jsonify({"success": True, "groups": groups_data}), 200
+
+    return jsonify({
+        "success": True,
+        "groups": {
+            group_name: {
+                "members": {
+                    u.name: {
+                        "skills": u.skills
+                    } for u in group_info["user_objs"]
+                }
+            } for group_name, group_info in groups_data.items()
+        }
+    }), 200
 
 @main.route('/getGroups', methods=['GET'])
 def get_groups():
