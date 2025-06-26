@@ -1,0 +1,327 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #121126;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+.svg-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.svg-container img {
+  width: 35%;
+  height: auto;
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+  pointer-events: none; 
+  position: absolute;
+  top: 0;
+  left: -5%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+
+.dashboard {
+    display: grid;
+    grid-template-areas:
+        "login find    explore  about"
+        "login find    explore  about"
+        "login logo    logo     about"
+        "login logo    logo     events"
+        "sponsor sponsor uc      events"
+        "sponsor sponsor uc      events";
+    grid-template-columns: repeat(4, 3fr);
+    grid-template-rows: repeat(6, 3fr);
+    height: 80vh;
+    width: 65vw;
+    margin: 5% auto;
+    gap: 10px;
+    padding: 10px;
+    background-image: rgba(0,0,0,0.5);
+}
+
+.login {
+    grid-area: login;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.find {
+    grid-area: find;
+    padding: 0rem 4rem 0rem 2rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.explore {
+    grid-area: explore;
+    padding: 0rem 4rem 0rem 2rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.about {
+    grid-area: about;
+    padding: 0rem 2rem 0rem 2rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.logo {
+    grid-area: logo;
+    display: flex;
+    flex-direction: row;
+}
+
+
+.sponsor {
+    grid-area: sponsor;
+    padding: 0rem 2rem 0rem 2rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.uc {
+    grid-area: uc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.uc img{
+    width: 80%;
+    height: 80%;
+}
+
+.events {
+    grid-area: events;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+
+
+.items{
+    z-index: 2;
+    border: 1px solid white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.items:hover {
+      transform: scale(1.01); 
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    background-color: rgba(100,100,100,0.5);
+
+    }
+
+
+.dashboard>div {
+    display: flex;
+    font-size: 1.5rem;
+    color: white;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 20px;
+}
+
+.Login-button{
+    padding: 0.5rem;
+    width: 25%;
+    margin: 2rem;
+    background-color: rgba(0, 0, 0, 0.3);
+    outline: none;
+    border: 1px solid white;
+    color: white;
+    border-radius: 40px;
+    font-size: 50%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.button-effect:hover{
+    transform: scale(1.05); 
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
+    background-color: rgba(4, 134, 63, 0.5);
+}
+
+.logo img{
+    height: 50%;
+    width: fit-content;
+    padding: 1rem;
+}
+
+.logo{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+*{
+  font-family: 'Poppins', sans-serif;
+}
+
+.find h1{
+    line-height: 2.5rem;
+    margin-bottom: 0;
+    font-size: 120%;
+    font-weight: bold;
+}
+
+.find p{
+    line-height: 1.5rem;
+    font-size: 50%;
+}
+
+.find-button{
+    padding: 0.5rem;
+    width: fit-content;
+    background-color: rgba(0, 0, 0, 0.3);
+    outline: none;
+    border: 1px solid white;
+    color: white;
+    border-radius: 40px;
+    font-size: 50%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.explore h1{
+    line-height: 2.5rem;
+    margin-bottom: 0;
+    font-size: 120%;
+    font-weight: bold;
+}
+
+.explore p{
+    line-height: 1.5rem;
+    font-size: 50%;
+}
+
+.explore-button{
+    padding: 0.5rem;
+    width: fit-content;
+    background-color: rgba(0, 0, 0, 0.3);
+    outline: none;
+    border: 1px solid white;
+    color: white;
+    border-radius: 40px;
+    font-size: 50%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about h1{
+    line-height: 2.5rem;
+    margin-bottom: 0;
+    margin-top: 5%;
+    font-size: 120%;
+    font-weight: bold;
+    line-height: 90%;
+}
+
+.about p{
+    line-height: 1.5rem;
+    font-size: 50%;
+}
+
+a{
+    text-decoration: none;
+    color: grey;
+    background-color: white;
+    width: fit-content;
+    height: fit-content;
+    padding: 0.2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 30px;
+    font-size: 60%;
+    margin-top: 2rem;
+    margin-bottom: 0rem;
+}
+
+.about-button{
+    padding: 0.5rem;
+    width: fit-content;
+    background-color: rgba(0, 0, 0, 0.3);
+    outline: none;
+    border: 1px solid white;
+    color: white;
+    border-radius: 40px;
+    font-size: 50%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sponsor h1{
+    font-size: 80%;
+}
+
+.sponsorcontainer{
+    display: flex;
+    flex-direction: row;
+}
+
+.sponsormessage-cont{
+    flex-grow: 1;
+    flex-wrap: wrap;
+    width: 50%;
+}
+.sponsorbutton-cont{
+    display: flex;
+    flex-grow: 2;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.sponsorbutton-cont button{
+    padding: 0.5rem;
+    width: fit-content;
+    height: fit-content;
+    background-color: rgba(0, 0, 0, 0.3);
+    outline: none;
+    border: 1px solid white;
+    color: white;
+    border-radius: 40px;
+    font-size: 50%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.events button{
+    height: 30%;
+    font-size: 80%;
+    color: white;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 0px 0px 22px 22px;
+    outline: none;
+    border: none;
+    border-top: 1px solid white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.events button:hover{
+    background-color: rgba(4, 134, 63, 0.5);
+
+}
