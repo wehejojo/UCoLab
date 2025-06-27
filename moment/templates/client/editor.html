@@ -16,15 +16,12 @@
       <textarea id="editor"></textarea>
     </div>
 
-    <pre id="debug">[Debug output]</pre>
-
     <script>
       const socket = io("http://192.168.0.87:5000/", { query: {
         group: "{{ group_name }}"
       }});
 
       const textarea = document.getElementById("editor");
-      const debug = document.getElementById("debug");
       let revision = 0;
       let suppress = false;
       let previousValue = "";
@@ -48,19 +45,11 @@
         return total + col;
       }
 
-      function updateDebug(message = "") {
-        const cursorPos = textarea.selectionStart;
-        const lines = textarea.value.split("\n");
-        const { line, col } = getLineAndCol(cursorPos, lines);
-        debug.textContent = `Cursor Pos: ${cursorPos}\nLine: ${line}, Col: ${col}\nRevision: ${revision}\n${message}`;
-      }
-
       socket.on("init", (data) => {
         textarea.value = data.text;
         textarea._lastLength = textarea.value.length;
         previousValue = textarea.value;
         revision = data.rev || 0;
-        updateDebug("[Init received]");
       });
 
       textarea.addEventListener("input", (e) => {
@@ -104,7 +93,6 @@
           console.log(`line: ${line}, col: ${col}, char: ${insertedChar}, rev: ${revision}`);
 
           revision += 1;
-          updateDebug(`[Insert] "${insertedChar}" at line ${line}, col ${col}`);
 
           // DELETE
         } else if (newLength < oldLength) {
@@ -118,7 +106,6 @@
           });
 
           revision += 1;
-          updateDebug(`[Delete] at line ${line}, col ${col}`);
         }
 
         previousValue = newText;
@@ -175,9 +162,6 @@
         revision += 1;
         suppress = false;
 
-        updateDebug(
-          `[Remote ${data.type}] at line ${data.line}, col ${data.col}`
-        );
       });
 
       textarea._lastLength = textarea.value.length;
