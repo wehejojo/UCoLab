@@ -16,18 +16,47 @@ def generateRandomSessionCode(length: int) -> str:
     characters: str = string.ascii_letters.upper() + string.digits
     return ''.join(random.choice(characters) for _ in range(length))
 
-SESSION_CODE: str = generateRandomSessionCode(4)
+def get_group_data_by_user_name(name):
+    user = User.query.filter_by(name=name).first()
+    if not user:
+        return None
 
-def all_questions_answered(user_data):
-    if 'answers' not in user_data:
-        return False
-    return all(f'q{i}' in user_data['answers'] for i in range(1, 6))
+    group = (
+        db.session.query(Group)
+        .join(GroupMembership, Group.id == GroupMembership.group_id)
+        .join(User, User.id == GroupMembership.user_id)
+        .filter(User.name == name)
+        .first()
+    )
+
+    if not group:
+        return None
+
+    group_users = (
+        db.session.query(User)
+        .join(GroupMembership)
+        .filter(GroupMembership.group_id == group.id)
+        .all()
+    )
+
+    members = []
+    for u in group_users:
+        answers_dict = {a.question_id: a.answer for a in u.answers}
+        members.append({
+            "name": u.name,
+            "college": u.college,
+            "skills": u.skills.split(",") if u.skills else [],
+            "answers": answers_dict
+        })
+
+    return group.name, members
+
+SESSION_CODE: str = generateRandomSessionCode(4)
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
     session.clear()
-    users = User.query.all()
-    return render_template('/admin/index.html', users = users)
+    return render_template('LandingPage.html')
 
 @main.route('/master/session', methods=['GET', 'POST'])
 def masterSession():
@@ -134,6 +163,8 @@ def match_users():
 
     db.session.commit()
 
+    print(group_name)
+
     return jsonify({
         "success": True,
         "groups": {
@@ -157,47 +188,41 @@ def get_groups():
     if not name:
         return jsonify({"success": False, "error": "Missing 'name' parameter"}), 400
 
-    user = User.query.filter_by(name=name).first()
-    if not user:
-        return jsonify({"success": False, "error": "User not found"}), 404
+    result = get_group_data_by_user_name(name)
+    if not result:
+        return jsonify({"success": False, "error": "User not found or not in a group"}), 404
 
-    group = (
-        db.session.query(Group)
-        .join(GroupMembership, Group.id == GroupMembership.group_id)
-        .join(User, User.id == GroupMembership.user_id)
-        .filter(User.name == name)
-        .first()
-    )
-
-    if not group:
-        return jsonify({"success": False, "error": "User not found in any group"}), 404
-
-    group_users = (
-        db.session.query(User)
-        .join(GroupMembership)
-        .filter(GroupMembership.group_id == group.id)
-        .all()
-    )
-
-    members = []
-    for u in group_users:
-        answers_dict = {a.question_id: a.answer for a in u.answers}
-        members.append({
-            "name": u.name,
-            "college": u.college,
-            "skills": u.skills.split(",") if u.skills else [],
-            "answers": answers_dict
-        })
+    group_name, members = result
 
     return jsonify({
         "success": True,
         "groups": {
-            group.name: {
+            group_name: {
                 "members": {str(i + 1): member for i, member in enumerate(members)}
             }
         },
         "currentuser": name
     }), 200
+
+@main.route('/group/<group_name>')
+def view_group(group_name):
+    name = request.args.get("name") 
+
+    if not name:
+        return render_template('error.html', error_message="Missing 'name' parameter")
+
+    result = get_group_data_by_user_name(name)
+    if not result:
+        return render_template('error.html', error_message="User not found or not in a group")
+
+    user_group_name, members = result
+
+    print(f"{name}\n{user_group_name}\n{group_name}")
+
+    if user_group_name != group_name:
+        return render_template('error.html', error_message=f"User {name} is not in this group")
+
+    return render_template('client/view_group.html', group_name=group_name, members=members)
 
 @main.route('/doc/<group_name>')
 def generate_doc(group_name):

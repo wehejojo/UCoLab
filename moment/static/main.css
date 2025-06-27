@@ -3,7 +3,7 @@
 /* Root Variables (from main.css preferred) */
 :root {
   --primary-bg: #121126;
-  --secondary-bg: linear-gradient(#707070FF, #00000000); /* from main.css */
+  --secondary-bg: linear-gradient(#707070FF, #00000000); 
   --text-color: rgb(255, 255, 255);
   --accent-color: #0F161E;
   --border-radius-sm: 10px;
@@ -20,77 +20,16 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  z-index: 10;
 }
 
 body {
-  background-color: var(--primary-bg); /* from main.css */
+  background-color: var(--primary-bg); 
   font-family: 'Poppins', sans-serif;
   color: var(--text-color);
   min-height: 100vh;
   padding: var(--spacing-sm);
-}
-
-.background-prop{
-    width: 50vw;
-    height: 50vw;
-    position: absolute;
-    z-index: -1;
-}
-/* MOMENTING IT */
-.background-prop-actors1{
-    position: absolute;
-    width: 25vw;
-    height: 25vw;
-    background-color: #FF0000;
-    top: 20%;
-    left: 50%;
-    filter: blur(5.5rem);
-    border-radius: 360px;
-    mix-blend-mode: screen;
-}
-.background-prop-actors2{
-    position: absolute;
-    width: 25vw;
-    height: 25vw;
-    background-color: #FF8000;
-        filter: blur(5.5rem);
-    border-radius: 360px;
-mix-blend-mode: screen;
-    top: 30%;
-    left: 50%;
-}
-.background-prop-actors3{
-    position: absolute;
-    width: 25vw;
-    height: 25vw;
-    background-color: #FF9D00;
-        filter: blur(5.5rem);
-    border-radius: 360px;
-    mix-blend-mode: screen;
-    top: 35%;
-    left: 30%;
-}
-.background-prop-actors4{
-    position: absolute;
-    width: 25vw;
-    height: 25vw;
-    background-color: #00FF09;
-        filter: blur(5.5rem);
-    border-radius: 360px;
-    mix-blend-mode: screen;
-    top: 25%;
-    left: 20%;
-}
-.background-prop-actors5{
-    position: absolute;
-    width: 25vw;
-    height: 25vw;
-    background-color: #0022FF;
-    filter: blur(5.5rem);
-    border-radius: 360px;
-    mix-blend-mode: screen;
-    top: 15%;
-    left: 30%;
+  overflow: hidden;
 }
 
 /* Typography */
@@ -101,22 +40,23 @@ h1, h2, h3, p {
 
 /* Matching Container */
 .matching-container {
-  width: min(90%, 1200px);
+  width: 50vw;
+  height: 40vw;
   margin: 5vh auto;
   background: var(--secondary-bg);
   text-align: center;
   padding: var(--spacing-md);
   border: 1px solid white;
-  border-radius: 16px
+  border-radius: 16px;
+  z-index: 180;
 }
 
 .matching-container h1 {
-  font-size: clamp(2rem, 5vw, 3.8rem);
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 700;
-  color: white; /* from index.css, added */
+  color: white;
 }
 
-/* Shared Container Structures */
 .query-container {
   display: flex;
   flex-wrap: wrap;
@@ -127,17 +67,22 @@ h1, h2, h3, p {
 
 .type-container {
   flex: 1;
-  min-width: min(100%, 20rem);
-  background: var(--secondary-bg); /* from main.css */
+  width: 15vw;
+  height: 20vw;
+  background: var(--secondary-bg);
   padding: var(--spacing-md);
   border-radius: var(--border-radius-lg);
-  border: 1px solid white; /* from main.css */
+  border: 1px solid white; 
+  text-align: left;
+  display:flex;
+  flex-direction: column;
 }
 
 .type-container h2 {
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 700;
   color:white;
+  margin: 0;
 }
 
 /* Forms */
@@ -191,7 +136,7 @@ input {
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-md);
-  height: calc(65vh); /* from main.css preferred over min-height */
+  height: 20%;
 }
 
 .participants,
@@ -199,15 +144,17 @@ input {
   background: var(--secondary-bg);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-md);
-  border: 1px solid white; /* from main.css */
+  border: 1px solid white; 
 }
 
 .participants {
+  max-height: 10%;
   flex: 1;
   min-width: 300px;
 }
 
 .participant-form {
+  max-height: 10%;
   flex: 2;
   min-width: 300px;
 }
@@ -225,13 +172,14 @@ input {
 
 .participant-header p {
   background-color: white;
+  color: grey;
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--border-radius-md);
 }
 
 .users {
   margin-top: var(--spacing-md);
-  max-height: 60vh;
+  max-height: 50vh;
   overflow-y: auto;
 }
 
@@ -258,7 +206,7 @@ input {
   padding: var(--spacing-md);
   border-radius: var(--border-radius-md);
   margin-top: var(--spacing-md);
-  border: 1px solid white; /* from main.css */
+  border: 1px solid white; 
 }
 
 .bottom-message {
@@ -368,8 +316,9 @@ input {
   }
 
   .matching-container {
-    width: 95%;
+    width: 90%;
     margin: 2vh auto;
+    z-index: 10;
   }
 
   .matching-container h1 {

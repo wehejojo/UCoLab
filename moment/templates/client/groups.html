@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js"></script>
     <title>Quiz</title>
     <link rel="stylesheet" href="/static/main.css" />
     <style>
@@ -10,10 +11,13 @@
         background-color: #dcdcdc;
       }
     </style>
-    <link rel="stylesheet" href="/static/main.css" />
+    <link rel="stylesheet" href="../static/backgroundprop.css" />
   </head>
 
   <body>
+    <div class="svg-container">
+      <img src="../static/background.svg" alt="" />
+    </div>
     <div class="top-bar">
       <h1 id="session_code">Room #: {{ session_code }}</h1>
     </div>
@@ -45,9 +49,19 @@
     <div class="bottom-bar">
       <div class="bottom-message">
         <p id="question-count">Analyzing Your Answers...</p>
+        <button id="confirm-group">Confirm Group -></button>
       </div>
     </div>
+    <script src="../static/script.js"></script>
     <script>
+      const socket = io("http://192.168.0.87:5000/", {
+        query: {
+          group: "{{ group_name }}",
+        },
+      });
+      const confirmGroupButton = document.getElementById("confirm-group");
+      let group_name = "";
+
       async function showLoadingAndFetch() {
         await delay(1000);
         document.querySelector(
@@ -97,6 +111,8 @@
             if (foundGroup) {
               const { groupName, groupData } = foundGroup;
 
+              group_name = groupName;
+
               const groupHeading = document.createElement("h2");
               groupHeading.textContent = `${groupName} (You are here!)`;
               finalCards.appendChild(groupHeading);
@@ -108,11 +124,17 @@
                   <div class="card-bottom">
                     <h3 style='text-align: center;'>${memberData.name}</h3>
                     <p><strong>College:</strong> ${memberData.college}</p>
-                    <p><strong>Role</strong> ${memberData.answers?.q1 || "N/A"}</p>
-                    <p><strong>Interest</strong> ${memberData.answers?.q2 || "N/A"}</p>
+                    <p><strong>Role</strong> ${
+                      memberData.answers?.q1 || "N/A"
+                    }</p>
+                    <p><strong>Interest</strong> ${
+                      memberData.answers?.q2 || "N/A"
+                    }</p>
                     <p><strong>Key Skills</strong></p>
                     <div class="skills">
-                      ${memberData.skills.map((skill) => `<p>${skill}</p>`).join("")}
+                      ${memberData.skills
+                        .map((skill) => `<p>${skill}</p>`)
+                        .join("")}
                     </div>
                   </div>`;
                 finalCards.appendChild(card);
@@ -133,6 +155,14 @@
       function delay(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
+
+      confirmGroupButton.addEventListener("click", () => {
+
+        group_name = group_name.replace(/\s+/g, "-");
+        const userName = localStorage.getItem("name");
+
+        window.location.href = `/group/${group_name}?name=${encodeURIComponent(userName)}`;
+      });
 
       window.onload = () => {
         showLoadingAndFetch();
