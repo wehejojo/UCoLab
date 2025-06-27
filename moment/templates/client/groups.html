@@ -158,10 +158,10 @@
 
       confirmGroupButton.addEventListener("click", () => {
 
-        console.log(group_name)
+        group_name = group_name.replace(/\s+/g, "-");
         const userName = localStorage.getItem("name");
 
-        window.location.href = `/group/${encodeURIComponent(group_name)}?name=${encodeURIComponent(userName)}`;
+        window.location.href = `/group/${group_name}?name=${encodeURIComponent(userName)}`;
       });
 
       window.onload = () => {

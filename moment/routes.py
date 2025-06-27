@@ -8,7 +8,7 @@ from flask_socketio import emit
 from moment.matchUsers import run_matching_sqlalchemy
 from moment.models import db, User, Answer, Group, GroupMembership
 
-import string, random, requests
+import string, random
 
 main = Blueprint('main', __name__)
 
@@ -163,6 +163,8 @@ def match_users():
 
     db.session.commit()
 
+    print(group_name)
+
     return jsonify({
         "success": True,
         "groups": {
@@ -215,8 +217,10 @@ def view_group(group_name):
 
     user_group_name, members = result
 
+    print(f"{name}\n{user_group_name}\n{group_name}")
+
     if user_group_name != group_name:
-        return render_template('error.html', error_message="User is not in this group")
+        return render_template('error.html', error_message=f"User {name} is not in this group")
 
     return render_template('client/view_group.html', group_name=group_name, members=members)
 
