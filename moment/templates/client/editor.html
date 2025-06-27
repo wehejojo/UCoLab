@@ -8,6 +8,10 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='editor.css') }}"
     />
+        <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="../static/backgroundprop.css" />
   </head>
   <body>
@@ -17,13 +21,18 @@
     <div class="document-container" style="z-index: 99999;">
       <div class="header">
         Editing Group: {{ group_name.capitalize().replace('-', ' ') }}
+        <div class="members">
+          Members:
+          {% for member in members %}
+            <p>{{ member.name }} - {{ member.college }}</p>
+          {% endfor %}
+        </div>
       </div>
       <div class="editor-container">
         <div id="cursors"></div>
         <textarea id="editor"></textarea>
       </div>
     </div>
-    <pre id="debug">[Debug output]</pre>
     <script src="../static/script.js"></script>
     <script>
       const socket = io("http://192.168.0.87:5000/", {
