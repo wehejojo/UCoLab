@@ -51,6 +51,8 @@ textarea {
     border-radius: 16px;
     backdrop-filter: blur(5px); 
     -webkit-backdrop-filter: blur(5px);
+    font-size: 5rem;
+    color: white;
 }
 
 #cursors {

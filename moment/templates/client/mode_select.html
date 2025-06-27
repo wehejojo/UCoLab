@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link href="/static/main.css" rel="stylesheet" />
-        <link rel="stylesheet" href="../static/backgroundprop.css">
 
-    <title>UCoLab Matching</title>
-  </head>
+<head>
+  <link href="/static/dummy.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../static/backgroundprop.css">
 
-  <body>
-    <div class="svg-container"><img src="../static/background.svg" alt="" /></div>
-    
-    <div class="matching-container">
+  <title>UCoLab Matching</title>
+</head>
+
+<body>
+  <div class="svg-container"><img src="../static/background.svg" alt="" /></div>
+
+  <div class="matching-container">
+    <div class="query-container">
       <h1>Choose a Matching Mode</h1>
-      <div class="query-container">
+      <div class="match-select">
         <div class="type-container">
           <div class="type-label">
             <h2>
-              Join with a <br />
+              Join with a
               Code
             </h2>
           </div>
@@ -26,19 +28,18 @@
               events.
             </p>
           </div>
-
           <form method="POST" action="/mode-select">
-              <div class="code-entry">
-                <div class="code-submit">
-                  <input type="text" id="code" name="code" placeholder="Enter Code" />
-                  <input type="submit" value="Join Room ->" id="codeSubmit" />
-                </div>
+            <div class="code-entry">
+              <div class="code-submit">
+                <input type="text" id="code" name="code" placeholder="      Enter Code" />
+                <input type="submit" value="Join Room ->" id="codeSubmit" />
               </div>
+            </div>
           </form>
         </div>
         <div class="type-container">
           <div class="type-label">
-            <h2>Explore <br />Open-Matching</h2>
+            <h2>Explore Open-Matching</h2>
           </div>
           <div class="type-detail">
             <p>
@@ -47,17 +48,15 @@
             </p>
           </div>
           <div class="random-submit">
-            <input
-              type="submit"
-              value="Start Smart Quiz ->"
-              id="randomSubmit"
-            />
+            <input type="submit" value="Start Smart Quiz ->" id="randomSubmit" />
           </div>
         </div>
       </div>
     </div>
-      <script src="../static/script.js"></script>
-    <script>
-    </script>
-  </body>
+
+  </div>
+  <script src="../static/script.js"></script>
+
+</body>
+
 </html>
