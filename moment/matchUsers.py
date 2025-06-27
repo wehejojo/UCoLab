@@ -32,7 +32,7 @@ def encode_user_from_model(user):
         vector.extend(one_hot)
     return np.array(vector)
 
-def sqlalchemy_grouping(users):
+def sqlalchemy_grouping(users, group_size=3):
     user_data = []
     for user in users:
         answers = {a.question_id: a.answer for a in user.answers}
@@ -60,7 +60,7 @@ def sqlalchemy_grouping(users):
         sim_score = cosine_similarity(style_vecs).mean()
         return 0.4 * q1_diversity + 0.3 * q2_same + 0.3 * sim_score
 
-    triplets = combinations(user_data, 3)
+    triplets = combinations(user_data, group_size)
     scored_triplets = []
 
     for triplet in triplets:
@@ -68,7 +68,7 @@ def sqlalchemy_grouping(users):
         if any(uid in used_ids for uid in ids):
             continue
         roles = [u['answers']['q1'] for u in triplet]
-        if len(set(roles)) < 3:
+        if len(set(roles)) < min(len(skill_maps["q1"]), group_size):
             continue
         vectors = [u['vector'] for u in triplet]
         interests = [u['answers']['q2'] for u in triplet]

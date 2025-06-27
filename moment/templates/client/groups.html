@@ -31,25 +31,19 @@
         Finding best teammates based on your skills, interests, and working
         style. This may take a moment...
       </h2>
+      <h2 id="question-text" style="display: none;">Here are your best matches</h2>
       <div id="final-cards" style="display: none; margin-top: 2rem">
-        <h2 id="question-text">Here are your best matches</h2>
-        <div
-          style="
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-          "
-        >
-          <div class="question"></div>
+          
         </div>
       </div>
     </div>
 
     <div class="bottom-bar">
       <div class="bottom-message">
-        <p id="question-count">Analyzing Your Answers...</p>
-        <button id="confirm-group">Confirm Group -></button>
+        <div class="group-bottom-message">
+          <p id="question-count">Analyzing Your Answers...</p>
+          <button id="confirm-group">Confirm Group -></button>
+        </div>
       </div>
     </div>
     <script src="../static/script.js"></script>
@@ -60,6 +54,8 @@
         },
       });
       const confirmGroupButton = document.getElementById("confirm-group");
+      const cardContainer = document.getElementById('card-container');
+      const narrativeText = document.getElementById('question-text');
       let group_name = "";
 
       async function showLoadingAndFetch() {
@@ -70,7 +66,7 @@
 
         await delay(1000);
         document.getElementById("loading-message").style.display = "none";
-        document.getElementById("final-cards").style.display = "block";
+        document.getElementById("final-cards").style.display = "flex";
 
         try {
           const userName = localStorage.getItem("name");
@@ -113,24 +109,19 @@
 
               group_name = groupName;
 
-              const groupHeading = document.createElement("h2");
-              groupHeading.textContent = `${groupName} (You are here!)`;
-              finalCards.appendChild(groupHeading);
+              narrativeText.style.display = 'block';
 
               Object.values(groupData.members).forEach((memberData) => {
                 const card = document.createElement("div");
                 card.className = "card";
                 card.innerHTML = `
+                  <h1 class='memberTYPE'><strong>${memberData.answers?.q1 || "N/A"}</strong></h1>
                   <div class="card-bottom">
-                    <h3 style='text-align: center;'>${memberData.name}</h3>
-                    <p><strong>College:</strong> ${memberData.college}</p>
-                    <p><strong>Role</strong> ${
-                      memberData.answers?.q1 || "N/A"
-                    }</p>
-                    <p><strong>Interest</strong> ${
-                      memberData.answers?.q2 || "N/A"
-                    }</p>
-                    <p><strong>Key Skills</strong></p>
+                    <h3 style='text-align: left;' class='group-member_name'>${memberData.name}</h3>
+                    <p><strong>College: </strong> ${memberData.college}</p>
+                    <p><strong>Role: </strong>${memberData.answers?.q1 || "N/A"}</p>
+                    <p><strong>Interest: </strong>${memberData.answers?.q2 || "N/A"}</p>
+                    <p><strong>Key Skills: </strong></p>
                     <div class="skills">
                       ${memberData.skills
                         .map((skill) => `<p>${skill}</p>`)
@@ -156,12 +147,20 @@
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
 
-      confirmGroupButton.addEventListener("click", () => {
+      function capitalize(str) {
+        if (!str) return "";
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+      }
 
+      confirmGroupButton.addEventListener("click", () => {
         group_name = group_name.replace(/\s+/g, "-");
         const userName = localStorage.getItem("name");
 
-        window.location.href = `/group/${group_name}?name=${encodeURIComponent(userName)}`;
+        window.location.href = `
+          /group/${group_name}?name=${
+            encodeURIComponent(userName)
+          }
+        `;
       });
 
       window.onload = () => {

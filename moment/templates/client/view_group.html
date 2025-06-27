@@ -8,7 +8,7 @@
     <title>Grop Confirmation</title>
   </head>
   <body>
-    <div>
+    <div class="group-verify">
       <h1>Your Dream Team is Ready!</h1>
       <p>
         You've just unlocked a team that shares your goals, skills, and passion.
@@ -17,7 +17,6 @@
       <div class="team-overview">
         <h2>Team Overview</h2>
         <div class="team-container">
-          <h3>{{ group_name.capitalize() }}</h3>
           {% for member in members %}
           <div>
             <strong>{{ member.name }}</strong> from {{ member.college }}<br />

@@ -226,7 +226,33 @@ def view_group(group_name):
 
 @main.route('/doc/<group_name>')
 def generate_doc(group_name):
-    return render_template('client/editor.html', group_name=group_name)
+    group = Group.query.filter_by(name=group_name).first()
+    if not group:
+        return render_template('error.html', error_message="Group not found")
+
+    group_users = (
+        db.session.query(User)
+        .join(GroupMembership)
+        .filter(GroupMembership.group_id == group.id)
+        .all()
+    )
+
+    members = []
+    for user in group_users:
+        answers_dict = {a.question_id: a.answer for a in user.answers}
+        members.append({
+            "name": user.name,
+            "college": user.college,
+            "skills": user.skills.split(",") if user.skills else [],
+            "answers": answers_dict
+        })
+
+    return render_template(
+        'client/editor.html',
+        group_name=group_name,
+        members=members
+    )
+
 
 # -------------------- Socket.IO Events -------------------- #
 

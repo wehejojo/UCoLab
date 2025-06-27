@@ -136,7 +136,8 @@ input {
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-md);
-  height: 20%;
+  min-height: 65vh;
+  max-height: 65vh
 }
 
 .participants,
@@ -148,13 +149,14 @@ input {
 }
 
 .participants {
-  max-height: 10%;
+  max-height: 65vh;
+  min-height: 65vh;
   flex: 1;
   min-width: 300px;
 }
 
 .participant-form {
-  max-height: 10%;
+  max-height: 80vh;
   flex: 2;
   min-width: 300px;
 }
@@ -280,7 +282,7 @@ input {
 }
 
 .card h3 {
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(2rem, 1vw, 3rem);
   margin-bottom: var(--spacing-sm);
 }
 
@@ -377,4 +379,52 @@ input {
   padding: 1rem;
   border-radius: 40px;
   color: var(--primary-bg);
+}
+
+
+.results-container{
+  min-height: 65vh;
+  max-height: 65vh;
+}
+
+.group-bottom-message{
+  display: flex;
+  justify-content: space-between;
+}
+
+#confirm-group{
+  background: var(--secondary-bg);
+  border: 1px solid white;
+  color: white;
+  border-radius: 20px;
+  padding: 1rem;
+}
+
+#final-cards{
+  max-height: 65vh;
+  min-height: 65vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.card-bottom{
+  background: var(--secondary-bg);
+  height: 80%;
+  border-radius: 20px;
+  border: 1px solid white;
+  text-wrap: wrap;
+}
+
+
+#question-text{
+  font-weight: 100;
+}
+
+.memberTYPE{
+  font-size: 3rem;
+}
+
+.group-verify{
+  display:flex;
 }
