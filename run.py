@@ -1,4 +1,4 @@
-from moment import create_app, socketio
+from ucolab import create_app, socketio
 
 app = create_app()
 

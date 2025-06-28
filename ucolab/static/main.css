@@ -1,0 +1,151 @@
+.card {
+  width: min(100%, 20rem);
+  margin: var(--spacing-sm);
+}
+
+.card h3 {
+  font-size: clamp(2rem, 1vw, 3rem);
+  margin-bottom: var(--spacing-sm);
+}
+
+.card-bottom {
+  background: #f1f1f1;
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-md);
+  text-align: left;
+}
+
+.skills,
+.interests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin: var(--spacing-sm) 0;
+}
+
+.skills p,
+.interests p {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 24rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+  }
+
+  .matching-container {
+    width: 90%;
+    margin: 2vh auto;
+    z-index: 10;
+  }
+
+  .matching-container h1 {
+    color: white;
+  }
+
+  .type-container {
+    min-width: 100%;
+  }
+
+  .details {
+    flex-direction: column;
+  }
+
+  .participants,
+  .participant-form {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --spacing-sm: 0.75rem;
+    --spacing-md: 1rem;
+  }
+
+  .bottom-bar {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .bottom-button {
+    width: 100%;
+  }
+
+  .options {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Extra Styles from main.css only */
+.sessionmaster {
+  margin: 10% auto;
+  width: 50%;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-bg);
+  border-radius: 20px;
+}
+
+.session-start {
+  background-color: var(--accent-color);
+  padding: 1rem;
+  border-radius: 40px;
+  color: var(--primary-bg);
+}
+
+
+.results-container{
+  min-height: 65vh;
+  max-height: 65vh;
+}
+
+.group-bottom-message{
+  display: flex;
+  justify-content: space-between;
+}
+
+#confirm-group{
+  background: var(--secondary-bg);
+  border: 1px solid white;
+  color: white;
+  border-radius: 20px;
+  padding: 1rem;
+}
+
+#final-cards{
+  max-height: 65vh;
+  min-height: 65vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.card-bottom{
+  background: var(--secondary-bg);
+  height: 80%;
+  border-radius: 20px;
+  border: 1px solid white;
+  text-wrap: wrap;
+}
+
+
+#question-text{
+  font-weight: 100;
+}
+
+.memberTYPE{
+  font-size: 3rem;
+}
+
+.group-verify{
+  display:flex;
+}

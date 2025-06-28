@@ -5,3 +5,9 @@ flask_socketio
 eventlet
 Flask-SQLAlchemy
 Flask-Migrate
+flask_login
+flask_bcrypt
+flask_wtf
+wtforms
+email_validator
+flask_admin

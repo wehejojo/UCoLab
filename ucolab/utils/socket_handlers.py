@@ -45,9 +45,9 @@ from flask import request
 from flask_socketio import emit
 from eventlet.semaphore import Semaphore
 
-from moment.utils.ot import InsertOp, DeleteOp
-from moment import socketio, db
-from moment.models import Group, Document
+from ucolab.utils.ot import InsertOp, DeleteOp
+from ucolab import socketio, db
+from ucolab.models import Group, Document
 
 write_lock = Semaphore()
 

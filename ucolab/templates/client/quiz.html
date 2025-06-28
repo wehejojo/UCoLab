@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz</title>
-    <link rel="stylesheet" href="/static/main.css" />
+    <link rel="stylesheet" href="/static/quiz.css" />
         <link rel="stylesheet" href="../static/backgroundprop.css">
     <style>
       .selected {
@@ -16,11 +16,12 @@
   <body>
         <div class="svg-container"><img src="../static/background.svg" alt="" /></div>
 
+    <div class="main-container">
     <div class="top-bar">
       <h1 id="session_code">Room #: {{ session_code }}</h1>
     </div>
 
-    <div id="quiz-container">
+    <div id="quiz-container" class="details">
       <div class="middle-container">
         <div class="question">
           <h2 id="question-text">Loading...</h2>
@@ -103,10 +104,11 @@
       <div class="bottom-message">
         <p id="question-count">Question 1 / 5</p>
       </div>
-
       <div class="bottom-button">
         <button type="button" class="Start">Next</button>
       </div>
+    </div>
+
     </div>
     <script src="../static/script.js"></script>
 
@@ -167,29 +169,69 @@
       let currentIndex = 0;
       let selectedAnswers = {};
 
-      async function loadQuestion(index) {
-        console.log(index);
-        const q = questions[index];
-        document.getElementById("question-text").innerText = q.question;
+      document.querySelectorAll('.option').forEach(option => {
+        option.addEventListener('click', function(e) {
+          const ripple = document.createElement('span');
+          ripple.classList.add('ripple');
 
-        const optionsContainer = document.getElementById("options-container");
-        optionsContainer.innerHTML = "";
+          const rect = this.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
 
-        q.choices.forEach((choice) => {
-          const div = document.createElement("div");
-          div.className = "option";
-          if (selectedAnswers[q.id] === choice) {
-            div.classList.add("selected");
-          }
-          div.onclick = () => selectOption(div, q.id, choice);
-          div.innerHTML = `<h2>${choice}</h2>`;
-          optionsContainer.appendChild(div);
+          ripple.style.left = `${x}px`;
+          ripple.style.top = `${y}px`;
+          ripple.style.width = ripple.style.height = `${Math.max(rect.width, rect.height)}px`;
+
+          this.appendChild(ripple);
+
+          ripple.addEventListener('animationend', () => {
+            ripple.remove();
+          });
         });
+      });
 
-        document.getElementById("question-count").innerText = `Question ${
-          index + 1
-        } / ${questions.length}`;
-      }
+async function loadQuestion(index) {
+  const q = questions[index];
+  document.getElementById("question-text").innerText = q.question;
+
+  const optionsContainer = document.getElementById("options-container");
+  optionsContainer.innerHTML = "";
+
+  q.choices.forEach((choice) => {
+    const div = document.createElement("div");
+    div.className = "option";
+    if (selectedAnswers[q.id] === choice) {
+      div.classList.add("selected");
+    }
+    div.onclick = (e) => {
+      selectOption(div, q.id, choice);
+
+      const ripple = document.createElement('span');
+      ripple.classList.add('ripple');
+
+      const rect = div.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      ripple.style.width = ripple.style.height = `${Math.max(rect.width, rect.height)}px`;
+
+      div.appendChild(ripple);
+
+      ripple.addEventListener('animationend', () => {
+        ripple.remove();
+      });
+    };
+    div.innerHTML = `<h2>${choice}</h2>`;
+    optionsContainer.appendChild(div);
+  });
+
+  document.getElementById("question-count").innerText = `Question ${
+    index + 1
+  } / ${questions.length}`;
+}
+
 
       function selectOption(clickedDiv, questionId, answer) {
         document.querySelectorAll(".option").forEach((div) => {

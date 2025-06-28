@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Match</title>
+    <link href="/static/match.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/backgroundprop.css" />
+  </head>
+
+  <body>
+    <div class="svg-container">
+      <img src="/static/background.svg" alt="Background" />
+    </div>
+
+    <div class="main-container">
+      <div class="top-bar">
+        <h1 id="session_code">Room #: {{ session_code }}</h1>
+      </div>
+
+      <div class="details">
+        <!-- Participants -->
+        <div class="participants">
+          <div class="participant-header">
+            <h2>Participants</h2>
+            <p>{{ participants | length }} users joined</p>
+          </div>
+          <div class="users" id="users">
+            {% for participant in participants %}
+            <div class="player">
+              <div class="pfp"></div>
+              <p>{{ participant.name }}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Participant Form -->
+        <div class="participant-form">
+          <h1>Details</h1>
+          <form id="participant-form" method="POST">
+            {{ form.hidden_tag() }}
+
+            <label for="participantName">Enter your name</label>
+            {{ form.name(id="participantName") }}
+
+            <label for="email">Email</label>
+            {{ form.email(id="email") }}
+
+            <label for="password">Password</label>
+            {{ form.password(id="password") }}
+
+            <label for="college">What College are you part of?</label>
+            {{ form.college(id="college") }}
+
+            <label for="attributes">What are your skills</label>
+            {{ form.skills(id="attributes") }}
+
+            <button class="Start" type="submit">
+              {{ form.submit.label.text }}
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="bottom-bar">
+        <div class="bottom-message">
+          <p>Waiting for host to start matchmaking...</p>
+        </div>
+        <div class="bottom-button"></div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/script.js"></script>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script>
+      const socket = io({ withCredentials: true });
+
+      socket.on("update", (data) => {
+        const container = document.getElementById("users");
+        container.innerHTML = "";
+        data.participants.forEach((p) => {
+          const div = document.createElement("div");
+          div.classList.add("player");
+          div.innerHTML = `<div class="pfp"></div><p>${p.name}</p>`;
+          container.appendChild(div);
+        });
+
+        const headerCount = document.querySelector(".participant-header p");
+        if (headerCount) {
+          headerCount.textContent = `${data.count} users joined`;
+        }
+      });
+
+      socket.on("redirect_to_quiz", (data) => {
+        window.location.href = data.url;
+      });
+    </script>
+  </body>
+</html>

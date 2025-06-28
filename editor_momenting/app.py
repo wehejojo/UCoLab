@@ -13,9 +13,6 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
 
 
-
-# ------------- Helper Functions --------------
-
 def get_group_file(group):
     return os.path.join(BASE_DIR, f'document_{group}.json')
 

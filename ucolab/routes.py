@@ -1,16 +1,27 @@
 from flask import (
     Blueprint, render_template, request, session,
-    redirect, url_for, current_app, jsonify
+    redirect, url_for, current_app, jsonify, flash
 )
-from moment import socketio
 from flask_socketio import emit
+from flask_bcrypt import Bcrypt
 
-from moment.matchUsers import run_matching_sqlalchemy
-from moment.models import db, User, Answer, Group, GroupMembership
+from flask_login import (
+    login_user, login_required, 
+    logout_user, current_user
+)
+
+from ucolab import socketio
+from ucolab.matchUsers import run_matching_sqlalchemy
+
+from ucolab.models import (
+    db, User, Answer, Group, GroupMembership,
+    RegisterForm, LoginForm
+)
 
 import string, random
 
 main = Blueprint('main', __name__)
+bcrypt = Bcrypt()
 
 def generateRandomSessionCode(length: int) -> str:
     characters: str = string.ascii_letters.upper() + string.digits
@@ -58,6 +69,11 @@ def index():
     session.clear()
     return render_template('LandingPage.html')
 
+@main.route('/error')
+def error():
+    error_message = request.args.get('error_message', 'An unknown error occurred.')
+    return render_template('error.html', error_message=error_message)
+
 @main.route('/master/session', methods=['GET', 'POST'])
 def masterSession():
     if request.method == 'POST':
@@ -85,20 +101,55 @@ def modeSelect():
             return render_template('error.html', error_message="Please enter a code.")  
         if user_code == SESSION_CODE:
             return redirect(url_for('main.sessionPage', session_code=SESSION_CODE))
-        return render_template('error.html', error_message="Wrong Code!!")
+        return redirect(url_for('main.error', error_message="Wrong Code!!"))
     return render_template('/client/mode_select.html')
 
-@main.route('/session/<session_code>')
+@main.route('/session/<session_code>', methods=['GET', 'POST'])
 def sessionPage(session_code):
+    form = RegisterForm()
+    form.submit.label.text = 'Lock In'
+
+    if form.validate_on_submit():
+        hashed_pass = bcrypt.generate_password_hash(form.password.data)
+        new_user = User(
+            name=form.name.data,
+            email=form.email.data,
+            password=hashed_pass,
+            college=form.college.data,
+            skills=form.skills.data
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        # ✅ Emit to all clients
+        users = User.query.all()
+        participants = [{
+            'name': user.name,
+            'college': user.college,
+            'skills': user.skills
+        } for user in users]
+
+        socketio.emit('update', {
+            'participants': participants,
+            'count': len(participants)
+        })
+
+        return redirect(url_for('main.sessionPage', session_code=session_code))
+
     users = User.query.all()
     participants = [{
         'name': user.name,
         'college': user.college,
         'skills': user.skills
     } for user in users]
+
     return render_template(
-        '/client/match.html', session_code=session_code, 
-        participants=participants, length=len(participants)
+        '/client/match.html',
+        session_code=session_code,
+        participants=participants,
+        length=len(participants),
+        form=form
     )
 
 @main.route('/master/quiz')
@@ -209,18 +260,18 @@ def view_group(group_name):
     name = request.args.get("name") 
 
     if not name:
-        return render_template('error.html', error_message="Missing 'name' parameter")
+        return redirect(url_for('main.error', error_message="Missing 'name' parameter"))
 
     result = get_group_data_by_user_name(name)
     if not result:
-        return render_template('error.html', error_message="User not found or not in a group")
+        return redirect(url_for('main.error', error_message="User not found or not in a group"))
 
     user_group_name, members = result
 
     print(f"{name}\n{user_group_name}\n{group_name}")
 
     if user_group_name != group_name:
-        return render_template('error.html', error_message=f"User {name} is not in this group")
+        return redirect(url_for('error.html', error_message=f"User {name} is not in this group"))
 
     return render_template('client/view_group.html', group_name=group_name, members=members)
 
@@ -228,7 +279,7 @@ def view_group(group_name):
 def generate_doc(group_name):
     group = Group.query.filter_by(name=group_name).first()
     if not group:
-        return render_template('error.html', error_message="Group not found")
+        return redirect(url_for('main.error', error_message="Group not found"))
 
     group_users = (
         db.session.query(User)
@@ -253,6 +304,45 @@ def generate_doc(group_name):
         members=members
     )
 
+@main.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        hashed_pass = bcrypt.generate_password_hash(form.password.data)
+        new_user = User(
+            name = form.name.data,
+            email = form.email.data,
+            password = hashed_pass,
+            college = form.college.data,
+            skills = form.skills.data
+        )
+        
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('main.login'))
+    return render_template('auth/register.html', form=form)
+
+@main.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if not user:
+            flash("User not found!", "danger")
+        elif not bcrypt.check_password_hash(user.password, form.password.data):
+            flash("Invalid password!", "danger")
+        else:
+            login_user(user)
+            return redirect(url_for('main.modeSelect'))
+
+    return render_template('auth/login.html', form=form)
+
+@main.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    print('logged out')
+    return redirect(url_for('main.login'))
 
 # -------------------- Socket.IO Events -------------------- #
 
@@ -271,7 +361,7 @@ def handle_connect():
     })
 
 @socketio.on('join')
-def handle_join(data):
+def handle_join(data):    
     name = data.get('name')
     college = data.get('college')
     skills = data.get('skills')
