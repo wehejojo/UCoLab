@@ -381,7 +381,8 @@ def handle_join(data):
     }, broadcast=True)
 
 @socketio.on('start_matching')
-def handle_start_matching():
+def handle_start_matching(data):
+    session_code = data.get('url').split('/')[1]
     with current_app.app_context():
-        quiz_url = url_for('main.quiz', session_code=SESSION_CODE)
+        quiz_url = url_for('main.quiz', session_code=session_code)
     emit('redirect_to_quiz', {'url': quiz_url}, broadcast=True)
