@@ -72,9 +72,9 @@
     <script src="../static/script.js"></script>
     <script>
       const hoverSounds = [
-        new Audio("sounds/hover2.mp3"),
-        new Audio("sounds/hover1.mp3"),
-        new Audio("sounds/hover3.mp3"),
+        new Audio("/static/sounds/hover2.mp3"),
+        new Audio("/static/sounds/hover1.mp3"),
+        new Audio("/static/sounds/hover3.mp3"),
       ];
 
 
@@ -93,7 +93,7 @@
         });
 
         item.addEventListener("click", () => {
-          let a = new Audio("sounds/click.mp3");
+          let a = new Audio("/static/sounds/click.mp3");
           a.play();
           setTimeout(() => a.pause(), 1000);
         });
