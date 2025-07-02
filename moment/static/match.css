@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-bg: #121126;
+    --secondary-bg: rgba(0, 0, 0, 0.5);
+    --text-color: rgb(255, 255, 255);
+    --accent-color: #0F161E;
+    --border-radius-sm: 10px;
+    --border-radius-md: 20px;
+    --border-radius-lg: 40px;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+}
+
+
+body {
+    background-color: var(--primary-bg);
+    color: white;
+}
+
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html,
+body {
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    padding: var(--spacing-sm);
+}
+
+
+h1, h2, h3, p {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+}
+
+.main-container{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-areas:
+        "top-bar top-bar top-bar"
+        "details details details"
+        "details details details"
+        "details details details"
+        "details details details"
+        "bottom-bar bottom-bar bottom-bar";
+    grid-template-columns: repeat(3, 3fr);
+    grid-template-rows: repeat(6, 3fr);
+    gap: 10px;
+    padding: 10px;
+}
+.top-bar, .participants, .participant-form , .bottom-bar{
+    border-radius: 20px;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.top-bar{
+    border: 1px solid white;
+    grid-area: top-bar;
+    display: flex;
+    align-items: center;
+    padding:1rem ;
+}
+
+.details{
+    grid-area: details;
+    display: grid;
+        grid-template-areas:
+        "participants participant-form participant-form";
+    grid-template-columns: repeat(3, 3fr);
+    grid-template-rows: repeat(1, 3fr);
+    gap: 1rem;
+}
+
+.participants{
+    grid-area: participants;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    gap: 1rem;
+}
+
+.participant-form{
+    grid-area: participant-form;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.participants,.participant-form{
+    border: 1px solid white;
+    padding: 2rem;
+}
+
+.participant-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.participant-form input, .participant-form select{
+    border: 1px solid white;
+    width: 50%;
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
+.users{
+    height: 80%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.bottom-bar{
+    border: 1px solid white;
+    grid-area: bottom-bar;
+    padding:1rem ;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bottom-button button {
+  padding: var(--spacing-sm);
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 5px; 
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ccc;
+}
+
+
+
+@media (max-width: 600px) {
+    .details{
+    grid-area: details;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+}
+
+
