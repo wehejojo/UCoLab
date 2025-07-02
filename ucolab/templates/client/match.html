@@ -41,19 +41,14 @@
           <form id="participant-form" method="POST">
             {{ form.hidden_tag() }}
 
-            <label for="participantName">Enter your name</label>
             {{ form.name(id="participantName") }}
 
-            <label for="email">Email</label>
             {{ form.email(id="email") }}
 
-            <label for="password">Password</label>
             {{ form.password(id="password") }}
 
-            <label for="college">What College are you part of?</label>
             {{ form.college(id="college") }}
 
-            <label for="attributes">What are your skills</label>
             {{ form.skills(id="attributes") }}
 
             <button class="Start" type="submit">
