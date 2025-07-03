@@ -243,7 +243,7 @@ body {
 .about h1{
     line-height: 1.5rem;
     margin-bottom: 0;
-    font-size: 100%;
+    font-size: 80%;
     font-weight: bold;
     padding-bottom: 1rem;
     margin-top: 5%;
@@ -283,12 +283,14 @@ body {
 }
 
 .sponsor h1{
-    font-size: 80%;
-    margin-bottom: 0;
-    font-size: 100%;
-    font-weight: 300;
+    font-size: clamp(0.8rem, 1.5vw, 1.2rem); 
+    font-weight: 500;
+    margin: 0;
+    padding-top: 1rem;
     padding-bottom: 1rem;
-    margin-top: 5%;
+    max-width: 100%;
+    line-height: 1.3;
+    word-wrap: break-word;
 }
 
 .sponsorcontainer{
@@ -296,16 +298,18 @@ body {
     flex-direction: row;
 }
 
-.sponsormessage-cont{
+.sponsormessage-cont {
     flex-grow: 1;
-    flex-wrap: wrap;
     width: 50%;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    margin-top: 3%;
 }
+
 .sponsorbutton-cont{
     display: flex;
     flex-grow: 2;
     justify-content: center;
-    align-items: flex-end;
 }
 
 .sponsorbutton-cont button{
@@ -320,6 +324,7 @@ body {
     font-size: 50%;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     margin-left: 40%;
+    align-self: flex-end;
 }
 
 .events button{
@@ -340,7 +345,6 @@ body {
 
 
 /* TABLET DITO */
-
 @media screen and (max-width: 1024px) {
         body{
         overflow-y: scroll;
