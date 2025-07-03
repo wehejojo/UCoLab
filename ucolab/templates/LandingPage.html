@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UCoLab</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../static/landing.css" />
-    <link rel="stylesheet" href="../static/backgroundprop.css">
-  </head>
 
-  <body>
-    <div class="svg-container"><img src="../static/background.svg" alt="" /></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UCoLab</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../static/landing.css" />
+  <link rel="stylesheet" href="../static/backgroundprop.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/x-icon" href="../static/logo.svg">
+</head>
+
+<body>
+  <div class="svg-container"><img src="../static/background.svg" alt="" /></div>
+  <div class="dashboard-wrapper">
     <div class="dashboard">
       <div class="items login">
         <button class="Login-button button-effect">Login</button>
@@ -69,39 +72,41 @@
         <button>Reverse Pitching</button>
       </div>
     </div>
-    <script src="../static/script.js"></script>
-    <script>
-      const hoverSounds = [
-        new Audio("/static/sounds/hover2.mp3"),
-        new Audio("/static/sounds/hover1.mp3"),
-        new Audio("/static/sounds/hover3.mp3"),
-      ];
+  </div>
+  <script src="../static/script.js"></script>
+  <script>
+    const hoverSounds = [
+      new Audio("/static/sounds/hover2.mp3"),
+      new Audio("/static/sounds/hover1.mp3"),
+      new Audio("/static/sounds/hover3.mp3"),
+    ];
 
 
-      let hoverIndex = 0;
+    let hoverIndex = 0;
 
-      const findYourMatchButton = document.getElementById('find-your-match');
+    const findYourMatchButton = document.getElementById('find-your-match');
 
-      document.querySelectorAll(".items").forEach((item) => {
-        item.addEventListener("mouseenter", () => {
-          const sound =
-            hoverSounds[Math.floor(Math.random() * hoverSounds.length)];
-          hoverIndex = (hoverIndex + 1) % hoverSounds.length;
+    document.querySelectorAll(".items").forEach((item) => {
+      item.addEventListener("mouseenter", () => {
+        const sound =
+          hoverSounds[Math.floor(Math.random() * hoverSounds.length)];
+        hoverIndex = (hoverIndex + 1) % hoverSounds.length;
 
-          sound.currentTime = 0;
-          sound.play();
-        });
-
-        item.addEventListener("click", () => {
-          let a = new Audio("/static/sounds/click.mp3");
-          a.play();
-          setTimeout(() => a.pause(), 1000);
-        });
+        sound.currentTime = 0;
+        sound.play();
       });
 
-      findYourMatchButton.addEventListener("click", () => {
-        window.location.href = "/mode-select";
-      })
-    </script>
-  </body>
+      item.addEventListener("click", () => {
+        let a = new Audio("/static/sounds/click.mp3");
+        a.play();
+        setTimeout(() => a.pause(), 1000);
+      });
+    });
+
+    findYourMatchButton.addEventListener("click", () => {
+      window.location.href = "/mode-select";
+    })
+  </script>
+</body>
+
 </html>

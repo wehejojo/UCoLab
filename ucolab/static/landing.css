@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
 html,
 body {
     margin: 0;
@@ -7,21 +13,34 @@ body {
     height: 100%;
     width: 100%;
     box-sizing: border-box;
-    overflow: hidden;
+    font-size: 100%;
 }
 
-html{
+html {
     background-color: #121126;
-
 }
 
-*,
-*::before,
-*::after {
-    box-sizing: inherit;
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+
+.dashboard-wrapper {
+    width: 100%;
+    min-height: 100vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
 .dashboard {
+    aspect-ratio: 4 / 3;
+    width: min(100%, 70rem);
+    height: auto;
     display: grid;
     grid-template-areas:
         "login find    explore  about"
@@ -30,14 +49,14 @@ html{
         "login logo    logo     events"
         "sponsor sponsor uc      events"
         "sponsor sponsor uc      events";
-    grid-template-columns: repeat(4, 3fr);
-    grid-template-rows: repeat(6, 3fr);
-    height: 80vh;
-    width: 65vw;
-    margin: 5% auto;
-    gap: 10px;
-    padding: 10px;
-    background-image: rgba(0,0,0,0.5);
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    box-sizing: border-box;
+    color: white;
+    font-size: clamp(0.75rem, 1vw, 1rem);
 }
 
 .login {
@@ -50,10 +69,12 @@ html{
 
 .find {
     grid-area: find;
-    padding: 0rem 4rem 0rem 2rem;
+    padding: 0rem 3rem 0rem 2rem;
     display: flex;
     flex-direction: column;
     position: relative;
+    font-size: 20px;
+    justify-content: center;
 }
 
 .explore {
@@ -61,7 +82,8 @@ html{
     padding: 0rem 4rem 0rem 2rem;
     display: flex;
     flex-direction: column;
-    position: relative;
+    font-size: 20px;
+    justify-content: center;
 }
 
 .about {
@@ -95,8 +117,8 @@ html{
 }
 
 .uc img{
-    width: 80%;
-    height: 80%;
+    width: 60%;
+    height: 60%;
 }
 
 .events {
@@ -167,15 +189,17 @@ html{
 }
 
 .find h1{
-    line-height: 2.5rem;
+    line-height: 1.5rem;
     margin-bottom: 0;
-    font-size: 120%;
+    font-size: 100%;
     font-weight: bold;
+    padding-bottom: 1rem;
 }
 
 .find p{
-    line-height: 1.5rem;
-    font-size: 50%;
+    line-height: 1rem;
+    font-size: 60%;
+    padding-bottom: 1rem;
 }
 
 .find-button{
@@ -191,15 +215,17 @@ html{
 }
 
 .explore h1{
-    line-height: 2.5rem;
+    line-height: 1.5rem;
     margin-bottom: 0;
-    font-size: 120%;
+    font-size: 100%;
     font-weight: bold;
+    padding-bottom: 1rem;
 }
 
 .explore p{
-    line-height: 1.5rem;
-    font-size: 50%;
+    line-height: 1rem;
+    font-size: 60%;
+    padding-bottom: 1rem;
 }
 
 .explore-button{
@@ -215,22 +241,23 @@ html{
 }
 
 .about h1{
-    line-height: 2.5rem;
+    line-height: 1.5rem;
     margin-bottom: 0;
-    margin-top: 5%;
-    font-size: 120%;
+    font-size: 100%;
     font-weight: bold;
-    line-height: 90%;
-}
+    padding-bottom: 1rem;
+    margin-top: 5%;
+  }
 
 .about p{
-    line-height: 1.5rem;
-    font-size: 50%;
+    line-height: 1rem;
+    font-size: 60%;
+    padding-bottom: 1rem;
 }
 
-a{
+.sponsor a, .about a {
     text-decoration: none;
-    color: grey;
+    color: rgb(26, 25, 25);
     background-color: white;
     width: fit-content;
     height: fit-content;
@@ -257,6 +284,11 @@ a{
 
 .sponsor h1{
     font-size: 80%;
+    margin-bottom: 0;
+    font-size: 100%;
+    font-weight: 300;
+    padding-bottom: 1rem;
+    margin-top: 5%;
 }
 
 .sponsorcontainer{
@@ -287,6 +319,7 @@ a{
     border-radius: 40px;
     font-size: 50%;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-left: 40%;
 }
 
 .events button{
@@ -303,5 +336,151 @@ a{
 
 .events button:hover{
     background-color: rgba(4, 134, 63, 0.5);
+}
 
+
+/* TABLET DITO */
+
+@media screen and (max-width: 1024px) {
+        body{
+        overflow-y: scroll;
+        }
+  .dashboard {
+    grid-template-areas:
+      "login login"
+      "find explore"
+      "logo logo"
+      "about about"
+      "sponsor sponsor"
+      "uc events";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(6, auto);
+    width: 90vw;
+    height: auto;
+    margin: 5% auto;
+    gap: 10px;
+  }
+
+  .find,
+  .explore,
+  .about,
+  .sponsor,
+  .uc,
+  .events {
+    padding: 1rem;
+    font-size: 80%;
+  }
+
+  .logo img {
+    width: 60%;
+    height: auto;
+  }
+
+  .uc img {
+    width: 100%;
+    height: auto;
+  }
+
+  .Login-button,
+  .find-button,
+  .explore-button,
+  .about-button,
+  .sponsorbutton-cont button {
+    font-size: 70%;
+    padding: 0.7rem 1rem;
+  }
+
+  .events button {
+    font-size: 70%;
+  }
+
+  .sponsorcontainer {
+    flex-direction: column;
+  }
+
+  .sponsormessage-cont,
+  .sponsorbutton-cont {
+    width: 100%;
+  }
+}
+
+/* MOBILE NAMAN DITO */
+@media screen and (max-width: 600px) {
+    body{
+        overflow-y: scroll;
+    }
+  .dashboard {
+    grid-template-areas:
+      "login"
+      "logo"
+      "find"
+      "explore"
+      "about"
+      "sponsor"
+      "uc"
+      "events";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    width: 95vw;
+    height: auto;
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .dashboard > div {
+    font-size: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .login,
+  .logo,
+  .find,
+  .explore,
+  .about,
+  .sponsor,
+  .uc,
+  .events {
+    padding: 1rem;
+  }
+
+  .logo img {
+    width: 100%;
+    height: auto;
+  }
+
+  .uc img {
+    width: 100%;
+    height: auto;
+  }
+
+  .Login-button,
+  .find-button,
+  .explore-button,
+  .about-button,
+  .sponsorbutton-cont button {
+    font-size: 80%;
+    width: 100%;
+  }
+
+  .events button {
+    font-size: 70%;
+    width: 100%;
+  }
+
+  .sponsorcontainer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sponsormessage-cont,
+  .sponsorbutton-cont {
+    width: 100%;
+  }
+
+  a {
+    font-size: 80%;
+    padding: 0.3rem 0.6rem;
+    margin-top: 1rem;
+  }
 }
