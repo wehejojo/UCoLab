@@ -86,7 +86,7 @@ class RegisterForm(FlaskForm):
         validators = [InputRequired()],
         render_kw = { "placeholder" : "Please keep it short"}
     )
-    submit = SubmitField("Register")
+    submit = SubmitField("Create My Account")
 
     def validate_email(self, email):
         existing = User.query.filter_by(email=email.data).first()

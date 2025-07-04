@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-</head>
-<body>
-  <h1>LOGIN MOMENT</h1>
-  <form action="" method="post">
-    {{ form.hidden_tag() }}
-    {{ form.email }}<br><br>
-    {{ form.password }}<br><br>
-    {{ form.submit }}
-  </form>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+  </head>
+  <body>
+    <div class="main-container">
+      <h1>Welcome Back, Innovator</h1>
+      <p>
+        Sign in to find your team, join new projects, and keep building the
+        future with UC InTTO.
+      </p>
+      <form action="" method="post">
+        {{ form.hidden_tag() }} {{ form.email }}<br /><br />
+        {{ form.password }}<br /><br />
+        {{ form.submit }}
+      </form>
+      <p>Don't Have an Account? <a href="/register">Create an account</a></p>
+    </div>
+  </body>
 </html>
