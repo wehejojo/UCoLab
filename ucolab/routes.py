@@ -312,19 +312,26 @@ def generate_doc(group_name):
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        hashed_pass = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(
-            name = form.name.data,
-            email = form.email.data,
-            password = hashed_pass,
-            college = form.college.data,
-            skills = form.skills.data
-        )
-        
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('main.login'))
+        try:
+            hashed_pass = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            new_user = User(
+                name = form.name.data,
+                email = form.email.data,
+                password = hashed_pass,
+                college = form.college.data,
+                skills = form.skills.data
+            )
+
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('main.login'))
+
+        except Exception as e:
+            print(f"Registration error: {e}")
+            flash("Registration failed: something went wrong.", "danger")
+
     return render_template('auth/register.html', form=form)
+
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():

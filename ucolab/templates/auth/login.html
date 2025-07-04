@@ -7,34 +7,11 @@
 </head>
 <body>
   <h1>LOGIN MOMENT</h1>
-
-  <!-- Flash messages -->
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <div style="padding: 10px; margin-bottom: 10px; border: 1px solid red; background-color: #ffe6e6; position: relative;">
-          <strong>{{ category.title() }}:</strong> {{ message }}
-          <span class="close-btn" style="position: absolute; top: 5px; right: 10px; cursor: pointer;">X</span>
-        </div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-
   <form action="" method="post">
     {{ form.hidden_tag() }}
     {{ form.email }}<br><br>
     {{ form.password }}<br><br>
     {{ form.submit }}
   </form>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      document.querySelectorAll('.close-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          this.parentElement.style.display = 'none';
-        });
-      });
-    });
-  </script>
 </body>
 </html>

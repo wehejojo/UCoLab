@@ -53,10 +53,10 @@ def create_app():
         try:
             admin = User.query.filter_by(name="admin").first()
             if not admin:
-                admin_password = os.getenv('ADMIN_PASSWORD')
+                admin_password = os.getenv('THE_UCOLAB_MOMENT')
                 if not admin_password:
                     raise RuntimeError("ADMIN PASSWORD is not an environment variable")
-                hashed_pass = bcrypt.generate_password_hash(admin_password).decode('utf8')
+                hashed_pass = bcrypt.generate_password_hash(admin_password)
 
                 admin = User(
                     name='admin',
@@ -69,7 +69,7 @@ def create_app():
                 db.session.commit()
                 print("Admin created")
             else:
-                print("Admin already exists")
+                print(f"Admin {admin.password} already exists")
         except Exception as e:
             print(f"Skipping admin creation during migration: {e}")
 
