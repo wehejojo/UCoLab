@@ -344,9 +344,13 @@ def login():
             flash("Invalid password!", "danger")
         else:
             login_user(user)
-            return redirect(url_for('main.modeSelect'))
+            if user.is_admin:
+                return redirect(url_for('main.masterSession'))
+            else:
+                return redirect(url_for('main.modeSelect'))
 
     return render_template('auth/login.html', form=form)
+
 
 @main.route('/logout', methods=['GET', 'POST'])
 @login_required
