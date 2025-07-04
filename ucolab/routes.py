@@ -19,6 +19,7 @@ from ucolab.models import (
 )
 
 import string, random
+from ucolab.utils.decorators import admin_required
 
 main = Blueprint('main', __name__)
 bcrypt = Bcrypt()
@@ -75,18 +76,15 @@ def error():
     return render_template('error.html', error_message=error_message)
 
 @main.route('/master/session', methods=['GET', 'POST'])
+@admin_required
 def masterSession():
-    if not current_user.is_authenticated or not current_user.is_admin:
-        return abort(403)
     if request.method == 'POST':
         return redirect(url_for('main.masterMatch'))
     return render_template('/admin/master_session.html', session_code=SESSION_CODE)
 
 @main.route('/master/match', methods=['GET'])
+@admin_required
 def masterMatch():
-    if not current_user.is_authenticated or not current_user.is_admin:
-        return abort(403)
-    
     users = User.query.all()
     participants = [{
         'name': user.name,
@@ -158,10 +156,8 @@ def sessionPage(session_code):
     )
 
 @main.route('/master/quiz')
-def masterQuiz():
-    if not current_user.is_authenticated or not current_user.is_admin:
-        return abort(403)
-    
+@admin_required
+def masterQuiz():    
     return render_template('/admin/quiz.html', session_code=SESSION_CODE)
 
 @main.route('/<session_code>/quiz')
