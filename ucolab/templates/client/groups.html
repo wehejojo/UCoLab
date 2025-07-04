@@ -1,39 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js"></script>
-    <title>Quiz</title>
-    <link rel="stylesheet" href="/static/quiz.css" />
-    <style>
-      .selected {
-        background-color: #dcdcdc;
-      }
-    </style>
-    <link rel="stylesheet" href="../static/backgroundprop.css" />
-  </head>
 
-  <body>
-    <div class="svg-container">
-      <img src="../static/background.svg" alt="" />
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.socket.io/3.1.3/socket.io.min.js"></script>
+  <title>Quiz</title>
+  <link rel="stylesheet" href="../static/quiz.css" />
+  <style>
+    .selected {
+      background-color: #dcdcdc;
+    }
+  </style>
+  <link rel="stylesheet" href="../static/backgroundprop.css" />
+</head>
+
+<body>
+  <div class="svg-container">
+    <img src="../static/background.svg" alt="" />
+  </div>
+
+  <div class="main-container">
     <div class="top-bar">
       <h1 id="session_code">Room #: {{ session_code }}</h1>
     </div>
 
-    <div
-      id="results-container"
-      style="text-align: center"
-      class="results-container"
-    >
-      <h2 id="loading-message">
-        Finding best teammates based on your skills, interests, and working
-        style. This may take a moment...
-      </h2>
-      <h2 id="question-text" style="display: none;">Here are your best matches</h2>
-      <div id="final-cards" style="display: none; margin-top: 2rem">
-          
+    <div id="results-container" class="details">
+      <div class="middle-container">
+        <div class="question">
+          <h2 id="loading-message" class="question-text">
+            Finding best teammates based on your skills, interests, and working
+            style. This may take a moment...
+          </h2>
+          <h2 id="question-text" style="display: none;">Here are your best matches</h2>
+        </div>
+        <div id="final-cards" style="display: none; margin-top: 2rem">
         </div>
       </div>
     </div>
@@ -46,126 +47,141 @@
         </div>
       </div>
     </div>
-    <script src="../static/script.js"></script>
-    <script>
-      const socket = io("http://192.168.0.88:5000/", {
-        query: {
-          group: "{{ group_name }}",
-        },
-      });
-      const confirmGroupButton = document.getElementById("confirm-group");
-      const cardContainer = document.getElementById('card-container');
-      const narrativeText = document.getElementById('question-text');
-      let group_name = "";
+  </div>
 
-      async function showLoadingAndFetch() {
-        await delay(1000);
-        document.querySelector(
-          "#loading-message"
-        ).textContent = `We've found your match. Getting everything set...`;
+  </div>
+  <script src="../static/script.js"></script>
+  <script src="../static/script.js"></script>
+<script>
+  const socket = io("http://192.168.0.88:5000/", {
+    query: {
+      group: "{{ group_name }}",
+    },
+  });
 
-        await delay(1000);
-        document.getElementById("loading-message").style.display = "none";
-        document.getElementById("final-cards").style.display = "flex";
+  const confirmGroupButton = document.getElementById("confirm-group");
+  const narrativeText = document.getElementById("question-text");
+  let group_name = "";
 
-        try {
-          const userName = localStorage.getItem("name");
-          if (!userName) {
-            console.error("No name found in localStorage.");
-            return;
-          }
+  // Looping message every 5 seconds
+  function loopLoadingMessage() {
+    const loadingText = document.getElementById("question-count");
+    const messages = [
+      "Analyzing your answers...",
+      "Finding the best group fit for you...",
+      "Matching with compatible teammates...",
+      "Optimizing team combinations...",
+    ];
+    let index = 0;
 
-          const response = await fetch(
-            `/getGroups?name=${encodeURIComponent(userName)}`,
-            {
-              method: "GET",
-              credentials: "include",
-            }
-          );
+    return setInterval(() => {
+      index = (index + 1) % messages.length;
+      loadingText.textContent = messages[index];
+    }, 5000);
+  }
 
-          const result = await response.json();
+  // Utility delay
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
-          if (result.success && typeof result.groups === "object") {
-            const finalCards = document.getElementById("final-cards");
-            finalCards.innerHTML = "";
+  // Main logic: loading -> fetch -> render group
+  async function showLoadingAndFetch() {
+    await delay(1000);
+    const loadingMsg = document.getElementById("loading-message");
+    loadingMsg.textContent = "We've found your match. Getting everything set...";
 
-            let foundGroup = null;
+    await delay(1000);
 
-            for (const [groupName, groupData] of Object.entries(
-              result.groups
-            )) {
-              const memberList = Object.values(groupData.members);
-              const isUserInGroup = memberList.some(
-                (member) => member.name === userName
-              );
-              if (isUserInGroup) {
-                foundGroup = { groupName, groupData };
-                break;
-              }
-            }
+    // Fade out loading message instead of hiding
+    loadingMsg.classList.add("fade-out");
 
-            if (foundGroup) {
-              const { groupName, groupData } = foundGroup;
+    document.getElementById("final-cards").style.display = "flex";
 
-              group_name = groupName;
+    try {
+      const userName = localStorage.getItem("name");
+      if (!userName) {
+        console.error("No name found in localStorage.");
+        return;
+      }
 
-              narrativeText.style.display = 'block';
-
-              Object.values(groupData.members).forEach((memberData) => {
-                const card = document.createElement("div");
-                card.className = "card";
-                card.innerHTML = `
-                  <h1 class='memberTYPE'><strong>${memberData.answers?.q1 || "N/A"}</strong></h1>
-                  <div class="card-bottom">
-                    <h3 style='text-align: left;' class='group-member_name'>${memberData.name}</h3>
-                    <p><strong>College: </strong> ${memberData.college}</p>
-                    <p><strong>Role: </strong>${memberData.answers?.q1 || "N/A"}</p>
-                    <p><strong>Interest: </strong>${memberData.answers?.q2 || "N/A"}</p>
-                    <p><strong>Key Skills: </strong></p>
-                    <div class="skills">
-                      ${memberData.skills
-                        .map((skill) => `<p>${skill}</p>`)
-                        .join("")}
-                    </div>
-                  </div>`;
-                finalCards.appendChild(card);
-              });
-            } else {
-              const notFound = document.createElement("p");
-              notFound.textContent = "You were not found in any group.";
-              finalCards.appendChild(notFound);
-            }
-          } else {
-            console.error("Unexpected format or no groups found:", result);
-          }
-        } catch (error) {
-          console.error("Error fetching match data:", error);
+      const response = await fetch(
+        `/getGroups?name=${encodeURIComponent(userName)}`,
+        {
+          method: "GET",
+          credentials: "include",
         }
-      }
+      );
 
-      function delay(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-      }
+      const result = await response.json();
 
-      function capitalize(str) {
-        if (!str) return "";
-        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-      }
+      if (result.success && typeof result.groups === "object") {
+        const finalCards = document.getElementById("final-cards");
+        finalCards.innerHTML = "";
 
-      confirmGroupButton.addEventListener("click", () => {
-        group_name = group_name.replace(/\s+/g, "-");
-        const userName = localStorage.getItem("name");
+        let foundGroup = null;
 
-        window.location.href = `
-          /group/${group_name}?name=${
-            encodeURIComponent(userName)
+        for (const [groupName, groupData] of Object.entries(result.groups)) {
+          const memberList = Object.values(groupData.members);
+          const isUserInGroup = memberList.some(
+            (member) => member.name === userName
+          );
+          if (isUserInGroup) {
+            foundGroup = { groupName, groupData };
+            break;
           }
-        `;
-      });
+        }
 
-      window.onload = () => {
-        showLoadingAndFetch();
-      };
-    </script>
-  </body>
+        if (foundGroup) {
+          const { groupName, groupData } = foundGroup;
+          group_name = groupName;
+          narrativeText.style.display = "block";
+
+          Object.values(groupData.members).forEach((memberData) => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+              <h1 class='memberTYPE'><strong>${memberData.answers?.q1 || "N/A"}</strong></h1>
+              <div class="card-bottom">
+                <h3 style='text-align: left;' class='group-member_name'>${memberData.name}</h3>
+                <p><strong>College: </strong> ${memberData.college}</p>
+                <p><strong>Role: </strong>${memberData.answers?.q1 || "N/A"}</p>
+                <p><strong>Interest: </strong>${memberData.answers?.q2 || "N/A"}</p>
+                <p><strong>Key Skills: </strong></p>
+                <div class="skills">
+                  ${memberData.skills.map(skill => `<p>${skill}</p>`).join("")}
+                </div>
+              </div>`;
+            finalCards.appendChild(card);
+          });
+        } else {
+          const notFound = document.createElement("p");
+          notFound.textContent = "You were not found in any group.";
+          document.getElementById("final-cards").appendChild(notFound);
+        }
+      } else {
+        console.error("Unexpected format or no groups found:", result);
+      }
+    } catch (error) {
+      console.error("Error fetching match data:", error);
+    }
+  }
+
+  // Handle Confirm button
+  confirmGroupButton.addEventListener("click", () => {
+    group_name = group_name.replace(/\s+/g, "-");
+    const userName = localStorage.getItem("name");
+    window.location.href = `/group/${group_name}?name=${encodeURIComponent(userName)}`;
+  });
+
+  // Init on page load
+  window.onload = () => {
+    const intervalId = loopLoadingMessage();        // Start looping loading text
+    showLoadingAndFetch().then(() => {
+      clearInterval(intervalId);                   // Stop once done
+    });
+  };
+</script>
+</body>
+
 </html>
