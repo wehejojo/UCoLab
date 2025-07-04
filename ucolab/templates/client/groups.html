@@ -12,7 +12,8 @@
       background-color: #dcdcdc;
     }
   </style>
-  <link rel="stylesheet" href="../static/backgroundprop.css" />
+  <link rel="stylesheet" href="../static/backgroundprop.css" />  <link rel="icon" type="image/x-icon" href="../static/logo.svg">
+
 </head>
 
 <body>
@@ -87,7 +88,7 @@
 
   // Main logic: loading -> fetch -> render group
   async function showLoadingAndFetch() {
-    await delay(1000);
+    await delay(5000);
     const loadingMsg = document.getElementById("loading-message");
     loadingMsg.textContent = "We've found your match. Getting everything set...";
 
