@@ -75,15 +75,27 @@ def error():
     error_message = request.args.get('error_message', 'An unknown error occurred.')
     return render_template('error.html', error_message=error_message)
 
+# @admin_required
 @main.route('/master/session', methods=['GET', 'POST'])
-@admin_required
 def masterSession():
-    if request.method == 'POST':
-        return redirect(url_for('main.masterMatch'))
-    return render_template('/admin/master_session.html', session_code=SESSION_CODE)
+    form = LoginForm()
+    if form.validate_on_submit():
+        print('test')
+        user = User.query.filter_by(email=form.email.data).first()
+        if not user:
+            print('not found')
+        elif not bcrypt.check_password_hash(user.password, form.password.data):
+            print('invalid pass')
+        else:
+            login_user(user)
+            print(user.is_admin)
+            if not user.is_admin:
+                return abort(403)
+            return render_template('/admin/master_session.html', session_code=SESSION_CODE)
+    return render_template('/admin/master_session.html', session_code=SESSION_CODE, form=form)
 
+# @admin_required
 @main.route('/master/match', methods=['GET'])
-@admin_required
 def masterMatch():
     users = User.query.all()
     participants = [{
@@ -125,7 +137,6 @@ def sessionPage(session_code):
         db.session.add(new_user)
         db.session.commit()
 
-        # ✅ Emit to all clients
         users = User.query.all()
         participants = [{
             'name': user.name,
@@ -155,8 +166,8 @@ def sessionPage(session_code):
         form=form
     )
 
+# @admin_required
 @main.route('/master/quiz')
-@admin_required
 def masterQuiz():    
     return render_template('/admin/quiz.html', session_code=SESSION_CODE)
 

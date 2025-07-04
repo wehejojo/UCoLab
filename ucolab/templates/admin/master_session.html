@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Session Master</title>
     <link href="/static/main.css" rel="stylesheet" />
-</head>
-<body>
-    <form class="sessionmaster" action="/master/session" method="POST">
-      <h1 id="session_code">Session Code: {{ session_code }} </h1>
-      <button id="start" class="session-start">Start Matching!</button>
-    </form>
-</body>
+  </head>
+  <body>
+    {% if not form_submitted %}
+      <form action="" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.email }}<br /><br />
+        {{ form.password }}<br /><br />
+        {{ form.submit }}
+      </form>
+    {% else %}
+      <h1 id="session_code">Session Code: {{ session_code }}</h1>
+      <a href="/master/match">
+        <button>Start Matching</button>
+      </a>
+    {% endif %}
+  </body>
 </html>
