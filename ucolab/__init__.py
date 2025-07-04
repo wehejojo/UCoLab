@@ -53,7 +53,7 @@ def create_app():
         try:
             admin = User.query.filter_by(name="admin").first()
             if not admin:
-                admin_password = os.getenv('THE_UCOLAB_MOMENT')
+                admin_password = 'THE_UCOLAB_MOMENT'
                 if not admin_password:
                     raise RuntimeError("ADMIN PASSWORD is not an environment variable")
                 hashed_pass = bcrypt.generate_password_hash(admin_password)
