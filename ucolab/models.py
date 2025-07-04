@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     college = db.Column(db.String(120))
     skills = db.Column(db.String(120))
     answers = db.relationship('Answer', backref='user', lazy=True)
+    is_admin = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f"Name: {self.name}, College: {self.college}, Skills: {self.skills}{', Answers: {self.answers}' if self.answers else ''}"

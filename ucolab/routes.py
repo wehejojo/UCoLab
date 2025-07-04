@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, render_template, request, session,
+    Blueprint, abort, render_template, request, session,
     redirect, url_for, current_app, jsonify, flash
 )
 from flask_socketio import emit
@@ -76,12 +76,17 @@ def error():
 
 @main.route('/master/session', methods=['GET', 'POST'])
 def masterSession():
+    if not current_user.is_authenticated or not current_user.is_admin:
+        return abort(403)
     if request.method == 'POST':
         return redirect(url_for('main.masterMatch'))
     return render_template('/admin/master_session.html', session_code=SESSION_CODE)
 
 @main.route('/master/match', methods=['GET'])
 def masterMatch():
+    if not current_user.is_authenticated or not current_user.is_admin:
+        return abort(403)
+    
     users = User.query.all()
     participants = [{
         'name': user.name,
@@ -154,6 +159,9 @@ def sessionPage(session_code):
 
 @main.route('/master/quiz')
 def masterQuiz():
+    if not current_user.is_authenticated or not current_user.is_admin:
+        return abort(403)
+    
     return render_template('/admin/quiz.html', session_code=SESSION_CODE)
 
 @main.route('/<session_code>/quiz')
