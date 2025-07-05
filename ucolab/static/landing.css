@@ -415,14 +415,12 @@ body {
     }
   .dashboard {
     grid-template-areas:
-      "login"
-      "logo"
-      "find"
-      "explore"
-      "about"
-      "sponsor"
-      "uc"
-      "events";
+      "logo login"
+      "find explore"
+      "find explore"
+      "about about"
+      "sponsor uc"
+      "events uc";
     grid-template-columns: 1fr;
     grid-template-rows: auto;
     width: 95vw;
@@ -449,13 +447,13 @@ body {
   }
 
   .logo img {
-    width: 100%;
-    height: auto;
+    width: 50%;
+    height: 50%;
   }
 
   .uc img {
-    width: 100%;
-    height: auto;
+    width: 12%;
+    height: 12%;
   }
 
   .Login-button,

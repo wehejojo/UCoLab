@@ -6,6 +6,8 @@
     <title>Quiz</title>
     <link rel="stylesheet" href="/static/quiz.css" />
         <link rel="stylesheet" href="../static/backgroundprop.css">
+          <link rel="icon" type="image/x-icon" href="../static/logo.svg">
+
     <style>
       .selected {
         background-color: #dcdcdc;
@@ -130,7 +132,7 @@ async function loadQuestion(index) {
   q.choices.forEach((choice) => {
     const div = document.createElement("div");
     div.className = "option";
-    if (selectedAnswers[q.id] === choice) {
+    if (selectedAnswers[q.id] === choice) {a
       div.classList.add("selected");
     }
     div.onclick = (e) => {
