@@ -18,7 +18,6 @@ from ucolab.models import (
 )
 
 import string, random
-from ucolab.utils.decorators import admin_required
 
 main = Blueprint('main', __name__)
 bcrypt = Bcrypt()
@@ -74,14 +73,12 @@ def error():
     error_message = request.args.get('error_message', 'An unknown error occurred.')
     return render_template('error.html', error_message=error_message)
 
-# @admin_required
 @main.route('/master/session', methods=['GET', 'POST'])
 def masterSession():
     if request.method == 'POST':
         return redirect(url_for('main.masterMatch'))
     return render_template('/admin/master_session.html', session_code=SESSION_CODE)
 
-# @admin_required
 @main.route('/master/match', methods=['GET'])
 def masterMatch():
     users = User.query.all()
@@ -105,8 +102,6 @@ def modeSelect():
             return redirect(url_for('main.sessionPage', session_code=SESSION_CODE))
         return redirect(url_for('main.error', error_message="Wrong Code!!"))
     return render_template('/client/mode_select.html')
-
-from flask import request
 
 @main.route('/session/<session_code>', methods=['GET', 'POST'])
 def sessionPage(session_code):
