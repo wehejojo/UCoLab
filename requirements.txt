@@ -12,3 +12,4 @@ wtforms
 email_validator
 flask_admin
 psycopg2-binary
+python-dotenv

@@ -6,8 +6,7 @@
     <title>Match</title>
     <link href="/static/match.css" rel="stylesheet" />
     <link rel="stylesheet" href="/static/backgroundprop.css" />
-      <link rel="icon" type="image/x-icon" href="../static/logo.svg">
-
+    <link rel="icon" type="image/x-icon" href="../static/logo.svg" />
   </head>
 
   <body>
@@ -21,21 +20,21 @@
       </div>
 
       <div class="details">
-  <!-- Participants -->
-  <div class="participants" id="participants">
-    <div class="participant-header">
-      <h2>Participants</h2>
-      <p>{{ participants | length }} users joined</p>
-    </div>
-    <div class="users" id="users">
-      {% for participant in participants %}
-      <div class="player">
-        <div class="pfp"></div>
-        <p>{{ participant.name }}</p>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
+        <!-- Participants -->
+        <div class="participants" id="participants">
+          <div class="participant-header">
+            <h2>Participants</h2>
+            <p>{{ participants | length }} users joined</p>
+          </div>
+          <div class="users" id="users">
+            {% for participant in participants %}
+            <div class="player">
+              <div class="pfp"></div>
+              <p>{{ participant.name }}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
 
         <!-- Participant Form -->
         <div class="participant-form">
@@ -79,31 +78,32 @@
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script>
       const socket = io({ withCredentials: true });
-        const form = document.getElementById("participant-form");
+      const form = document.getElementById("participant-form");
 
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault(); // prevent normal form submit
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault(); // prevent normal form submit
 
-    const formData = new FormData(form);
+        const formData = new FormData(form);
 
-    const response = await fetch(window.location.pathname, {
-      method: "POST",
-      body: formData,
-    });
+        const response = await fetch(window.location.pathname, {
+          method: "POST",
+          body: formData,
+        });
 
-    if (response.ok) {
-      // Only switch view if successful
-      if (window.innerWidth <= 768) {
-        const formContainer = document.getElementById("participantForm");
-        const participantsContainer = document.getElementById("participants");
+        if (response.ok) {
+          // Only switch view if successful
+          if (window.innerWidth <= 768) {
+            const formContainer = document.getElementById("participant-form");
+            const participantsContainer =
+              document.getElementById("participants");
 
-        formContainer.classList.add("mobile-hidden");
-        participantsContainer.classList.add("mobile-visible");
-      }
-    } else {
-      alert("Failed to submit. Try again.");
-    }
-  });
+            formContainer.classList.add("mobile-hidden");
+            participantsContainer.classList.add("mobile-visible");
+          }
+        } else {
+          alert("Failed to submit. Try again.");
+        }
+      });
       socket.on("update", (data) => {
         const container = document.getElementById("users");
         container.innerHTML = "";

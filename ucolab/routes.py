@@ -103,8 +103,6 @@ def modeSelect():
         return redirect(url_for('main.error', error_message="Wrong Code!!"))
     return render_template('/client/mode_select.html')
 
-from flask import request
-
 @main.route('/session/<session_code>', methods=['GET', 'POST'])
 def sessionPage(session_code):
     if request.method == 'POST':
