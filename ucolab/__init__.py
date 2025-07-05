@@ -19,12 +19,18 @@ def create_app():
     basedir = os.path.abspath(os.path.dirname(__file__))
     db_path = os.path.join(basedir, 'data', 'app.db')
 
-    app.config['SECRET_KEY'] = 'your_secret_key_here'
-    database_url = os.getenv("DATABASE_URL", f"sqlite:///{db_path}")
-    if database_url.startswith("postgres://"):
-        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev_secret_key')
+    database_url = os.getenv("DATABASE_URL")
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    if database_url:
+        # Production (e.g., Railway PostgreSQL)
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    else:
+        # Development (local SQLite)
+        app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
+
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.permanent_session_lifetime = timedelta(minutes=30)
 
@@ -46,32 +52,5 @@ def create_app():
 
     from ucolab.utils.socket_handlers import init_handlers
     init_handlers()
-
-    from ucolab.models import User
-
-    with app.app_context():
-        try:
-            admin = User.query.filter_by(name="admin").first()
-            if not admin:
-                admin_password = 'THE_UCOLAB_MOMENT'
-                if not admin_password:
-                    raise RuntimeError("ADMIN PASSWORD is not an environment variable")
-                hashed_pass = bcrypt.generate_password_hash(admin_password)
-
-                admin = User(
-                    name='admin',
-                    email='admin@ucolab',
-                    password=hashed_pass,
-                    is_admin=True
-                )
-
-                db.session.add(admin)
-                db.session.commit()
-                print("Admin created")
-            else:
-                print(f"Admin {admin.password} already exists")
-        except Exception as e:
-            print(f"Skipping admin creation during migration: {e}")
-
 
     return app

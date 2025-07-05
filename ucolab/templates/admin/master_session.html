@@ -7,18 +7,9 @@
     <link href="/static/main.css" rel="stylesheet" />
   </head>
   <body>
-    {% if not form_submitted %}
-      <form action="" method="post">
-        {{ form.hidden_tag() }}
-        {{ form.email }}<br /><br />
-        {{ form.password }}<br /><br />
-        {{ form.submit }}
-      </form>
-    {% else %}
+    <form action="/master/session" method="post">
       <h1 id="session_code">Session Code: {{ session_code }}</h1>
-      <a href="/master/match">
-        <button>Start Matching</button>
-      </a>
-    {% endif %}
+      <button type="submit">Start Matching</button>
+    </form>
   </body>
 </html>
