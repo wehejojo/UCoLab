@@ -162,14 +162,115 @@ h1, h2, h3, p {
 }
 
 
+/* Base styles omitted for brevity - use your existing styles */
 
+/* Tablet styles */
+@media (max-width: 900px) {
+  .main-container {
+    grid-template-areas:
+      "top-bar top-bar"
+      "details details"
+      "bottom-bar bottom-bar";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  /* Slight border-radius reduction for tablet */
+  .top-bar, .participants, .participant-form, .bottom-bar {
+    border-radius: var(--border-radius-sm);
+  }
+
+  /* Options grid: 2 columns fixed */
+  .options {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: var(--spacing-md);
+    padding: 0 var(--spacing-sm);
+  }
+
+  /* Question margins reduced for tablet */
+  .question h2 {
+    margin: 2rem;
+  }
+
+  /* Bottom buttons: slightly smaller */
+  .bottom-button button {
+    font-size: clamp(0.9rem, 2vw, 1.3rem);
+    padding: 0.8rem var(--spacing-sm);
+  }
+}
+
+/* Mobile styles */
 @media (max-width: 600px) {
-    .details{
-    grid-area: details;
+  .main-container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-}
+  }
+
+  .details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
+  /* Border radius smaller for mobile */
+  .top-bar, .participants, .participant-form, .bottom-bar {
+    border-radius: var(--border-radius-sm);
+  }
+
+  .participants, .participant-form{
+        flex-grow: 1;
+  }
+
+        .participant-form {
+        display: block;
+      }
+
+      .participants {
+        display: none;
+      }
+
+      .participant-form.mobile-hidden {
+        display: none !important;
+      }
+
+      .participants.mobile-visible {
+        display: flex !important;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+  /* Options grid: single column */
+  .options {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-sm);
+    padding: 0 var(--spacing-xs);
+  }
+
+  /* Question title margins smaller */
+  .question h2 {
+    margin: 1.5rem;
+    font-weight: 300;
+    font-size: 1.5rem;
+  }
+
+  /* Bottom button larger tap area */
+  .bottom-button button {
+    width: 100%;
+    font-size: 1.2rem;
+    padding: var(--spacing-sm);
+  }
+
+  /* Reduce padding inside containers */
+  .top-bar, .bottom-bar {
+    padding: 0.8rem;
+  }
+
+  /* Option font color and padding tweaks for better fit */
+  .option {
+    padding: var(--spacing-sm);
+    font-size: 0.9rem;
+  }
+}
 

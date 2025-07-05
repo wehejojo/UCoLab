@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+      <link rel="icon" type="image/x-icon" href="../static/logo.svg">
+
+  </head>
+  <body>
+    <div class="top-bar" id="top-bar">Choose Your Collge</div>
+    <div id="college">
+      <h1>Which college are you from?</h1>
+      <input type="radio" id="citcs" name="college" value="CITCS" />
+      <label for="citcs">CITCS</label><br />
+      <input type="radio" id="cba" name="college" value="CBA" />
+      <label for="cba">CBA</label><br />
+      <input type="radio" id="cea" name="college" value="CEA" />
+      <label for="cea">CEA</label><br />
+      <input type="radio" id="chtm" name="college" value="CHTM" />
+      <label for="chtm">CHTM</label><br />
+      <input type="radio" id="ccje" name="college" value="CCJE" />
+      <label for="ccje">CCJE</label><br />
+      <input type="radio" id="cte" name="college" value="CTE" />
+      <label for="cte">CTE</label><br />
+      <input type="radio" id="coa" name="college" value="COA" />
+      <label for="coa">COA</label><br />
+      <input type="radio" id="cas" name="college" value="CAS" />
+      <label for="cas">CAS</label><br />
+      <input type="radio" id="con" name="college" value="CON" />
+      <label for="con">CON</label><br />
+    </div>
+    <div id="skills" style="display: none">
+      <h1>What skills are you bringing to the team?</h1>
+      <input type="text" />
+    </div>
+    <div id="interest" style="display: none">
+      <h1>Which college are you from?</h1>
+      <input type="radio" id="tech" name="interest" value="Tech & Software" />
+      <label for="tech">Tech & Software</label><br />
+      <input
+        type="radio"
+        id="sustain"
+        name="interest"
+        value="Sustainability & Environment"
+      />
+      <label for="sustain">Sustainability & Environment</label><br />
+      <input
+        type="radio"
+        id="health"
+        name="interest"
+        value="Health & Wellness"
+      />
+      <label for="health">Health & Wellness</label><br />
+      <input type="radio" id="arts" name="interest" value="Arts & Culture" />
+      <label for="arts">Arts & Culture</label><br />
+      <input
+        type="radio"
+        id="business"
+        name="interest"
+        value="Business & Finance"
+      />
+      <label for="business">Business & Finance</label><br />
+      <input type="radio" id="education" name="interest" value="Education" />
+      <label for="education">Education</label><br />
+      <input
+        type="radio"
+        id="social"
+        name="interest"
+        value="Social Impact & Community"
+      />
+      <label for="social">Social Impact & Community</label><br />
+      <input type="radio" id="open" name="interest" value="Open to Anything" />
+      <label for="open">Open to Anything</label><br />
+    </div>
+    <div class="bot-bar" id="bot-bar">
+      <button id="next-question">Next</button>
+    </div>
+    <script>
+      const sections = ["college", "skills", "interest"];
+      const headers = [
+        "Choose Your College",
+        "Select Your Skills",
+        "Choose your interests",
+      ];
+      let currentStep = 0;
+
+      const nextButton = document.getElementById("next-question");
+      const topBar = document.getElementById("top-bar");
+
+      nextButton.addEventListener("click", () => {
+        const currentSection = document.getElementById(sections[currentStep]);
+        currentSection.style.display = "none";
+
+        currentStep++;
+
+        if (currentStep < sections.length) {
+          const nextSection = document.getElementById(sections[currentStep]);
+          nextSection.style.display = "block";
+          topBar.textContent = headers[currentStep];
+        } else {
+          topBar.remove();
+          currentSection.remove();
+          nextButton.remove();
+          window.location.href = "./home/index.html";
+        }
+      });
+    </script>
+  </body>
+</html>

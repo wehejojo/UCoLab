@@ -19,12 +19,18 @@ def create_app():
     basedir = os.path.abspath(os.path.dirname(__file__))
     db_path = os.path.join(basedir, 'data', 'app.db')
 
-    app.config['SECRET_KEY'] = 'your_secret_key_here'
-    database_url = os.getenv("DATABASE_URL", f"sqlite:///{db_path}")
-    if database_url.startswith("postgres://"):
-        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev_secret_key')
+    database_url = os.getenv("DATABASE_URL")
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    if database_url:
+        # Production (e.g., Railway PostgreSQL)
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    else:
+        # Development (local SQLite)
+        app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
+
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.permanent_session_lifetime = timedelta(minutes=30)
 

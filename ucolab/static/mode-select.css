@@ -1,19 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 :root {
     --primary-bg: #121126;
-    --secondary-bg: rgba(0, 0, 0, 0.5);
+    --secondary-bg: rgba(0, 0, 0, 0.2);
     --text-color: rgb(255, 255, 255);
     --accent-color: #0F161E;
+
     --border-radius-sm: 10px;
     --border-radius-md: 20px;
     --border-radius-lg: 40px;
+
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
     --spacing-md: 2rem;
     --spacing-lg: 3rem;
-}
-
-body {
-    background-color: var(--primary-bg);
 }
 
 * {
@@ -22,119 +22,233 @@ body {
     margin: 0;
 }
 
-html,
-body {
-    box-sizing: border-box;
+html{
+    background-color: var(--primary-bg);
+}
+
+html, body {
     height: 100%;
     width: 100%;
-    margin: 0;
-    padding: 0;
     font-family: 'Poppins', sans-serif;
     color: var(--text-color);
     padding: var(--spacing-sm);
+    overflow-y: hidden;
 }
-
 
 .matching-container {
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
     display: flex;
-    justify-items: center;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    padding: var(--spacing-md);
 }
 
-.matching-container h1{
-    font-size: 3rem;
+.matching-container h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    text-align: center;
+    line-height: 1rem;
 }
 
 .query-container {
     background-color: var(--secondary-bg);
-    width: 60%;
-    height: 80%;
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    min-height: 60vh;
     border: 1px solid white;
-    border-radius: 20px;
+    border-radius: var(--border-radius-md);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 5rem 0rem 0rem 0rem;
+    padding: 4rem 2rem 2rem 2rem;
+    gap: var(--spacing-md);
 }
 
 .match-select {
-    margin: 1rem;
-    width: 80%;
-    height: 60%;
+    width: 100%;
+    max-width: 700px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     gap: 1rem;
+    flex-wrap: wrap; 
 }
 
 .type-container {
-    background-color: var(--secondary-bg);
-    width: 50%;
-    height: 100%;
-    border: 1px solid white;
-    border-radius: 20px;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  background-color: var(--secondary-bg);
+  border: 1px solid white;
+  border-radius: var(--border-radius-md);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  font-size: clamp(0.9rem, 0.5vw, 1.2rem);
+  min-width: 160px;
+  aspect-ratio: 1 / 1;
+  flex: 1 1 45%;
+  max-width: 45%;
 }
+
 
 .type-container h2 {
+    line-height: 1;
     font-size: 2rem;
-    display:flex;
+    font-weight: bold;
+    display: flex;
 }
 
-.mode-select-form, .random-submit{
-    display: flex;
-  flex-direction: column;
-  height: 25%;
+.type-container p{
+    line-height: 1;
 }
 
- .random-submit{
-    display: flex;
-  flex-direction: column;
- }
-
-.code-submit input {
-  width: 100%;
-  border: none;
-  outline: none;
-  border-radius: 20px 0px 0px 20px;
-  padding-left: 1rem;
+.code-entry {
+    margin-top: auto;
 }
 
 .code-submit {
-  display: flex;
-  background-color: rgba(0,0,0,0);
+    display: flex;
+    width: 100%;
+    background-color: transparent;
 }
 
-.type-detail{
-    width:80%;
-}
-
-.code-entry{
-    margin-top: auto;
+.code-submit input {
+    width: 100%;
+    padding: 0.2rem 1rem;
+    border: none;
+    outline: none;
+    border-radius: 20px 0px 0px 20px;
+    font-size: 1rem;
 }
 
 #codeSubmit,
 #randomSubmit {
-  background-color: var(--accent-color);
-  color: white;
-  cursor: pointer;
+    background-color: var(--accent-color);
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border: none;
+    font-size: 1rem;
 }
 
-#randomSubmit{
-    padding: 0.5rem;
-      border: none;
-  outline: none;
-    border-radius: 20px 20px 20px 20px;
+#codeSubmit {
+    border-radius: 0px 20px 20px 0px;
+}
+
+#randomSubmit {
+    border-radius: 20px;
+    align-self: flex-start;
     margin-top: auto;
     width: fit-content;
 }
 
-#codeSubmit{
-    padding:0.5rem;
-    border-radius: 0px 20px 20px 0px;
+::placeholder {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+
+@media screen and (max-width: 1024px) {
+      .code-submit input::placeholder {
+    font-size: 0.95rem;
+  }
+  .matching-container {
+    padding: 2rem;
+  }
+
+  .query-container {
+    width: 90%;
+    padding: 3rem 1rem 2rem 1rem;
+  }
+
+    .match-select {
+    flex-direction: column;
+    align-items: stretch;  
+    width: 100%;
+
+    display: flex;
+    justify-content: space-evenly; 
+    gap: 1rem; 
+    }
+
+  .type-container {
+    width: 100%;
+    max-width: 100%;
+    font-size: 1rem;
+
+    aspect-ratio: auto !important;
+
+    height: auto;
+    min-height: 160px;
+    max-height: 240px;
+
+    min-width: unset !important;
+    max-width: unset !important;
+    flex: none !important;
+  }
+}
+
+
+@media screen and (max-width: 600px) {
+      .code-submit input::placeholder {
+    font-size: 0.9rem;
+  }
+    body{
+        overflow-y: scroll;
+    }
+  .matching-container {
+    padding: 2rem 1rem;
+  }
+
+  .matching-container h1 {
+    font-size: clamp(2rem, 5vw, 2.5rem);
+    margin: 0 auto;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .query-container {
+    padding: 2rem 1rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+    .match-select {
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    justify-content: space-evenly;
+    gap: 1rem;
+    flex-wrap: wrap;
+    }
+
+
+.type-container {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  gap: 1rem;
+  flex: none !important;
+  aspect-ratio: auto !important;
+  min-width: unset !important;
+  max-width: unset !important;
+}
+
+  .type-label h2 {
+    font-size: clamp(1.2rem, 4vw, 1.6rem);
+    line-height: 1.3;
+  }
+
+  .type-detail p {
+    font-size: clamp(1rem, 3vw, 1.2rem);
+  }
+
+  .code-submit input,
+  #codeSubmit,
+  #randomSubmit {
+    font-size: 1rem;
+    padding: 0.6rem 1rem;
+  }
 }

@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Session Master</title>
     <link href="/static/main.css" rel="stylesheet" />
-</head>
-<body>
-    <form class="sessionmaster" action="/master/session" method="POST">
-      <h1 id="session_code">Session Code: {{ session_code }} </h1>
-      <button id="start" class="session-start">Start Matching!</button>
+  </head>
+  <body>
+    <form action="/master/session" method="post">
+      <h1 id="session_code">Session Code: {{ session_code }}</h1>
+      <button type="submit">Start Matching</button>
     </form>
-</body>
+  </body>
 </html>
