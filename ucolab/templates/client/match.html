@@ -39,21 +39,29 @@
         <div class="participant-form">
           <h1>Details</h1>
           <form id="participant-form" method="POST">
-            {{ form.hidden_tag() }}
+            <input
+              type="text"
+              id="participantName"
+              name="name"
+              placeholder="Name"
+              required
+            />
+            <input
+              type="text"
+              id="college"
+              name="college"
+              placeholder="College"
+              required
+            />
+            <input
+              type="text"
+              id="attributes"
+              name="skills"
+              placeholder="Skills"
+              required
+            />
 
-            {{ form.name(id="participantName") }}
-
-            {{ form.email(id="email") }}
-
-            {{ form.password(id="password") }}
-
-            {{ form.college(id="college") }}
-
-            {{ form.skills(id="attributes") }}
-
-            <button class="Start" type="submit">
-              {{ form.submit.label.text }}
-            </button>
+            <button class="Start" type="submit">Lock In</button>
           </form>
         </div>
       </div>

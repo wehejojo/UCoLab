@@ -76,8 +76,6 @@ def error():
 
 @main.route('/master/session', methods=['GET', 'POST'])
 def masterSession():
-    if not current_user.is_authenticated or not current_user.is_admin:
-        return abort(403)
     if request.method == 'POST':
         return redirect(url_for('main.masterMatch'))
     return render_template('/admin/master_session.html', session_code=SESSION_CODE)
@@ -109,25 +107,24 @@ def modeSelect():
         return redirect(url_for('main.error', error_message="Wrong Code!!"))
     return render_template('/client/mode_select.html')
 
+from flask import request
+
 @main.route('/session/<session_code>', methods=['GET', 'POST'])
 def sessionPage(session_code):
-    form = RegisterForm()
-    form.submit.label.text = 'Lock In'
+    if request.method == 'POST':
+        name = request.form.get('name')
+        college = request.form.get('college')
+        skills = request.form.get('skills')
 
-    if form.validate_on_submit():
-        hashed_pass = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(
-            name=form.name.data,
-            email=form.email.data,
-            password=hashed_pass,
-            college=form.college.data,
-            skills=form.skills.data
-        )
+        if not name or not college or not skills:
+            print("Missing fields in form")
+            return redirect(url_for('main.sessionPage', session_code=session_code))
+
+        new_user = User(name=name, college=college, skills=skills)
 
         db.session.add(new_user)
         db.session.commit()
 
-        # ✅ Emit to all clients
         users = User.query.all()
         participants = [{
             'name': user.name,
@@ -153,9 +150,9 @@ def sessionPage(session_code):
         '/client/match.html',
         session_code=session_code,
         participants=participants,
-        length=len(participants),
-        form=form
+        length=len(participants)
     )
+
 
 @main.route('/master/quiz')
 def masterQuiz():
@@ -312,38 +309,38 @@ def generate_doc(group_name):
         members=members
     )
 
-@main.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        hashed_pass = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(
-            name = form.name.data,
-            email = form.email.data,
-            password = hashed_pass,
-            college = form.college.data,
-            skills = form.skills.data
-        )
+# @main.route('/register', methods=['GET', 'POST'])
+# def register():
+#     form = RegisterForm()
+#     if form.validate_on_submit():
+#         hashed_pass = bcrypt.generate_password_hash(form.password.data)
+#         new_user = User(
+#             name = form.name.data,
+#             email = form.email.data,
+#             password = hashed_pass,
+#             college = form.college.data,
+#             skills = form.skills.data
+#         )
         
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('main.login'))
-    return render_template('auth/register.html', form=form)
+#         db.session.add(new_user)
+#         db.session.commit()
+#         return redirect(url_for('main.login'))
+#     return render_template('auth/register.html', form=form)
 
-@main.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if not user:
-            flash("User not found!", "danger")
-        elif not bcrypt.check_password_hash(user.password, form.password.data):
-            flash("Invalid password!", "danger")
-        else:
-            login_user(user)
-            return redirect(url_for('main.modeSelect'))
+# @main.route('/login', methods=['GET', 'POST'])
+# def login():
+#     form = LoginForm()
+#     if form.validate_on_submit():
+#         user = User.query.filter_by(email=form.email.data).first()
+#         if not user:
+#             flash("User not found!", "danger")
+#         elif not bcrypt.check_password_hash(user.password, form.password.data):
+#             flash("Invalid password!", "danger")
+#         else:
+#             login_user(user)
+#             return redirect(url_for('main.modeSelect'))
 
-    return render_template('auth/login.html', form=form)
+#     return render_template('auth/login.html', form=form)
 
 @main.route('/logout', methods=['GET', 'POST'])
 @login_required

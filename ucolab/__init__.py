@@ -46,32 +46,5 @@ def create_app():
 
     from ucolab.utils.socket_handlers import init_handlers
     init_handlers()
-
-    from ucolab.models import User
-
-    with app.app_context():
-        try:
-            admin = User.query.filter_by(name="admin").first()
-            if not admin:
-                admin_password = os.getenv('ADMIN_PASSWORD')
-                if not admin_password:
-                    raise RuntimeError("ADMIN PASSWORD is not an environment variable")
-                hashed_pass = bcrypt.generate_password_hash(admin_password).decode('utf8')
-
-                admin = User(
-                    name='admin',
-                    email='admin@ucolab',
-                    password=hashed_pass,
-                    is_admin=True
-                )
-
-                db.session.add(admin)
-                db.session.commit()
-                print("Admin created")
-            else:
-                print("Admin already exists")
-        except Exception as e:
-            print(f"Skipping admin creation during migration: {e}")
-
-
+    
     return app
