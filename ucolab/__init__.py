@@ -18,13 +18,17 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    db_path = os.path.join(basedir, 'data', 'app.db')
 
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev_secret_key')
-    database_url = os.getenv("DATABASE_URL")
+    database_url = os.getenv("DATABASE_URL", "").strip()
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+    if not database_url:
+        raise ValueError("❌ DATABASE_URL not found or is empty!")
+
+    print(f"✅ Loaded DATABASE_URL: {database_url}")
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.permanent_session_lifetime = timedelta(minutes=30)
 
