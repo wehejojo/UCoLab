@@ -84,7 +84,7 @@
         e.preventDefault(); // prevent normal form submit
 
         const formData = new FormData(form);
-
+        localStorage.setItem("name", formData.get("name") );
         const response = await fetch(window.location.pathname, {
           method: "POST",
           body: formData,

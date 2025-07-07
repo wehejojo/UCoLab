@@ -346,114 +346,102 @@ body {
 
 /* TABLET DITO */
 @media screen and (max-width: 1024px) {
-        body{
-        overflow-y: scroll;
-        }
+  body {
+    overflow-y: scroll;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+  }
+
   .dashboard {
+    display: grid;
     grid-template-areas:
-      "login login"
-      "find explore"
       "logo logo"
+      "uc find"
+      "uc explore"
       "about about"
       "sponsor sponsor"
-      "uc events";
+      "events events";
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(6, auto);
+    grid-auto-rows: auto;
     width: 90vw;
     height: auto;
     margin: 5% auto;
+    padding: 10px;
     gap: 10px;
   }
 
-  .find,
-  .explore,
-  .about,
-  .sponsor,
-  .uc,
-  .events {
-    padding: 1rem;
-    font-size: 80%;
-  }
-
-  .logo img {
-    width: 60%;
-    height: auto;
-  }
-
-  .uc img {
-    width: 100%;
-    height: auto;
-  }
-
-  .Login-button,
-  .find-button,
-  .explore-button,
-  .about-button,
-  .sponsorbutton-cont button {
-    font-size: 70%;
-    padding: 0.7rem 1rem;
-  }
-
-  .events button {
-    font-size: 70%;
-  }
-
-  .sponsorcontainer {
-    flex-direction: column;
-  }
-
-  .sponsormessage-cont,
-  .sponsorbutton-cont {
-    width: 100%;
-  }
+  .dashboard img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
-
-/* MOBILE NAMAN DITO */
-@media screen and (max-width: 600px) {
-    body{
-        overflow-y: scroll;
-    }
-  .dashboard {
-    grid-template-areas:
-      "logo login"
-      "find explore"
-      "find explore"
-      "about about"
-      "sponsor uc"
-      "events uc";
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    width: 95vw;
-    height: auto;
-    padding: 10px;
-    gap: 8px;
+  .login, .events {
+    display: none !important;
   }
 
   .dashboard > div {
     font-size: 1rem;
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
   }
 
-  .login,
-  .logo,
-  .find,
-  .explore,
-  .about,
-  .sponsor,
-  .uc,
-  .events {
-    padding: 1rem;
+  .logo {
+    grid-area: logo;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .logo img {
-    width: 50%;
-    height: 50%;
+    max-width: 70%;
+    height: auto;
+    display: block;
+  }
+
+  .uc {
+    grid-area: uc;
   }
 
   .uc img {
-    width: 12%;
-    height: 12%;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .find {
+    grid-area: find;
+    padding: 1rem;
+    font-size: 90%;
+  }
+
+  .explore {
+    grid-area: explore;
+    padding: 1rem;
+    font-size: 90%;
+  }
+
+  .about {
+    grid-area: about;
+    padding: 1rem;
+    font-size: 90%;
+  }
+
+  .sponsor {
+    grid-area: sponsor;
+    padding: 1rem;
+    font-size: 90%;
+  }
+
+  .events {
+    grid-area: events;
+    padding: 1rem;
+    font-size: 90%;
   }
 
   .Login-button,
@@ -462,11 +450,12 @@ body {
   .about-button,
   .sponsorbutton-cont button {
     font-size: 80%;
+    padding: 0.7rem 1rem;
     width: 100%;
   }
 
   .events button {
-    font-size: 70%;
+    font-size: 80%;
     width: 100%;
   }
 
@@ -484,5 +473,132 @@ body {
     font-size: 80%;
     padding: 0.3rem 0.6rem;
     margin-top: 1rem;
+  }
+}
+
+
+/* MOBILE NAMAN DITO */
+@media screen and (max-width: 600px) {
+  body {
+    overflow-y: scroll;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+  }
+
+  .dashboard {
+    display: grid;
+    grid-template-areas:
+      "logo logo"
+      "uc find"
+      "uc explore"
+      "about about"
+      "sponsor sponsor"
+      "events events";
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .dashboard > div {
+    font-size: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .login, .events{
+    display: none !important;
+  }
+
+  .login,
+  .logo,
+  .find,
+  .explore,
+  .about,
+  .sponsor,
+  .uc,
+  .events {
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .logo {
+    grid-area: logo;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .uc {
+    grid-area: uc;
+  }
+
+  .find {
+    grid-area: find;
+  }
+
+  .explore {
+    grid-area: explore;
+  }
+
+  .about {
+    grid-area: about;
+  }
+
+  .sponsor {
+    grid-area: sponsor;
+  }
+
+  .events {
+    grid-area: events;
+  }
+
+  .logo img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .uc img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .Login-button,
+  .find-button,
+  .explore-button,
+  .about-button,
+  .sponsorbutton-cont button {
+    font-size: 80%;
+    width: 100%;
+    padding: 0.2rem;
+  }
+
+  .events button {
+    font-size: 70%;
+    width: 100%;
+    padding: 0.2rem;
+  }
+
+  .sponsorcontainer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sponsormessage-cont,
+  .sponsorbutton-cont {
+    width: 100%;
+  }
+
+  a {
+    font-size: 80%;
+    padding: 0.3rem 0.6rem;
+    margin-top: 0.2rem;
   }
 }
