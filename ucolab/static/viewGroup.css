@@ -1,0 +1,124 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-container{
+      filter: blur(10px);
+        pointer-events: none; 
+        opacity: 0.8;
+}
+
+.group-verify{
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    padding: 2rem;
+    text-align: center;
+    gap: 1rem;
+    position: absolute;
+    z-index: 9999;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.4s ease-out forwards;
+  animation-delay: 0.2s; 
+}
+
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.group-step{
+    display: flex;
+    text-align: left;
+    gap: 1rem;
+}
+
+.team-overview,.container-right{
+    border: 1px solid white;
+    border-radius: 16px;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+}
+
+.team-overview{
+    flex-grow: 1;
+}
+
+.container-right{
+    flex-grow: 8;
+}
+
+.role{
+    border: 1px solid white;
+    border-radius: 16px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    width: fit-content;
+}
+
+.names{
+    margin-top: 1rem;
+    line-height: 0;
+}
+
+.Start{
+    width: 100%;
+    text-align: left;
+    padding: 1rem;
+    border-radius: 16px;
+    border: 1px solid white;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+@media (max-width: 600px) {
+    /* Stack .group-step vertically for narrow screens */
+    .group-step {
+        flex-direction: column;
+        gap: 1.5rem; /* add some vertical space */
+        width: 100vw; /* use full viewport width */
+        max-width: 400px; /* optionally constrain max width */
+        margin: 0 auto; /* center horizontally */
+        padding: 0 1rem; /* some horizontal padding */
+    }
+
+    /* Make team-overview and container-right full width */
+    .team-overview,
+    .container-right {
+        flex-grow: 0;
+        width: 100%;
+        border-radius: 12px; /* slightly smaller radius */
+        padding: 1rem 0.8rem;
+        box-sizing: border-box; /* ensure padding fits width */
+    }
+
+    /* .role elements: adjust to wrap and fill space */
+    .role {
+        width: auto;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        font-size: 0.9rem;
+        word-break: break-word;
+        white-space: normal; /* allow wrapping */
+        margin-bottom: 0.5rem;
+        display: inline-block;
+    }
+
+    /* Adjust names margin to add space */
+    .names {
+        margin-top: 1rem;
+        line-height: 1.2; /* better readability on mobile */
+    }
+
+    /* Adjust Start button styling for full width */
+    .Start {
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        font-size: 1rem;
+    }
+}

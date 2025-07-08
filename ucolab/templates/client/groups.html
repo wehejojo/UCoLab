@@ -35,7 +35,7 @@
           </h2>
           <h2 id="question-text" style="display: none;">Here are your best matches</h2>
         </div>
-        <div id="final-cards" style="display: none; margin-top: 2rem">
+        <div id="final-cards" style="display: none; margin-top: 1rem">
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@
 
       <div class="bottom-button">
 
-        <button id="confirm-group" class="Start">Confirm Group -></button>
+        <button id="confirm-group" class="Start">Confirm Group</button>
       </div>
     </div>
   </div>
@@ -98,7 +98,7 @@
     loadingMsg.classList.add("fade-out");
 
     document.getElementById("final-cards").style.display = "flex";
-
+    document.getElementById("loading-message").style.display = "none";
     try {
       const userName = localStorage.getItem("name");
       if (!userName) {
@@ -146,13 +146,15 @@
               <h1 class='memberTYPE'><strong>${memberData.answers?.q1 || "N/A"}</strong></h1>
               <div class="card-bottom">
                 <h3 style='text-align: left;' class='group-member_name'>${memberData.name}</h3>
-                <p><strong>College: </strong> ${memberData.college}</p>
-                <p><strong>Role: </strong>${memberData.answers?.q1 || "N/A"}</p>
-                <p><strong>Interest: </strong>${memberData.answers?.q2 || "N/A"}</p>
-                <p><strong>Key Skills: </strong></p>
+                <p>${memberData.college}</p>
+                <br>
+                <strong>Interest </strong>
+                <p class="card-choices">${memberData.answers?.q2 || "N/A"}</p>
+                <strong>Key Skills </strong
                 <div class="skills">
-                  ${memberData.skills.map(skill => `<p>${skill}</p>`).join("")}
+                  ${memberData.skills.map(skill => `<p class="card-choices" >${skill}</p>`).join("")}
                 </div>
+                <br.
               </div>`;
             finalCards.appendChild(card);
           });

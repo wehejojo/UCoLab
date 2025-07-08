@@ -95,7 +95,31 @@ h1, h2, h3, p {
     grid-area: participant-form;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
+}
+
+.forms{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.forms button {
+  width: fit-content;
+  padding: 0.3rem;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid rgb(214, 207, 207);
+  background-color: white;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.forms button:hover {
+  transform: scale(1.2);
+  z-index: 10;
+  box-shadow: 1px 1px 6px 2px rgba(255,255,255,0.3);
 }
 
 .participants,.participant-form{
