@@ -63,7 +63,7 @@ textarea {
 }
 
 .members{
-    font-size: 1rem;
+    font-size: 0.1rem;
     display: flex;
     flex-direction: column;
     line-height: 0.5rem;
@@ -72,7 +72,7 @@ textarea {
 
 .members p{
     line-height: 0.2rem;
-    font-size: 5rem;
+    font-size: 1rem;
     color: white;
 }
 
