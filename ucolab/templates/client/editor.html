@@ -22,9 +22,9 @@
     </div>
     <div class="document-container" style="z-index: 99999;">
       <div class="header">
-        Editing Group: {{ group_name.capitalize().replace('-', ' ') }}
+        Group: {{ group_name.capitalize().replace('-', ' ') }}
         <div class="members">
-          Members:
+          <p>Members:</p>
           {% for member in members %}
             <p>{{ member.name }} - {{ member.college }}</p>
           {% endfor %}

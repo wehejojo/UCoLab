@@ -45,13 +45,13 @@ textarea {
     position: sticky;
     width: 100%;
     height: 15vh;
-    background-image: linear-gradient(#707070FF, #00000000); 
+    background-color: rgba(0,0,0,0.5); 
     box-shadow: 1px 1px 5px black;; 
     border: 1px solid white;
     top: 1vh;
     z-index: 2;
     border-radius: 16px;
-    backdrop-filter: blur(5px); 
+    backdrop-filter: blur(10px); 
     -webkit-backdrop-filter: blur(5px);
     font-size: 2rem;
     font-family: 'Poppins', sans-serif;
@@ -82,4 +82,24 @@ textarea {
     left: 25%;
     pointer-events: none;
     z-index: 1000;
+}
+
+@media (max-width: 600px) {
+    .members{
+        display: none;
+    }
+
+    textarea {
+    margin-top: 2.5vh;
+    width: 100%;
+    height: 100vh;
+    font-family: monospace;
+    font-size: 16px;
+    border-radius: 16px;
+    border: none;
+    padding: 5em;
+    box-shadow: -1px 1px 5px #888888;
+    outline: none;
+    }
+
 }
