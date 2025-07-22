@@ -14,7 +14,7 @@ from ucolab import socketio
 from ucolab.matchUsers import run_matching_sqlalchemy
 
 from ucolab.models import (
-    db, User, Answer, Group, GroupMembership,
+    db, User, Answer, Group, GroupMembership, Project
 )
 
 import string, random
@@ -250,6 +250,36 @@ def get_groups():
         },
         "currentuser": name
     }), 200
+
+@main.route('/projects', methods=['GET', 'POST'])
+def projects():
+    if request.method == 'POST':
+        data = request.get_json()
+
+        name = data.get('name')
+        description = data.get('description')
+        owner = data.get('owner')
+        needs = data.get('needs') 
+        image_url = data.get('image_url')
+
+        if not all([name, description, owner, needs, image_url]):
+            return jsonify({'success': False, 'error': 'Missing fields'}), 400
+
+        new_project = Project(
+            name=name,
+            description=description,
+            owner=owner,
+            needs=needs,
+            image_url=image_url
+        )
+
+        db.session.add(new_project)
+        db.session.commit()
+        return jsonify({'success': True}), 200
+
+    all_projects = Project.query.all()
+    return render_template('projects.html', projects=all_projects)
+
 
 @main.route('/group/<group_name>')
 def view_group(group_name):

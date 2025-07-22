@@ -41,3 +41,11 @@ class Document(db.Model):
 
     def __repr__(self):
         return f"<Document group={self.group.name}, revision={self.revision}>"
+
+class Project(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    owner = db.Column(db.String(255), nullable=False)
+    needs = db.Column(db.Text)  
+    image_url = db.Column(db.String(1024)) 

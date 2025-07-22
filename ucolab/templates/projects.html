@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Explore Projects</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='backgroundprop.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='projects.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename='logo.svg') }}" />
+    <style>
+      .popup {
+        display: none;
+        position: fixed;
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        top: 20%;
+        left: 35%;
+        z-index: 999;
+      }
+      .project-card {
+        border: 1px solid #ccc;
+        padding: 1rem;
+        margin: 1rem;
+        background: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="svg-container">
+      <img src="{{ url_for('static', filename='background.svg') }}" alt="" />
+    </div>
+
+    <div class="projects-container">
+      <button id="openPopup">+ Add a Project</button>
+    </div>
+
+    <!-- Popup Form -->
+    <div class="popup" id="popupForm">
+      <h3>Add New Project</h3>
+      <input type="text" id="name" placeholder="Project Name" /><br />
+      <textarea id="description" placeholder="Project Description"></textarea><br />
+      <input type="text" id="owner" placeholder="Project Owner" /><br />
+      <input type="text" id="needs" placeholder="Project Needs (comma separated)" /><br />
+      <input type="text" id="image_url" placeholder="Project Image URL" /><br />
+      <button onclick="submitProject()">Submit</button>
+      <button onclick="document.getElementById('popupForm').style.display='none'">Close</button>
+    </div>
+
+    <!-- Rendered Project Cards -->
+    <div id="projectsDisplay">
+      {% for project in projects %}
+        <div class="project-card">
+          <img src="{{ project.image_url }}" alt="project image" style="width:100px" /><br />
+          <strong>{{ project.name }}</strong> by {{ project.owner }}<br />
+          <p>{{ project.description }}</p>
+          <p>
+            <strong>Needs:</strong> {{ project.needs }}
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <script>
+      document.getElementById('openPopup').onclick = () => {
+        document.getElementById('popupForm').style.display = 'block'
+      }
+      
+      function submitProject() {
+        const payload = {
+          name: document.getElementById('name').value,
+          description: document.getElementById('description').value,
+          owner: document.getElementById('owner').value,
+          needs: document.getElementById('needs').value,
+          image_url: document.getElementById('image_url').value
+        }
+      
+        fetch('/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              window.location.reload() // Refresh to show new project
+            } else {
+              alert('Failed to add project: ' + data.error)
+            }
+          })
+      }
+    </script>
+  </body>
+</html>
