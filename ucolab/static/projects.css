@@ -4,6 +4,12 @@
 *::before,
 *::after {
     box-sizing: inherit;
+    font-family: poppins;
+    color: white;
+}
+
+*{
+    border: 1px solid red;   
 }
 
 html,
@@ -18,4 +24,67 @@ body {
 
 html {
     background-color: #121126;
+}
+
+.maincontainer{
+    display: flex;
+    height: inherit;
+    width: inherit;
+    padding: 5rem;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.message{
+    width:35%;
+    word-wrap: break-word;
+    font-size: 1rem;
+}
+
+      .popup {
+        display: none;
+        position: fixed;
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        top: 20%;
+        left: 35%;
+        z-index: 999;
+      }
+      .project-card {
+        border: 1px solid #ccc;
+        padding: 1rem;
+        margin: 1rem;
+        background: rgba(0, 0,0,0.4);
+        display: flex;
+        border-radius: 16px;
+    }
+
+    .thumbnail{
+        flex-grow: 1;
+        object-fit: cover;
+    }
+
+.projects-container{
+    
+}
+
+#projectsDisplay{
+    width: 40%;
+    height: 70%;
+    overflow-y: scroll;
+}
+
+#projectsDisplay::-webkit-scrollbar {
+  width: 4px;              /* vertical scrollbar */
+  height: 6px;             /* horizontal scrollbar */
+}
+
+#projectsDisplay::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#projectsDisplay::-webkit-scrollbar-thumb {
+  background-color: white;
+  border-radius: 10px;
 }
