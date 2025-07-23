@@ -26,6 +26,11 @@ html {
     background-color: #121126;
 }
 
+.blur-container{
+    height: inherit;
+    width: inherit;    
+}
+
 .maincontainer{
     display: flex;
     height: inherit;
@@ -38,18 +43,39 @@ html {
 .message{
     width:35%;
     word-wrap: break-word;
-    font-size: 1rem;
+    font-size: 2rem;
+    text-shadow: 2px 1px 4px rgba(0, 0,0,0.9);
 }
 
       .popup {
         display: none;
         position: fixed;
-        background: white;
+        background: rgba(0, 0,0,0.4);
         padding: 20px;
         border: 1px solid #ccc;
-        top: 20%;
-        left: 35%;
+        top: 50%;
+        left: 50%;
         z-index: 999;
+        width: 40%;
+        height: 50%;
+        transform: translate(-50%, -50%);
+        flex-direction: column;
+        border-radius: 16px;
+        align-items: center;
+      }
+
+      .popupheader{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .popup input, .popup textarea{
+        background: rgba(0, 0,0,0.4);
+        border: 1px solid white;
+        width: 100%;
+        font-size: 1rem;
+        padding: 0.5rem;
       }
       .project-card {
         border: 1px solid #ccc;
@@ -61,30 +87,50 @@ html {
     }
 
     .thumbnail{
-        flex-grow: 1;
+        width: 30%;
         object-fit: cover;
     }
 
-.projects-container{
-    
+    .details{
+        width: 70%;
+        line-height: 1rem;
+    }
+
+
+
+button{
+    background: rgba(0, 0,0,0.4);
+    border: 1px solid white;
+    border-radius: 8px;
+    font-size: 1rem;
 }
 
 #projectsDisplay{
-    width: 40%;
+    width: 55%;
     height: 70%;
-    overflow-y: scroll;
 }
 
-#projectsDisplay::-webkit-scrollbar {
+.projects-container{
+        overflow-y: scroll;
+        width: 100%;
+        height: 100%;
+
+}
+.projects-container::-webkit-scrollbar {
   width: 4px;              /* vertical scrollbar */
   height: 6px;             /* horizontal scrollbar */
 }
 
-#projectsDisplay::-webkit-scrollbar-track {
+.projects-container::-webkit-scrollbar-track {
   background: transparent;
 }
 
-#projectsDisplay::-webkit-scrollbar-thumb {
+.projects-container::-webkit-scrollbar-thumb {
   background-color: white;
   border-radius: 10px;
+}
+
+.blur {
+  filter: blur(8px);
+  transition: 0.3s ease;
 }

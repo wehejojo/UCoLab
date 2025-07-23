@@ -9,76 +9,90 @@
     <link rel="icon" href="../static/logo.svg" />
   </head>
   <body>
-    
-    <div class="svg-container"><img src="../static/background.svg" alt="" /></div>
-  
+  <div class="svg-container"><img src="../static/background.svg" alt="" /></div>
+
+  <!-- START blur container -->
+  <div class="blur-container" id="blurTarget">
     <div class="maincontainer">
       <div class="message">
         <h1>Explore These Amazing Student Projects!</h1>
       </div>
-      <!-- Popup Form -->
-      <div class="popup" id="popupForm">
-        <h3>Add New Project</h3>
-        <input type="text" id="name" placeholder="Project Name" /><br />
-        <textarea id="description" placeholder="Project Description"></textarea><br />
-        <input type="text" id="owner" placeholder="Project Owner" /><br />
-        <input type="text" id="needs" placeholder="Project Needs (comma separated)" /><br />
-        <input type="text" id="image_url" placeholder="Project Image URL" /><br />
-        <button onclick="submitProject()">Submit</button>
-        <button onclick="document.getElementById('popupForm').style.display='none'">Close</button>
-      </div>
 
       <!-- Rendered Project Cards -->
       <div id="projectsDisplay">
+        <button id="openPopup">+ Add a Project</button>
         <div class="projects-container">
-          <button id="openPopup">+ Add a Project</button>
-        </div>
-        {% for project in projects %}
+          {% for project in projects %}
           <div class="project-card">
             <div class="thumbnail">
               <img src="{{ project.image_url }}" alt="project image" style="width:100px" /><br />
             </div>
             <div class="details">
-            <strong>{{ project.name }}</strong> by {{ project.owner }}<br />
-            <p>{{ project.description }}</p>
-            <p>
-              <strong>Needs:</strong> {{ project.needs }}
-            </p>
+              <h1>{{ project.name }}</h1>
+              <p>By: {{project.owner}}</p>
+              <p>{{ project.description }}</p>
+              <p><strong>Needs:</strong> {{ project.needs }}</p>
             </div>
           </div>
-        {% endfor %}
+          {% endfor %}
+        </div>
       </div>
     </div>
+  </div>
+  <!-- END blur container -->
 
+  <!-- Popup Form -->
+  <div class="popup" id="popupForm">
+    <div class="popupheader">
+      <h3>Add New Project</h3>
+      <button onclick="closePopup()">Close</button>
+    </div>
+    <input type="text" id="name" placeholder="Project Name" /><br />
+    <textarea id="description" placeholder="Project Description"></textarea><br />
+    <input type="text" id="owner" placeholder="Project Owner" /><br />
+    <input type="text" id="needs" placeholder="Project Needs (comma separated)" /><br />
+    <input type="text" id="image_url" placeholder="Project Image URL" /><br />
+    <button onclick="submitProject()">Submit</button>
+  </div
     <script src="../static/script.js"></script>
-    <script>
-      document.getElementById('openPopup').onclick = () => {
-        document.getElementById('popupForm').style.display = 'block'
+<script>
+  const popup = document.getElementById('popupForm');
+  const blurTarget = document.getElementById('blurTarget');
+
+  document.getElementById('openPopup').onclick = () => {
+    popup.style.display = 'flex';
+    blurTarget.classList.add('blur');
+  }
+
+  function closePopup() {
+    popup.style.display = 'none';
+    blurTarget.classList.remove('blur');
+  }
+
+  function submitProject() {
+    const payload = {
+      name: document.getElementById('name').value,
+      description: document.getElementById('description').value,
+      owner: document.getElementById('owner').value,
+      needs: document.getElementById('needs').value,
+      image_url: document.getElementById('image_url').value
+    };
+
+    fetch('/projects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        window.location.reload();
+      } else {
+        alert('Failed to add project: ' + data.error);
       }
-      
-      function submitProject() {
-        const payload = {
-          name: document.getElementById('name').value,
-          description: document.getElementById('description').value,
-          owner: document.getElementById('owner').value,
-          needs: document.getElementById('needs').value,
-          image_url: document.getElementById('image_url').value
-        }
-      
-        fetch('/projects', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.success) {
-              window.location.reload() // Refresh to show new project
-            } else {
-              alert('Failed to add project: ' + data.error)
-            }
-          })
-      }
-    </script>
+    });
+  }
+</script>
+
   </body>
 </html>
