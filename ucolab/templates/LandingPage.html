@@ -38,7 +38,7 @@
         <p>
           Explore a Library of real student-led projects you can join or start
         </p>
-        <button class="explore-button button-effect">Explore Projects</button>
+<button class="explore-button button-effect" id="explore-projects">Explore Projects</button>
       </div>
       <div class="items about">
         <a href="">About Us</a>
@@ -78,36 +78,40 @@
   <script src="../static/script.js"></script>
   <script>
     const hoverSounds = [
-      new Audio("/static/sounds/hover2.mp3"),
-      new Audio("/static/sounds/hover1.mp3"),
-      new Audio("/static/sounds/hover3.mp3"),
-    ];
+  new Audio("/static/sounds/hover2.mp3"),
+  new Audio("/static/sounds/hover1.mp3"),
+  new Audio("/static/sounds/hover3.mp3"),
+];
 
+let hoverIndex = 0;
 
-    let hoverIndex = 0;
+const findYourMatchButton = document.getElementById('find-your-match');
+const exploreProjectsButton = document.getElementById('explore-projects');
 
-    const findYourMatchButton = document.getElementById('find-your-match');
+document.querySelectorAll(".items").forEach((item) => {
+  item.addEventListener("mouseenter", () => {
+    const sound = hoverSounds[Math.floor(Math.random() * hoverSounds.length)];
+    hoverIndex = (hoverIndex + 1) % hoverSounds.length;
 
-    document.querySelectorAll(".items").forEach((item) => {
-      item.addEventListener("mouseenter", () => {
-        const sound =
-          hoverSounds[Math.floor(Math.random() * hoverSounds.length)];
-        hoverIndex = (hoverIndex + 1) % hoverSounds.length;
+    sound.currentTime = 0;
+    sound.play();
+  });
 
-        sound.currentTime = 0;
-        sound.play();
-      });
+  item.addEventListener("click", () => {
+    let a = new Audio("/static/sounds/click.mp3");
+    a.play();
+    setTimeout(() => a.pause(), 1000);
+  });
+});
 
-      item.addEventListener("click", () => {
-        let a = new Audio("/static/sounds/click.mp3");
-        a.play();
-        setTimeout(() => a.pause(), 1000);
-      });
-    });
+findYourMatchButton.addEventListener("click", () => {
+  window.location.href = "/mode-select";
+});
 
-    findYourMatchButton.addEventListener("click", () => {
-      window.location.href = "/mode-select";
-    })
+exploreProjectsButton.addEventListener("click", () => {
+  window.location.href = "/projects";
+});
+
   </script>
 </body>
 
