@@ -1,118 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UCoLab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../static/landing.css" />
+    <link rel="stylesheet" href="../static/backgroundprop.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="../static/logo.svg" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UCoLab</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="../static/landing.css" />
-  <link rel="stylesheet" href="../static/backgroundprop.css">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" type="image/x-icon" href="../static/logo.svg">
-</head>
-
-<body>
-  <div class="svg-container"><img src="../static/background.svg" alt="" /></div>
-  <div class="dashboard-wrapper">
-    <div class="dashboard">
-      <div class="items login">
-        <a class="Login-button button-effect" href="/login">
-          <button>Login</button>
-        </a>
-      </div>
-      <div class="items find">
-        <h1>Find My Dream Team</h1>
-        <p>
-          Get matched with collbaorators based on your skills, goals and
-          interests.
-        </p>
-        <button class="find-button button-effect" id="find-your-match">
-          Find Your Match
-        </button>
-      </div>
-      <div class="items explore">
-        <h1>Find or Start a Project</h1>
-        <p>
-          Explore a Library of real student-led projects you can join or start
-        </p>
-<button class="explore-button button-effect" id="explore-projects">Explore Projects</button>
-      </div>
-      <div class="items about">
-        <a href="">About Us</a>
-        <h1>UCoLab is UC's Innovation Matchmaking Platform</h1>
-        <p>
-          - built to connect students with the right teammates for research,
-          startups and projects.
-        </p>
-        <button class="about-button button-effect">View More</button>
-      </div>
-      <div class="items logo">
-        <img src="../static/LogoAnimated.gif" alt="" />
-        <h1>UCoLab</h1>
-      </div>
-      <div class="items sponsor">
-        <a href="">Powered By UC InTTO</a>
-        <div class="sponsorcontainer">
-          <div class="sponsormessage-cont">
-            <h1>
-              UCoLab is backed by the UC Innovation and Technology Transfer
-              Office (InTTO)
-            </h1>
-          </div>
-          <div class="sponsorbutton-cont">
-            <button class="button-effect">Discover InTTO</button>
+  <body>
+    <div class="svg-container">
+      <img src="../static/background.svg" alt="" />
+    </div>
+    <div class="dashboard-wrapper">
+      <div class="dashboard">
+        <div class="items login">
+          <a class="Login-button button-effect" href="/login"><button>Login</button></a>
+        </div>
+        <div class="items find">
+          <h1>Find My Dream Team</h1>
+          <p>Get matched with collbaorators based on your skills, goals and interests.</p>
+          <button class="find-button button-effect" id="find-your-match">Find Your Match</button>
+        </div>
+        <div class="items explore">
+          <h1>Find or Start a Project</h1>
+          <p>Explore a Library of real student-led projects you can join or start</p>
+          <button class="explore-button button-effect" id="explore-projects">Explore Projects</button>
+        </div>
+        <div class="items about">
+          <a href="">About Us</a>
+          <h1>UCoLab is UC's Innovation Matchmaking Platform</h1>
+          <p>- built to connect students with the right teammates for research, startups and projects.</p>
+          <button class="about-button button-effect">View More</button>
+        </div>
+        <div class="items logo">
+          <img src="../static/LogoAnimated.gif" alt="" />
+          <h1>UCoLab</h1>
+        </div>
+        <div class="items sponsor">
+          <a href="">Powered By UC InTTO</a>
+          <div class="sponsorcontainer">
+            <div class="sponsormessage-cont">
+              <h1>UCoLab is backed by the UC Innovation and Technology Transfer Office (InTTO)</h1>
+            </div>
+            <div class="sponsorbutton-cont">
+              <button class="button-effect">Discover InTTO</button>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="items uc">
-        <img src="../static/uclogo.svg" alt="" />
-      </div>
-      <div class="items events">
-        <button>Reverse Pitching</button>
+        <div class="items uc">
+          <img src="../static/uclogo.svg" alt="" />
+        </div>
+        <div class="items events">
+          <button>Reverse Pitching</button>
+        </div>
       </div>
     </div>
-  </div>
-  <script src="../static/script.js"></script>
-  <script>
-    const hoverSounds = [
-  new Audio("/static/sounds/hover2.mp3"),
-  new Audio("/static/sounds/hover1.mp3"),
-  new Audio("/static/sounds/hover3.mp3"),
-];
-
-let hoverIndex = 0;
-
-const findYourMatchButton = document.getElementById('find-your-match');
-const exploreProjectsButton = document.getElementById('explore-projects');
-
-document.querySelectorAll(".items").forEach((item) => {
-  item.addEventListener("mouseenter", () => {
-    const sound = hoverSounds[Math.floor(Math.random() * hoverSounds.length)];
-    hoverIndex = (hoverIndex + 1) % hoverSounds.length;
-
-    sound.currentTime = 0;
-    sound.play();
-  });
-
-  item.addEventListener("click", () => {
-    let a = new Audio("/static/sounds/click.mp3");
-    a.play();
-    setTimeout(() => a.pause(), 1000);
-  });
-});
-
-findYourMatchButton.addEventListener("click", () => {
-  window.location.href = "/mode-select";
-});
-
-exploreProjectsButton.addEventListener("click", () => {
-  window.location.href = "/projects";
-});
-
-  </script>
-</body>
-
+    <script src="../static/script.js"></script>
+    <script>
+      const hoverSounds = [new Audio('/static/sounds/hover2.mp3'), new Audio('/static/sounds/hover1.mp3'), new Audio('/static/sounds/hover3.mp3')]
+      
+      let hoverIndex = 0
+      
+      const findYourMatchButton = document.getElementById('find-your-match')
+      const exploreProjectsButton = document.getElementById('explore-projects')
+      
+      document.querySelectorAll('.items').forEach((item) => {
+        item.addEventListener('mouseenter', () => {
+          const sound = hoverSounds[Math.floor(Math.random() * hoverSounds.length)]
+          hoverIndex = (hoverIndex + 1) % hoverSounds.length
+      
+          sound.currentTime = 0
+          sound.play()
+        })
+      
+        item.addEventListener('click', () => {
+          let a = new Audio('/static/sounds/click.mp3')
+          a.play()
+          setTimeout(() => a.pause(), 1000)
+        })
+      })
+      
+      findYourMatchButton.addEventListener('click', () => {
+        window.location.href = '/mode-select'
+      })
+      
+      exploreProjectsButton.addEventListener('click', () => {
+        window.location.href = '/projects'
+      })
+    </script>
+  </body>
 </html>
