@@ -14,7 +14,7 @@ from ucolab import socketio
 from ucolab.matchUsers import run_matching_sqlalchemy
 
 from ucolab.models import (
-    db, User, Answer, Group, GroupMembership, Project, Role
+    db, User, Answer, Group, GroupMembership, Project
 )
 
 from flask import request, jsonify
