@@ -14,7 +14,7 @@ from ucolab import socketio
 from ucolab.matchUsers import run_matching_sqlalchemy
 
 from ucolab.models import (
-    db, User, Answer, Group, GroupMembership, Project
+    db, User, Answer, Group, GroupMembership, Project, Role
 )
 
 from flask import request, jsonify
@@ -306,9 +306,6 @@ def projects():
     # GET method
     all_projects = Project.query.all()
     return render_template('projects.html', projects=all_projects)
-
-
-
 
 @main.route('/group/<group_name>')
 def view_group(group_name):

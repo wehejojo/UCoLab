@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from dotenv import load_dotenv
+from ucolab.models import Project, Role
 import os
 
 load_dotenv()
