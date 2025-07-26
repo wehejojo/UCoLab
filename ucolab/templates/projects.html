@@ -14,76 +14,102 @@
     </div>
 
     <div class="top-bar">
-      <img src="../static/logo.svg" alt="">
+      <img src="../static/logo.svg" alt="" />
       <h1>H</h1>
     </div>
     <div class="tabs-container">
-      <button class="tab1">Find Projects</button>
-      <button class="tab2">My Projects</button>
-      <button class="tab3">Create Project</button>
+      <button class="tab1-button">Find Projects</button>
+      <button class="tab2-button">My Projects</button>
+      <button class="tab3-button">Create Project</button>
     </div>
 
     <div class="tab1">
       <h1>Find Your Next Project</h1>
       <p>Discover academic research, startup opportunities, and collaborative projects.</p>
       <div class="project-search">
-        <input type="text" id="searchbar" placeholder="Search projects, skills or keywords...">
+        <input type="text" id="searchbar" placeholder="Search projects, skills or keywords..." />
         <button>Filter</button>
       </div>
       <div class="projects">
-        
+        <div class="project-card">
+          <div class="card-top">
+            <p class="type">Startup</p>
+            <h1>Kapital</h1>
+            <p class="project-card-description">a centralized digital platform designed to empower Cordilleran entrepreneurs, investors, and job seekers by bridging opportunity gaps in the local innovation and employment ecosystem.</p>
+            <p class="owner">Jester Perez CITCS </p>
+          </div>
+          <div class="card-bottom">
+            <p>Roles Needed</p>
+            <p class="roles">Business development</p>
+            <button class="details">View Details</button>
+            <button class="message">Message</button>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="tab2">
-
+      <div class="projects">
+        <div class="project-card">
+          <div class="card-top">
+            <p class="type">Startup</p>
+            <h1>Kapital</h1>
+            <p class="project-card-description">a centralized digital platform designed to empower Cordilleran entrepreneurs, investors, and job seekers by bridging opportunity gaps in the local innovation and employment ecosystem.</p>
+            <p class="owner">
+              <p>Jester Perez CITCS</p>
+            </p>
+          </div>
+          <div class="card-bottom">
+            <p>Roles Needed</p>
+            <p class="roles">Business development</p>
+            <button class="details">View Details</button>
+            <button class="message">Message</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="tab3">
-
-
-    </div>
-
+    <div class="tab3"></div>
 
     <script src="../static/script.js"></script>
 
     <script>
-      const popup = document.getElementById('popupForm')
-      const blurTarget = document.getElementById('blurTarget')
-      
-      document.getElementById('openPopup').onclick = () => {
-        popup.style.display = 'flex'
-        blurTarget.classList.add('blur')
-      }
-      
-      function closePopup() {
-        popup.style.display = 'none'
-        blurTarget.classList.remove('blur')
-      }
-      
-      function submitProject() {
-        const payload = {
-          name: document.getElementById('name').value,
-          description: document.getElementById('description').value,
-          owner: document.getElementById('owner').value,
-          needs: document.getElementById('needs').value,
-          image_url: document.getElementById('image_url').value
+  document.addEventListener("DOMContentLoaded", () => {
+    const tabs = {
+      tab1: document.querySelector(".tab1"),
+      tab2: document.querySelector(".tab2"),
+      tab3: document.querySelector(".tab3"),
+    };
+
+    const buttons = {
+      tab1: document.querySelector(".tab1-button"),
+      tab2: document.querySelector(".tab2-button"),
+      tab3: document.querySelector(".tab3-button"),
+    };
+
+    function showTab(tabName) {
+      for (const key in tabs) {
+        if (key === tabName) {
+          tabs[key].classList.remove("hidden");
+        } else {
+          tabs[key].classList.add("hidden");
         }
-      
-        fetch('/projects', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.success) {
-              window.location.reload()
-            } else {
-              alert('Failed to add project: ' + data.error)
-            }
-          })
       }
-    </script>
+
+      // Optional: highlight active button
+      for (const key in buttons) {
+        buttons[key].classList.toggle("active", key === tabName);
+      }
+    }
+
+    // Initial state
+    showTab("tab1");
+
+    // Event listeners
+    buttons.tab1.addEventListener("click", () => showTab("tab1"));
+    buttons.tab2.addEventListener("click", () => showTab("tab2"));
+    buttons.tab3.addEventListener("click", () => showTab("tab3"));
+  });
+</script>
   </body>
 </html>
