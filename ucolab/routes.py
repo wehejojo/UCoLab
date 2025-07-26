@@ -257,28 +257,46 @@ def projects():
         data = request.get_json()
 
         name = data.get('name')
-        description = data.get('description')
-        owner = data.get('owner')
-        needs = data.get('needs') 
-        image_url = data.get('image_url')
+        project_type = data.get('project_type')
+        department = data.get('department')
+        start_date = data.get('start_date')
+        website = data.get('website')
 
-        if not all([name, description, owner, needs, image_url]):
-            return jsonify({'success': False, 'error': 'Missing fields'}), 400
+        owner_name = data.get('owner_name')
+        owner_course = data.get('owner_course')
 
-        new_project = Project(
+        roles = data.get('roles')  # List of dicts: [{title, description, skills}, ...]
+
+        if not all([name, owner_name, owner_course]):
+            return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+
+        project = Project(
             name=name,
-            description=description,
-            owner=owner,
-            needs=needs,
-            image_url=image_url
+            project_type=project_type,
+            department=department,
+            start_date=start_date,
+            website=website,
+            owner_name=owner_name,
+            owner_course=owner_course
         )
 
-        db.session.add(new_project)
+        for role in roles:
+            new_role = Role(
+                title=role.get('title'),
+                description=role.get('description'),
+                skills=role.get('skills'),
+                project=project
+            )
+            db.session.add(new_role)
+
+        db.session.add(project)
         db.session.commit()
+
         return jsonify({'success': True}), 200
 
     all_projects = Project.query.all()
     return render_template('projects.html', projects=all_projects)
+
 
 
 @main.route('/group/<group_name>')

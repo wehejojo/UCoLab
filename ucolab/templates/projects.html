@@ -36,7 +36,7 @@
             <p class="type">Startup</p>
             <h1>Kapital</h1>
             <p class="project-card-description">a centralized digital platform designed to empower Cordilleran entrepreneurs, investors, and job seekers by bridging opportunity gaps in the local innovation and employment ecosystem.</p>
-            <p class="owner">Jester Perez CITCS </p>
+            <p class="owner">Jester Perez CITCS</p>
           </div>
           <div class="card-bottom">
             <p>Roles Needed</p>
@@ -69,7 +69,50 @@
       </div>
     </div>
 
-    <div class="tab3"></div>
+    <div class="tab3">
+      <div class="project-creation">
+        <div class="left-side">
+          <div class="name-and-description">
+            <input type="text" placeholder="Enter Project Name" />
+            <select name="" id="">
+              <option value="capstone">Capstone</option>
+              <option value="startup">Startup</option>
+              <option value="thesis">thesis</option>
+              <option value="casual-project">Casual Project</option>
+              <option value="technopreneurship project">Technopreneurship Project</option>
+            </select>
+          </div>
+          <div class="roles-needed">
+            <h1>Roles Needed</h1>
+            <button>+</button>
+          </div>
+          <div class="roles-card">
+            <input type="text" placeholder="Title of needed role" />
+            <p>List what this teammate will be doing. Example "Design the user interface and user flow for the dashboard"</p>
+            <p>Skills Needed:</p>
+            <input type="text" placeholder="Enter the Skills Needed. Use comma (,) to separate inputs" />
+            <button>Apply to Join Project</button>
+          </div>
+        </div>
+        <div class="right-side">
+          <div class="project-lead">
+            <input type="text" placeholder="(Enter Name)">
+            <input type="text" placeholder="College/course">
+          </div>
+          <div class="project-details">
+            <label for="department"></label>
+            <input type="text" id="department" placeholder="CITCS">
+            <label for="Start-date"></label>
+            <input type="text" id="Start-date" placeholder="August 2025">
+            <label for="Project-Type"></label>
+            <input type="text" id="Project-Type" placeholder="Startup">
+            <label for="Website"></label>
+            <input type="text" id="Website" placeholder="www.ucolab.com">
+          </div>
+          <button>Create Project</button>
+        </div>
+      </div>
+    </div>
 
     <script src="../static/script.js"></script>
 
@@ -101,6 +144,12 @@
         buttons[key].classList.toggle("active", key === tabName);
       }
     }
+
+    document.querySelector(".roles-needed button").addEventListener("click", () => {
+      const roleCard = document.querySelector(".roles-card").cloneNode(true);
+      document.querySelector(".left-side").appendChild(roleCard);
+    });
+
 
     // Initial state
     showTab("tab1");

@@ -45,7 +45,19 @@ class Document(db.Model):
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    owner = db.Column(db.String(255), nullable=False)
-    needs = db.Column(db.Text)  
-    image_url = db.Column(db.String(1024)) 
+    project_type = db.Column(db.String(100))
+    department = db.Column(db.String(100))
+    start_date = db.Column(db.String(100))  # You can switch to db.Date if using a date picker
+    website = db.Column(db.String(255))
+
+    owner_name = db.Column(db.String(255), nullable=False)
+    owner_course = db.Column(db.String(255), nullable=False)
+
+    roles = db.relationship('Role', backref='project', cascade="all, delete-orphan")
+
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text)
+    skills = db.Column(db.String(512))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
