@@ -6,7 +6,6 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from dotenv import load_dotenv
-from ucolab.models import Project, Role
 import os
 
 load_dotenv()
@@ -29,18 +28,17 @@ def create_app():
     print(f"✅ Loaded DATABASE_URL: {database_url}")
 
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.permanent_session_lifetime = timedelta(minutes=30)
 
     db.init_app(app)
     migrate.init_app(app, db)
     socketio.init_app(app)
-
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'
 
-    from ucolab.models import User
+    # ⬇️ MOVE model import here after db is set up
+    from ucolab.models import User  # Now it's safe
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -51,5 +49,5 @@ def create_app():
 
     from ucolab.utils.socket_handlers import init_handlers
     init_handlers()
-    
+
     return app
