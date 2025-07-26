@@ -160,5 +160,68 @@
     buttons.tab3.addEventListener("click", () => showTab("tab3"));
   });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Existing logic...
+
+  // CREATE PROJECT button logic
+  const createBtn = document.querySelector(".right-side button");
+  createBtn.addEventListener("click", () => {
+    // Get basic project info
+    const projectName = document.querySelector('.name-and-description input').value;
+    const projectType = document.querySelector('.name-and-description select').value;
+    const ownerName = document.querySelector('.project-lead input:nth-child(1)').value;
+    const ownerCourse = document.querySelector('.project-lead input:nth-child(2)').value;
+    const department = document.querySelector('#department').value;
+    const startDate = document.querySelector('#Start-date').value;
+    const website = document.querySelector('#Website').value;
+
+    // Get all roles
+    const roles = [];
+    document.querySelectorAll('.roles-card').forEach(roleCard => {
+      const title = roleCard.querySelector('input[type="text"]').value;
+      const skillsInput = roleCard.querySelectorAll('input[type="text"]')[1];
+      const description = roleCard.querySelector('p:nth-of-type(1)').textContent; // You may want to replace this with an editable <textarea>
+      const skills = skillsInput ? skillsInput.value : '';
+      roles.push({ title, description, skills });
+    });
+
+    // Final payload
+    const payload = {
+      name: projectName,
+      project_type: projectType,
+      owner_name: ownerName,
+      owner_course: ownerCourse,
+      department: department,
+      start_date: startDate,
+      website: website,
+      roles: roles
+    };
+
+    // Send to backend
+    fetch('/projects', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert('Project successfully created!');
+        location.reload(); // Or navigate to tab1 to show the new project
+      } else {
+        alert('Error: ' + data.error);
+      }
+    })
+    .catch(err => {
+      console.error('Fetch error:', err);
+      alert('Something went wrong.');
+    });
+  });
+});
+</script>
+
   </body>
 </html>
