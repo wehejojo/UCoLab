@@ -17,6 +17,9 @@ from ucolab.models import (
     db, User, Answer, Group, GroupMembership, Project
 )
 
+from flask import request, jsonify
+
+
 import string, random
 
 main = Blueprint('main', __name__)
@@ -254,48 +257,56 @@ def get_groups():
 @main.route('/projects', methods=['GET', 'POST'])
 def projects():
     if request.method == 'POST':
-        data = request.get_json()
+        try:
+            data = request.get_json()
 
-        name = data.get('name')
-        project_type = data.get('project_type')
-        department = data.get('department')
-        start_date = data.get('start_date')
-        website = data.get('website')
+            name = data.get('name')
+            project_type = data.get('project_type')
+            department = data.get('department')
+            start_date = data.get('start_date')
+            website = data.get('website')
 
-        owner_name = data.get('owner_name')
-        owner_course = data.get('owner_course')
+            owner_name = data.get('owner_name')
+            owner_course = data.get('owner_course')
+            roles = data.get('roles')  # List of dicts
 
-        roles = data.get('roles')  # List of dicts: [{title, description, skills}, ...]
+            if not all([name, owner_name, owner_course]):
+                return jsonify({'success': False, 'error': 'Missing required fields'}), 400
 
-        if not all([name, owner_name, owner_course]):
-            return jsonify({'success': False, 'error': 'Missing required fields'}), 400
-
-        project = Project(
-            name=name,
-            project_type=project_type,
-            department=department,
-            start_date=start_date,
-            website=website,
-            owner_name=owner_name,
-            owner_course=owner_course
-        )
-
-        for role in roles:
-            new_role = Role(
-                title=role.get('title'),
-                description=role.get('description'),
-                skills=role.get('skills'),
-                project=project
+            project = Project(
+                name=name,
+                project_type=project_type,
+                department=department,
+                start_date=start_date,
+                website=website,
+                owner_name=owner_name,
+                owner_course=owner_course
             )
-            db.session.add(new_role)
 
-        db.session.add(project)
-        db.session.commit()
+            db.session.add(project)
+            db.session.flush()  # Ensures project.id is available before adding roles
 
-        return jsonify({'success': True}), 200
+            for role in roles:
+                new_role = Role(
+                    title=role.get('title'),
+                    description=role.get('description'),
+                    skills=role.get('skills'),
+                    project_id=project.id  # Explicit foreign key usage
+                )
+                db.session.add(new_role)
 
+            db.session.commit()
+            return jsonify({'success': True}), 200
+
+        except Exception as e:
+            db.session.rollback()
+            print("🔥 Error in POST /projects:", str(e))
+            return jsonify({'success': False, 'error': str(e)}), 500
+
+    # GET method
     all_projects = Project.query.all()
     return render_template('projects.html', projects=all_projects)
+
 
 
 

@@ -53,11 +53,11 @@ class Project(db.Model):
     owner_name = db.Column(db.String(255), nullable=False)
     owner_course = db.Column(db.String(255), nullable=False)
 
-    roles = db.relationship('Role', backref='project', cascade="all, delete-orphan")
+    roles = db.relationship('Role', backref='project', cascade="all, delete")
 
 class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text)
     skills = db.Column(db.String(512))
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"))
