@@ -35,7 +35,7 @@ html {
   width: 90%;
   height: 15%;
   justify-content: space-between;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.2);
   border-radius: 16px;
   border: 1px solid white;
   padding: 1rem;
@@ -96,7 +96,7 @@ html {
 }
 
 .project-search{
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.2);
   width: 100%;
   height: 15%;
   border-radius: 16px;
@@ -116,6 +116,7 @@ html {
 
 .project-search input{
   width: 85%;
+    color: black;
 }
 
 .project-search button{
@@ -132,7 +133,7 @@ html {
 }
 
 .project-card{
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.2);
   width: 32.5%;
   height: fit-content;
   padding: 2rem;
@@ -157,7 +158,7 @@ html {
 
 .roles{
   width: fit-content;
-  padding: 0.5rem;
+  padding: 0.2rem;
   border-radius: 40px;
   border: 1px solid white;
   font-size: 0.4rem;
@@ -167,14 +168,14 @@ html {
   border-radius: 40px;
   background-color: black;
   font-size: 1.2rem;
-  padding: 0.5rem;
+  padding: 0.2rem;
 }
 
 .message{
   border-radius: 40px;
   background-color: white;
   font-size: 1.2rem;
-  padding: 0.5rem;
+  padding: 0.2rem;
   color: black;
   outline: none;
   border: none;
@@ -186,5 +187,88 @@ html {
 }
 
 .project-creation{
-  
+  display: flex;
 }
+
+.project-creation input{
+  background-color: transparent;
+  outline: none;
+  border: none;
+  color: white;  
+}
+
+.project-creation input::placeholder {
+  color: white;
+}
+
+.project-type-select{
+  color: black;
+  padding: 0.2rem;
+  border-radius: 40px;
+}
+
+.left-side{
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 70%;
+}
+
+.name-and-description, .roles-needed{
+  background-color: rgba(0,0,0,0.2);
+  border: 1px solid white;
+  border-radius: 16px;
+}
+
+.name-and-description{
+  padding: 2rem;
+  height: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+.name-and-description-head{
+  display: flex;
+  justify-content: space-between;
+}
+
+.name-and-description-head input{
+  font-size: 3rem;
+  font-weight: 500;
+}
+
+.name-and-description-head select{
+  height: fit-content;
+}
+
+.description-holder{
+  width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  max-width: 100%;
+  color: white;
+}
+
+textarea::placeholder{
+  color: white;
+}
+
+.roles-needed{
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+.roles-needed button{
+  width: 11%;
+  height: 100%;
+  font-size: 3rem;
+  aspect-ratio: 1/1;
+  border-radius: 100px;
+  color:gray;
+}
+
