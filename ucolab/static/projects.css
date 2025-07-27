@@ -188,12 +188,12 @@ html {
 
 .project-creation{
   display: flex;
+  gap: 1rem;
 }
 
 .project-creation input{
   background-color: transparent;
   outline: none;
-  border: none;
   color: white;  
 }
 
@@ -214,7 +214,7 @@ html {
   width: 70%;
 }
 
-.name-and-description, .roles-needed{
+.name-and-description, .roles-needed, .roles-card, .project-lead, .project-details{
   background-color: rgba(0,0,0,0.2);
   border: 1px solid white;
   border-radius: 16px;
@@ -235,6 +235,7 @@ html {
 .name-and-description-head input{
   font-size: 3rem;
   font-weight: 500;
+    border: none;
 }
 
 .name-and-description-head select{
@@ -254,21 +255,114 @@ html {
 }
 
 textarea::placeholder{
-  color: white;
+  color: rgb(195, 195, 195);
+  font-size: 1rem;
 }
 
 .roles-needed{
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 2rem;
 }
 
+.roles-needed h1{
+  font-size: 3rem;
+  font-weight: 500;
+}
+
 .roles-needed button{
-  width: 11%;
-  height: 100%;
+  width: 6.5%;
+  height: 80%;
   font-size: 3rem;
   aspect-ratio: 1/1;
   border-radius: 100px;
   color:gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.roles-card{
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    line-height: 0rem;
+}
+.role-title-input{
+  font-size: 2rem;
+  font-weight: 500;
+    border: none;
 }
 
+.skill-input{
+  font-size: 1rem;
+  border-radius: 40px;
+  padding: 1rem;
+  border: 1px solid white;
+}
+
+.roles-card button{
+  border-radius: 16px;
+  outline: none;
+  border: none;
+  padding: 1rem;
+  color: #121126;
+  font-weight: 500;
+}
+
+.right-side{
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.project-lead{
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 1rem;
+}
+
+.project-lead input{
+  border: none;
+  font-size: 1rem;
+}
+
+.project-lead h1{
+  font-size: 3rem;
+  font-weight: 500;
+}
+
+.project-details{
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.project-details h1{
+  font-size: 3rem;
+  font-weight: 500;
+}
+
+.project-details input{
+  border: none;
+  font-size: 1rem;
+
+}
+
+.details-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.create-project-button{
+  border-radius: 16px;
+  background-color: black;
+  padding: 2rem;
+  font-size: 1.5rem;
+}

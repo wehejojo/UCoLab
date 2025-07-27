@@ -74,14 +74,14 @@
         <div class="left-side">
           <div class="name-and-description">
             <div class="name-and-description-head">
-                          <input type="text" placeholder="Enter Project Name" />
-            <select name="" id="" class="project-type-select">
-              <option value="capstone">Capstone</option>
-              <option value="startup">Startup</option>
-              <option value="thesis">thesis</option>
-              <option value="casual-project">Casual Project</option>
-              <option value="technopreneurship project">Technopreneurship Project</option>
-            </select>
+              <input type="text" placeholder="Enter Project Name" />
+              <select name="" id="" class="project-type-select">
+                <option value="capstone">Capstone</option>
+                <option value="startup">Startup</option>
+                <option value="thesis">thesis</option>
+                <option value="casual-project">Casual Project</option>
+                <option value="technopreneurship project">Technopreneurship Project</option>
+              </select>
             </div>
             <textarea class="description-holder" placeholder="Briefly describe what this project is about and what problem it aims to solve. Example: “We’re developing a low-cost sensor network to monitor water quality in real-time for local communities.”"></textarea>
           </div>
@@ -90,29 +90,39 @@
             <button>+</button>
           </div>
           <div class="roles-card">
-            <input type="text" placeholder="Title of needed role" />
+            <input class="role-title-input" type="text" placeholder="Title of needed role" />
             <p>List what this teammate will be doing. Example "Design the user interface and user flow for the dashboard"</p>
             <p>Skills Needed:</p>
-            <input type="text" placeholder="Enter the Skills Needed. Use comma (,) to separate inputs" />
+            <input class="skill-input" type="text" placeholder="Enter the Skills Needed. Use comma (,) to separate inputs" />
             <button>Apply to Join Project</button>
           </div>
         </div>
         <div class="right-side">
           <div class="project-lead">
-            <input type="text" placeholder="(Enter Name)">
-            <input type="text" placeholder="College/course">
+            <h1>Project Lead</h1>
+            <input type="text" placeholder="(Enter Name)" />
+            <input type="text" placeholder="College/course" />
           </div>
           <div class="project-details">
-            <label for="department"></label>
-            <input type="text" id="department" placeholder="CITCS">
-            <label for="Start-date"></label>
-            <input type="text" id="Start-date" placeholder="August 2025">
-            <label for="Project-Type"></label>
-            <input type="text" id="Project-Type" placeholder="Startup">
-            <label for="Website"></label>
-            <input type="text" id="Website" placeholder="www.ucolab.com">
+            <h1>Project Details</h1>
+            <div class="details-row">
+              <label for="department">Department:</label>
+              <input type="text" id="department" placeholder="CITCS" />
+            </div>
+            <div class="details-row">
+              <label for="start-date">Start Date:</label>
+              <input type="text" id="start-date" placeholder="August 2025" />
+            </div>
+            <div class="details-row">
+              <label for="project-type">Project Type:</label>
+              <input type="text" id="project-type" placeholder="Startup" />
+            </div>
+            <div class="details-row">
+              <label for="website">Website:</label>
+              <input type="text" id="website" placeholder="www.ucolab.com" />
+            </div>
           </div>
-          <button>Create Project</button>
+          <button class="create-project-button">Create Project</button>
         </div>
       </div>
     </div>
@@ -163,7 +173,7 @@
     buttons.tab3.addEventListener("click", () => showTab("tab3"));
   });
 </script>
-<script>
+    <script>
 document.addEventListener("DOMContentLoaded", () => {
   // Existing logic...
 
@@ -225,6 +235,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
-
   </body>
 </html>
