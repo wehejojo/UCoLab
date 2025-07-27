@@ -310,6 +310,11 @@ textarea::placeholder{
   color: #121126;
   font-weight: 500;
 }
+.role-description{
+  outline: none;
+  border: none;
+  font-size: 1rem;
+}
 
 .right-side{
   width: 30%;
