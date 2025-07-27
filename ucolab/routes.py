@@ -262,6 +262,7 @@ def projects():
 
             name = data.get('name')
             project_type = data.get('project_type')
+            project_description = data.get('project_description')
             department = data.get('department')
             start_date = data.get('start_date')
             website = data.get('website')
@@ -276,6 +277,7 @@ def projects():
             project = Project(
                 name=name,
                 project_type=project_type,
+                project_description=project_description,
                 department=department,
                 start_date=start_date,
                 website=website,

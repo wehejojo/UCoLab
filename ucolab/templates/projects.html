@@ -36,16 +36,17 @@
       <div class="card-top">
         <p class="type">{{ project.project_type }}</p>
         <h1>{{ project.name }}</h1>
-        <p class="project-card-description">{{ project.description or '' }}</p>
+        <p class="project-card-description">{{ project.project_description or '' }}</p>
         <p class="owner">{{ project.owner_name }} {{ project.owner_course }}</p>
       </div>
       <div class="card-bottom">
         <p>Roles Needed</p>
         <p class="roles">
           {% for role in project.roles %}
-            {{ role.title }}{% if not loop.last %}, {% endif %}
+            <span class="role-tag">({{ role.title }})</span>
           {% endfor %}
         </p>
+
         <button class="details">View Details</button>
         <button class="message">Message</button>
       </div>
@@ -98,7 +99,7 @@
           </div>
           <div class="roles-card">
             <input class="role-title-input" type="text" placeholder="Title of needed role" />
-            <input class="role-description" placeholder="List what this teammate will be doing. Example "Design the user interface and user flow for the dashboard""></input>
+            <textarea class="role-description" placeholder="List what this teammate will be doing. Example "Design the user interface and user flow for the dashboard""></textarea>
             <p>Skills Needed:</p>
             <input class="skill-input" type="text" placeholder="Enter the Skills Needed. Use comma (,) to separate inputs" />
             <button>Apply to Join Project</button>
@@ -167,6 +168,7 @@
 
     document.querySelector(".roles-needed button").addEventListener("click", () => {
       const roleCard = document.querySelector(".roles-card").cloneNode(true);
+      roleCard.querySelectorAll("input, textarea").forEach(el => el.value = "");
       document.querySelector(".left-side").appendChild(roleCard);
     });
 
@@ -190,6 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Get basic project info
     const projectName = document.querySelector('.name-and-description input').value;
     const projectType = document.querySelector('.name-and-description select').value;
+    const projectDescription = document.querySelector('.description-holder').value;
     const projectLeadInputs = document.querySelectorAll('.project-lead input');
     const ownerName = projectLeadInputs[0].value;
     const ownerCourse = projectLeadInputs[1].value;
@@ -202,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.roles-card').forEach(roleCard => {
       const title = roleCard.querySelector('input[type="text"]').value;
       const skillsInput = roleCard.querySelectorAll('input[type="text"]')[1];
-      const description = roleCard.querySelector('p:nth-of-type(1)').textContent; // You may want to replace this with an editable <textarea>
+      const description = roleCard.querySelector('.role-description').value;
       const skills = skillsInput ? skillsInput.value : '';
       roles.push({ title, description, skills });
     });
@@ -211,6 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const payload = {
       name: projectName,
       project_type: projectType,
+      project_description: projectDescription,
       owner_name: ownerName,
       owner_course: ownerCourse,
       department: department,

@@ -46,6 +46,7 @@ class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     project_type = db.Column(db.String(100))
+    project_description = db.Column(db.Text)
     department = db.Column(db.String(100))
     start_date = db.Column(db.String(100))  # You can switch to db.Date if using a date picker
     website = db.Column(db.String(255))
