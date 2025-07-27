@@ -128,6 +128,51 @@
     </div>
 
     <script src="../static/script.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const projectsContainer = document.querySelector(".tab1 .projects");
+
+  function createProjectCard(project) {
+    const card = document.createElement("div");
+    card.className = "project-card";
+
+    card.innerHTML = `
+      <div class="card-top">
+        <p class="type">${project.project_type}</p>
+        <h1>${project.name}</h1>
+        <p class="project-card-description">${project.description || "No description provided."}</p>
+        <p class="owner">${project.owner_name} ${project.owner_course}</p>
+      </div>
+      <div class="card-bottom">
+        <p>Roles Needed</p>
+        <p class="roles">${project.roles.join(", ")}</p>
+        <button class="details">View Details</button>
+        <button class="message">Message</button>
+      </div>
+    `;
+    return card;
+  }
+
+  function loadProjects() {
+    fetch('/api/projects')
+      .then(res => res.json())
+      .then(data => {
+        projectsContainer.innerHTML = ''; // Clear placeholder
+        data.forEach(project => {
+          const card = createProjectCard(project);
+          projectsContainer.appendChild(card);
+        });
+      })
+      .catch(err => {
+        console.error("Error loading projects:", err);
+        projectsContainer.innerHTML = "<p>Failed to load projects.</p>";
+      });
+  }
+
+  // Load on page/tab1 init
+  loadProjects();
+});
+</script>
 
     <script>
   document.addEventListener("DOMContentLoaded", () => {
