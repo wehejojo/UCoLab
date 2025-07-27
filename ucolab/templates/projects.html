@@ -183,8 +183,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Get basic project info
     const projectName = document.querySelector('.name-and-description input').value;
     const projectType = document.querySelector('.name-and-description select').value;
-    const ownerName = document.querySelector('.project-lead input:nth-child(1)').value;
-    const ownerCourse = document.querySelector('.project-lead input:nth-child(2)').value;
+    const projectLeadInputs = document.querySelectorAll('.project-lead input');
+    const ownerName = projectLeadInputs[0].value;
+    const ownerCourse = projectLeadInputs[1].value;
     const department = document.querySelector('#department').value;
     const startDate = document.querySelector('#Start-date').value;
     const website = document.querySelector('#Website').value;
