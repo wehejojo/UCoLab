@@ -307,31 +307,6 @@ def projects():
     all_projects = Project.query.all()
     return render_template('projects.html', projects=all_projects)
 
-@main.route('/api/projects', methods=['GET'])
-def api_get_projects():
-    try:
-        all_projects = Project.query.all()
-        result = []
-
-        for p in all_projects:
-            result.append({
-                'name': p.name,
-                'project_type': p.project_type,
-                'department': p.department,
-                'start_date': p.start_date,
-                'website': p.website,
-                'owner_name': p.owner_name,
-                'owner_course': p.owner_course,
-                'roles': [r.title for r in p.roles]  # Assuming Project has relationship: roles = db.relationship(...)
-            })
-
-        return jsonify(result), 200
-
-    except Exception as e:
-        print("🔥 Error in GET /api/projects:", str(e))
-        return jsonify({'error': str(e)}), 500
-
-
 @main.route('/group/<group_name>')
 def view_group(group_name):
     name = request.args.get("name") 
