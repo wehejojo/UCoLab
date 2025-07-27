@@ -163,6 +163,8 @@ html {
   border-radius: 40px;
   border: 1px solid white;
   font-size: 0.4rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .details{
