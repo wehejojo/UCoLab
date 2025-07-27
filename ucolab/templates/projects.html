@@ -41,12 +41,11 @@
       </div>
       <div class="card-bottom">
         <p>Roles Needed</p>
-          <p class="roles">
-            {% for skill in role.skills.split(',') %}
-              ({{ skill.strip() }})
-            {% endfor %}
-          </p>
-
+        <p class="roles">
+          {% for role in project.roles %}
+            {{ role.title }}{% if not loop.last %}, {% endif %}
+          {% endfor %}
+        </p>
         <button class="details">View Details</button>
         <button class="message">Message</button>
       </div>
