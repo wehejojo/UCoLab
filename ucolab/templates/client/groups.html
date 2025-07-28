@@ -88,88 +88,79 @@
 
   // Main logic: loading -> fetch -> render group
   async function showLoadingAndFetch() {
-    await delay(5000);
-    const loadingMsg = document.getElementById("loading-message");
-    loadingMsg.textContent = "We've found your match. Getting everything set...";
+  const loadingMsg = document.getElementById("loading-message");
+  const finalCards = document.getElementById("final-cards");
+  const userName = localStorage.getItem("name");
 
-    await delay(1000);
-
-    // Fade out loading message instead of hiding
-    loadingMsg.classList.add("fade-out");
-
-    document.getElementById("final-cards").style.display = "flex";
-    document.getElementById("loading-message").style.display = "none";
-    try {
-      const userName = localStorage.getItem("name");
-      if (!userName) {
-        console.error("No name found in localStorage.");
-        return;
-      }
-
-      const response = await fetch(
-        `/getGroups?name=${encodeURIComponent(userName)}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-      console.log('test');
-
-      const result = await response.json();
-
-      if (result.success && typeof result.groups === "object") {
-        const finalCards = document.getElementById("final-cards");
-        finalCards.innerHTML = "";
-
-        let foundGroup = null;
-
-        for (const [groupName, groupData] of Object.entries(result.groups)) {
-          const memberList = Object.values(groupData.members);
-          const isUserInGroup = memberList.some(
-            (member) => member.name === userName
-          );
-          if (isUserInGroup) {
-            foundGroup = { groupName, groupData };
-            break;
-          }
-        }
-
-        if (foundGroup) {
-          const { groupName, groupData } = foundGroup;
-          group_name = groupName;
-          narrativeText.style.display = "block";
-
-          Object.values(groupData.members).forEach((memberData) => {
-            const card = document.createElement("div");
-            card.className = "card";
-            card.innerHTML = `
-              <h1 class='memberTYPE'><strong>${memberData.answers?.q1 || "N/A"}</strong></h1>
-              <div class="card-bottom">
-                <h3 style='text-align: left;' class='group-member_name'>${memberData.name}</h3>
-                <p>${memberData.college}</p>
-                <br>
-                <strong>Interest </strong>
-                <p class="card-choices">${memberData.answers?.q2 || "N/A"}</p>
-                <strong>Key Skills </strong
-                <div class="skills">
-                  ${memberData.skills.map(skill => `<p class="card-choices" >${skill}</p>`).join("")}
-                </div>
-                <br.
-              </div>`;
-            finalCards.appendChild(card);
-          });
-        } else {
-          const notFound = document.createElement("p");
-          notFound.textContent = "You were not found in any group.";
-          document.getElementById("final-cards").appendChild(notFound);
-        }
-      } else {
-        console.error("Unexpected format or no groups found:", result);
-      }
-    } catch (error) {
-      console.error("Error fetching match data:", error);
-    }
+  if (!userName) {
+    console.error("No name found in localStorage.");
+    return;
   }
+
+  try {
+    const response = await fetch(`/getGroups?name=${encodeURIComponent(userName)}`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const result = await response.json();
+
+    if (result.success && typeof result.groups === "object") {
+      finalCards.innerHTML = "";
+
+      let foundGroup = null;
+
+      for (const [groupName, groupData] of Object.entries(result.groups)) {
+        const memberList = Object.values(groupData.members);
+        const isUserInGroup = memberList.some(
+          (member) => member.name === userName
+        );
+        if (isUserInGroup) {
+          foundGroup = { groupName, groupData };
+          break;
+        }
+      }
+
+      if (foundGroup) {
+        const { groupName, groupData } = foundGroup;
+        group_name = groupName;
+        narrativeText.style.display = "block";
+
+        Object.values(groupData.members).forEach((memberData) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <h1 class='memberTYPE'><strong>${memberData.answers?.q1 || "N/A"}</strong></h1>
+            <div class="card-bottom">
+              <h3 style='text-align: left;' class='group-member_name'>${memberData.name}</h3>
+              <p>${memberData.college}</p>
+              <br>
+              <strong>Interest </strong>
+              <p class="card-choices">${memberData.answers?.q2 || "N/A"}</p>
+              <strong>Key Skills </strong>
+              <div class="skills">
+                ${memberData.skills.map(skill => `<p class="card-choices">${skill}</p>`).join("")}
+              </div>
+              <br>
+            </div>`;
+          finalCards.appendChild(card);
+        });
+
+        // Hide loading ONLY after group is shown
+        loadingMsg.style.display = "none";
+        finalCards.style.display = "flex";
+      } else {
+        loadingMsg.textContent = "You were not found in any group.";
+      }
+    } else {
+      loadingMsg.textContent = "Unable to fetch group data.";
+    }
+  } catch (error) {
+    console.error("Error fetching match data:", error);
+    loadingMsg.textContent = "An error occurred while fetching data.";
+  }
+}
+
 
   // Handle Confirm button
   confirmGroupButton.addEventListener("click", () => {
