@@ -32,7 +32,7 @@ def encode_user_from_model(user):
         vector.extend(one_hot)
     return np.array(vector)
 
-def sqlalchemy_grouping(users, group_size=5):
+def sqlalchemy_grouping(users, group_size=6):
     user_data = []
     for user in users:
         answers = {a.question_id: a.answer for a in user.answers}
