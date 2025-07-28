@@ -1,0 +1,258 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-bg: #121126;
+    --secondary-bg: rgba(0, 0, 0, 0.5);
+    --text-color: rgb(255, 255, 255);
+    --accent-color: #0F161E;
+    --border-radius-sm: 10px;
+    --border-radius-md: 20px;
+    --border-radius-lg: 40px;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+}
+
+
+body {
+    background-color: var(--primary-bg);
+    color: white;
+}
+
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html,
+body {
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    padding: var(--spacing-sm);
+}
+
+
+h1, h2, h3, p {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+}
+
+.main-container{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-areas:
+        "top-bar top-bar top-bar"
+        "details details details"
+        "details details details"
+        "details details details"
+        "bottom-bar bottom-bar bottom-bar";
+    grid-template-columns: repeat(3, 3fr);
+    grid-template-rows: repeat(5, 3fr);
+    gap: 10px;
+    padding: 10px;
+        border: 1px solid red;
+
+}
+
+.top-bar, .participants, .participant-form , .bottom-bar{
+    border-radius: 20px;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.top-bar{
+    border: 1px solid white;
+    grid-area: top-bar;
+    display: flex;
+    align-items: center;
+    padding:1rem ;
+}
+
+.details{
+    grid-area: details;
+    gap: 1rem;
+}
+
+.participants{
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    gap: 1rem;
+    height: 100%;
+}
+
+.participants,.participant-form{
+    border: 1px solid white;
+    padding: 2rem;
+}
+
+.participant-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.users{
+    height: 80%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.bottom-bar{
+    border: 1px solid white;
+    grid-area: bottom-bar;
+    padding:1rem ;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bottom-button button {
+  padding: var(--spacing-sm);
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 5px; 
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ccc;
+}
+
+
+/* Base styles omitted for brevity - use your existing styles */
+
+/* Tablet styles */
+@media (max-width: 900px) {
+  .main-container {
+    grid-template-areas:
+      "top-bar top-bar"
+      "details details"
+      "bottom-bar bottom-bar";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  /* Slight border-radius reduction for tablet */
+  .top-bar, .participants, .participant-form, .bottom-bar {
+    border-radius: var(--border-radius-sm);
+  }
+
+  /* Options grid: 2 columns fixed */
+  .options {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: var(--spacing-md);
+    padding: 0 var(--spacing-sm);
+  }
+
+  /* Question margins reduced for tablet */
+  .question h2 {
+    margin: 2rem;
+  }
+
+  /* Bottom buttons: slightly smaller */
+  .bottom-button button {
+    font-size: clamp(0.9rem, 2vw, 1.3rem);
+    padding: 0.8rem var(--spacing-sm);
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 600px) {
+  .main-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+  /* Border radius smaller for mobile */
+  .top-bar, .participants, .participant-form, .bottom-bar {
+    border-radius: var(--border-radius-sm);
+  }
+
+  .participants, .participant-form{
+        flex-grow: 1;
+  }
+
+        .participant-form {
+        display: block;
+      }
+
+      .participants {
+        display: none;
+      }
+
+      .participant-form.mobile-hidden {
+        display: none !important;
+      }
+
+      .participants.mobile-visible {
+        display: flex !important;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+  /* Options grid: single column */
+  .options {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-sm);
+    padding: 0 var(--spacing-xs);
+  }
+
+  /* Question title margins smaller */
+  .question h2 {
+    margin: 1.5rem;
+    font-weight: 300;
+    font-size: 1.5rem;
+  }
+
+  /* Bottom button larger tap area */
+  .bottom-button button {
+    width: 100%;
+    font-size: 1.2rem;
+    padding: var(--spacing-sm);
+  }
+
+  /* Reduce padding inside containers */
+  .top-bar, .bottom-bar {
+    padding: 0.8rem;
+  }
+
+  /* Option font color and padding tweaks for better fit */
+  .option {
+    padding: var(--spacing-sm);
+    font-size: 0.9rem;
+  }
+}
+

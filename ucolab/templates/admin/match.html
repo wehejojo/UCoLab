@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Match</title>
-    <link href="/static/main.css" rel="stylesheet" />
-  </head>
 
-  <body>
-    <div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Match</title>
+  <link href="../../static/admin-match.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/backgroundprop.css" />
+</head>
+
+<body>
+  <div class="svg-container">
+    <img src="/static/background.svg" alt="Background" />
+  </div>
+    <div class="main-container">
       <div class="top-bar">
         <h1 id="session_code">Room #: {{ session_code }} </h1>
       </div>
@@ -28,7 +33,7 @@
             {% endfor %}
           </div>
         </div>
-        
+
       </div>
       <div class="bottom-bar">
         <div class="bottom-message">
@@ -39,36 +44,39 @@
         </div>
       </div>
     </div>
-    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
-    <script>
-      const socket = io();
+  </div>
 
-      document.getElementById('master').addEventListener('click', () => {
-        socket.emit('start_matching', {
-          url: '/{{ session_code }}/quiz'
-        });
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <script>
+    const socket = io();
 
-        window.location.href = '/master/quiz';
+    document.getElementById('master').addEventListener('click', () => {
+      socket.emit('start_matching', {
+        url: '/{{ session_code }}/quiz'
       });
 
-      socket.on('update', (data) => {
-        const participants = data.participants;
-        const count = data.count;
+      window.location.href = '/master/quiz';
+    });
 
-        const container = document.getElementById("users");
-        container.innerHTML = '';
-        participants.forEach(p => {
-          const div = document.createElement("div");
-          div.classList.add("player");
-          div.innerHTML = `<div class="pfp"></div><p>${p.name}</p>`;
-          container.appendChild(div);
-        });
+    socket.on('update', (data) => {
+      const participants = data.participants;
+      const count = data.count;
 
-        const headerCount = document.querySelector(".participant-header p");
-        if (headerCount) {
-          headerCount.textContent = `${count} users joined`;
-        }
+      const container = document.getElementById("users");
+      container.innerHTML = '';
+      participants.forEach(p => {
+        const div = document.createElement("div");
+        div.classList.add("player");
+        div.innerHTML = `<div class="pfp"></div><p>${p.name}</p>`;
+        container.appendChild(div);
       });
-    </script>
-  </body>
+
+      const headerCount = document.querySelector(".participant-header p");
+      if (headerCount) {
+        headerCount.textContent = `${count} users joined`;
+      }
+    });
+  </script>
+</body>
+
 </html>
