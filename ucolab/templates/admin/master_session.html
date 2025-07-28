@@ -4,12 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Session Master</title>
-    <link href="../../static/main.css" rel="stylesheet" />
+    <link href="../../static/admin-match.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/backgroundprop.css" />
   </head>
   <body>
-    <form action="/master/session" method="post">
-      <h1 id="session_code">Session Code: {{ session_code }}</h1>
-      <button type="submit">Start Matching</button>
-    </form>
+      <div class="svg-container">
+    <img src="/static/background.svg" alt="Background" />
+  </div>
+    <div class="sesssion-master">
+      <form action="/master/session" method="post">
+        <h1 id="session_code">Session Code: {{ session_code }}</h1>
+        <button type="submit">Start Matching</button>
+      </form>
+    </div>
   </body>
 </html>
