@@ -84,7 +84,7 @@ textarea {
     z-index: 1000;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 830px) {
     .members{
         display: none;
     }
